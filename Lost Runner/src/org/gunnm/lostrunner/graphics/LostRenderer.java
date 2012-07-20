@@ -7,27 +7,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
 
 public class LostRenderer implements Renderer {
-
-	private static float[] pyramidCoords = new float[] {
-		 0,  1,  0,
-		 1, -1,  1,
-		 1, -1, -1,
-		-1, -1, -1,
-		-1, -1,  1,
-		 1, -1,  1
-	};
-
-	private static float[] pyramidColors = new float[] {
-		1, 0, 0, 1,
-		0, 1, 0, 1,
-		0, 0, 1, 1,
-		0, 1, 0, 1,
-		0, 0, 1, 1,
-		0, 1, 0, 1
-	};
-	
+	private static int mapWidth   	= 5;
+	private static int mapHeight  	= 10;
+	private static FloatBuffer[][] gamePlate;
+	private float rotation = 0.0f;
+	/*
 	private static float[][] cubeCoords = new float[][] {
 		new float[] { // top
 			 1, 1,-1,
@@ -66,7 +53,8 @@ public class LostRenderer implements Renderer {
 			 1,-1,-1
 		},
 	};
-
+	*/
+	/*
 	private static float[] cubeColors = new float[] {
 		0,1,0,1,
 		1,0.5f,0,1,
@@ -82,9 +70,10 @@ public class LostRenderer implements Renderer {
 	
 	private static float pyramidRot;
 	private static float cubeRot;
-	
+	*/
 	static
 	{
+		/*
 		pyramidVertexBfr = FloatBuffer.wrap(pyramidCoords);
 		pyramidColorBfr = FloatBuffer.wrap(pyramidColors);
 		
@@ -92,7 +81,7 @@ public class LostRenderer implements Renderer {
 		for (int i = 0; i < 6; i++)
 		{
 			cubeVertexBfr[i] = FloatBuffer.wrap(cubeCoords[i]);
-		}
+		}*/
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -107,6 +96,18 @@ public class LostRenderer implements Renderer {
 		gl.glCullFace(GL10.GL_BACK);
 		
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gamePlate = new FloatBuffer[mapWidth][mapHeight];
+		
+		for (int i = 0 ; i < mapWidth ; i++)
+		{
+			for (int j = 0 ; j < mapHeight ; j++)
+			{
+				gamePlate[i][j] = FloatBuffer.wrap(new float[]{i    , 0 , -j,
+						                                      i+1  ,  0 , -j,
+						                                      i+1, 0, -j-1,
+						                                      i, 0 , -j-1});
+			}
+		}
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -114,7 +115,7 @@ public class LostRenderer implements Renderer {
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		
+		/*
 		// draw pyramid
 		gl.glTranslatef(-1.5f, 0, -6);
 		gl.glRotatef(pyramidRot, 0, 1, 0);
@@ -125,11 +126,31 @@ public class LostRenderer implements Renderer {
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 6);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-		
+		*/
 		// draw cube
-		gl.glLoadIdentity();
-		gl.glTranslatef(1.5f, 0, -6);
-		gl.glRotatef(cubeRot, 1, 1, 1);
+		GLU.gluLookAt(gl, mapWidth + 8, 5, mapHeight / 3 , 
+						  mapWidth / 2, 0, -1 * mapHeight / 2, 
+						  0, 1, 0);
+/*		
+		gl.glTranslatef(0, -2, -20);
+		gl.glRotatef(-20, 1, 0, 0);
+		gl.glRotatef(-20, 0, 1, 0);
+*/
+		Log.d( "ANGLE" , "rotation" + rotation);
+		//gl.glRotatef(cubeRot, 1, 1, 1);
+		
+		gl.glColor4f(1, 0, 0, 0.5f);
+		for (int i = 0 ; i < mapWidth ; i++)
+		{
+			for (int j = 0 ; j < mapHeight ; j++)
+			{
+				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, gamePlate[i][j]);
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+			}
+		}
+		/*
 		for (int i = 0; i < 6; i++)
 		{
 			gl.glColor4f(cubeColors[4*i+0], cubeColors[4*i+1], cubeColors[4*i+2], cubeColors[4*i+3]);
@@ -142,7 +163,10 @@ public class LostRenderer implements Renderer {
 		// update rotations
 		pyramidRot += 0.8f;
 		cubeRot -= 0.5f;
-	}
+		*/
+		rotation += 2.8f;
+
+	}  
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// avoid division by zero
@@ -152,7 +176,9 @@ public class LostRenderer implements Renderer {
 		// setup projection matrix
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, 90.0f, (float)width / (float)height, 1.0f, 100.0f);
+		GLU.gluPerspective(gl,90.0f, (float)width / (float)height, 0.1f, 100.0f);
+		//GLU.gluLookAt(gl, 5, 1, -1, 5, 0, 3, 0, 1, 0);
+		//GLU.gluLookAt(gl, 0, 0, 20, 0, 0, 0, 0, 1, 0);
 	}
 
 }
