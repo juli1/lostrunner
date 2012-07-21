@@ -37,9 +37,10 @@ public class LostRunner extends Activity {
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
         surface = new GLSurfaceView(this);
-        renderer = new LostRenderer(new Game(new Map1()));
+       
+        renderer = new LostRenderer(this, new Game(new Map1()));
         surface.setRenderer(renderer);
-        surface.setOnKeyListener(new Key());
+        surface.setOnKeyListener(new Key(renderer));
         surface.setFocusable(true);
         setContentView(surface);
     }

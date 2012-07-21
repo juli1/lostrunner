@@ -10,16 +10,27 @@ import android.view.View.OnKeyListener;
 public class Key implements OnKeyListener
 {
 	private static final String TAG = "Key";
+	private LostRenderer renderer;
 	
-	public Key ()
+	public Key (LostRenderer r)
 	{
+		this.renderer = r;
+	
 	}
 
-
+ 
 	public boolean onKey(View v, int keyCode, KeyEvent event) 
 	{
+	
 		if (event.getAction() == KeyEvent.ACTION_DOWN)
 		{
+			Log.i("KEY", "Keydown event");
+
+			if (event.getKeyCode()  == KeyEvent.KEYCODE_SHIFT_RIGHT)
+			{
+				Log.i("KEY", "Going left");
+				LostRenderer.camX -= 0.2;
+			}
 			if (event.getKeyCode()  == KeyEvent.KEYCODE_DPAD_LEFT)
 			{
 				Log.i("KEY", "Going left");

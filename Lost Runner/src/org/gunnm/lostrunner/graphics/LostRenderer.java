@@ -1,14 +1,22 @@
 package org.gunnm.lostrunner.graphics;
 
 import java.nio.FloatBuffer;
+import java.util.Calendar;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.gunnm.lostrunner.R;
 import org.gunnm.lostrunner.model.Game;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.opengl.GLUtils;
 import android.util.Log;
 
 public class LostRenderer implements Renderer 
@@ -20,17 +28,28 @@ public class LostRenderer implements Renderer
 	public static float toviewX = 0;
 	public static float toviewY = 0;
 	public static float toviewZ = 0;
-
+	private int textures[];
+	private static final int NB_TEXTURES = 8;
 	private static FloatBuffer[] cubeVertexBfr;
-
+	private Context context;
+	
+	private boolean showFPS = true;
+	private long startTime;
+	private long nbFrames;
+	
 	
 	private Game currentGame;
+	private GLText glText;
 	
-	public LostRenderer (Game g)
+	
+	public LostRenderer (Context c, Game g)
 	{
 		super ();
-		
+		this.textures = new int[NB_TEXTURES];
 		this.currentGame = g;
+		this.context = c;
+		this.startTime = Calendar.getInstance().getTimeInMillis();
+		this.nbFrames = 0;
 		
 		camX = g.getCurrentMap().getMapWidth();
 		camY = 4;
@@ -47,6 +66,19 @@ public class LostRenderer implements Renderer
 			cubeVertexBfr[i] = FloatBuffer.wrap(cubeCoords[i]);
 		}
 	}
+	
+	public void enableShowFPS ()
+	{
+		this.showFPS = true;
+		this.startTime = Calendar.getInstance().getTimeInMillis();
+		this.nbFrames = 0;
+	}
+	
+	public void disableShowFPS ()
+	{
+		this.showFPS = false;
+	}
+	
 	private static float[][] cubeCoords = new float[][] {
 			new float[] { // top
 					 0.5f, 0.5f,-0.5f,
@@ -90,6 +122,17 @@ public class LostRenderer implements Renderer
 	
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		
+	      // Set the background frame color
+	      gl.glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );
+
+	      // Create the GLText
+	      glText = new GLText( gl, context.getAssets() );
+
+	      // Load the font from file (set size + padding), creates the texture
+	      // NOTE: after a successful call to this the font is ready for rendering!
+	      glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+		
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glClearColor(0, 0, 0, 0);
 
@@ -116,11 +159,14 @@ public class LostRenderer implements Renderer
 	}
 
 	public void onDrawFrame(GL10 gl) {
-		currentGame.update();
+
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
+	      gl.glMatrixMode( GL10.GL_MODELVIEW );       
+	      gl.glLoadIdentity();              
+
+	      currentGame.update();
+		
 		GLU.gluLookAt(gl, camX , camY, camZ , 
 						  toviewX, toviewY, toviewZ, 
 						  0, 1, 0);
@@ -157,15 +203,50 @@ public class LostRenderer implements Renderer
 			gl.glPopMatrix();
 		}
 	
+		  /*
+	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
+	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
+	      // TEST: render the entire font texture
+	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
+
+	      // TEST: render some strings with the font
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
+	      glText.draw( "Test String :)", 0, 0 );          // Draw Test String
+	      glText.draw( "Line 1", 50, 50 );                // Draw Test String
+	      glText.draw( "Line 2", 100, 100 );              // Draw Test String
+	      glText.end();
+	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+	      gl.glDisable( GL10.GL_BLEND ); 
+	      */
+		
+		if (this.showFPS)
+		{
+			this.nbFrames = this.nbFrames + 1;
+			long currentTime = Calendar.getInstance().getTimeInMillis();
+			long nbsec;
+			nbsec = 1;
+			nbsec = ((currentTime - startTime) / 1000 );
+			if (nbsec == 0)
+			{
+				nbsec = 1;
+			}
+			long fps =  nbFrames / nbsec;
+			Log.i("LostRenderer", "FPS=" + fps);
+		}
 	}  
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		if (height == 0) height = 1;
+		if (height == 0)
+		{
+			height = 1;
+		}
+	    // Setup orthographic projection
+	    gl.glMatrixMode( GL10.GL_PROJECTION );          // Activate Projection Matrix
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL10.GL_PROJECTION);
+		
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl,90.0f, (float)width / (float)height, 0.1f, 100.0f);
-
+		GLU.gluPerspective(gl,90.0f, (float)width / (float)height , 0.1f, 100.0f);
 	}
 	
 
