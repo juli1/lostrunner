@@ -1,14 +1,19 @@
 package org.gunnm.lostrunner;
 
+import org.gunnm.lostrunner.controller.Key;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -30,15 +35,17 @@ public class LostRunner extends Activity {
         	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         	WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
-         
+
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
         surface = new GLSurfaceView(this);
         renderer = new LostRenderer();
         surface.setRenderer(renderer);
+        surface.setOnKeyListener(new Key());
+        surface.setFocusable(true);
         setContentView(surface);
     }
-
+		 
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -62,6 +69,8 @@ public class LostRunner extends Activity {
 		return super.onTouchEvent(event);
 	}
 
+	
+	
 	private class GlAppGestureListener extends GestureDetector.SimpleOnGestureListener
     {
     	private LostRunner currentApp;

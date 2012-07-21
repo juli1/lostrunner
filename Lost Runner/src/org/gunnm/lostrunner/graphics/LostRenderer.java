@@ -12,8 +12,18 @@ import android.util.Log;
 public class LostRenderer implements Renderer {
 	private static int mapWidth   	= 5;
 	private static int mapHeight  	= 10;
+	private static int nbCubes      = 5;
 	private static FloatBuffer[][] gamePlate;
+	private static FloatBuffer[][] cubes;
+	private static boolean[] cubeActive;
 	private float rotation = 0.0f;
+	public static float camX = mapWidth;
+	public static float camY = 4;
+	public static float camZ = 3;
+	public static float toviewX = mapWidth / 2;
+	public static float toviewY = 0;
+	public static float toviewZ = -1 * mapHeight / 2;
+	
 	/*
 	private static float[][] cubeCoords = new float[][] {
 		new float[] { // top
@@ -97,7 +107,7 @@ public class LostRenderer implements Renderer {
 		
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		gamePlate = new FloatBuffer[mapWidth][mapHeight];
-		
+		cubes = new FloatBuffer[nbCubes][6];
 		for (int i = 0 ; i < mapWidth ; i++)
 		{
 			for (int j = 0 ; j < mapHeight ; j++)
@@ -107,6 +117,42 @@ public class LostRenderer implements Renderer {
 						                                      i+1, 0, -j-1,
 						                                      i, 0 , -j-1});
 			}
+		}
+		for (int i = 0 ; i < nbCubes ; i++)
+		{
+			int xpos = i % mapWidth;
+			int zpos = (int) Math.ceil( i / mapWidth);
+			
+			//bottom
+			cubes[i][0] = FloatBuffer.wrap(new float[] {xpos    , 0 , -1 * mapHeight,
+														xpos  ,  0 ,-1 *  mapHeight + 1,
+														xpos + 1, 0,-1 *  mapHeight + 1 ,
+														xpos + 1 , 0 , -1 * mapHeight});	
+			//top
+			cubes[i][1] = FloatBuffer.wrap(new float[] {xpos + 1   , 1 , -1 * mapHeight,
+														xpos , 1, -1 * mapHeight,
+														xpos   ,  1 ,-1 *  mapHeight + 1,
+														xpos +1 , 1 , -1 * mapHeight + 1});
+			//left
+			cubes[i][2] = FloatBuffer.wrap(new float[] {xpos , 0 ,-1 *  mapHeight,
+														xpos ,  0 , -1 * mapHeight + 1,
+														xpos ,    1  , -1 *  mapHeight + 1,
+														xpos ,  1  , -1 * mapHeight});
+			//right
+			cubes[i][3] = FloatBuffer.wrap(new float[] {xpos + 1  ,  0 , -1 * mapHeight,
+														xpos + 1  ,  0 , -1 * mapHeight + 1,
+														xpos + 1  ,  1 , -1 *  mapHeight + 1,
+														xpos + 1  ,  1 , -1 *  mapHeight });
+			//front
+			cubes[i][4] = FloatBuffer.wrap(new float[] {xpos    , 0 ,-1 *  mapHeight + 1,
+														xpos  +1 ,  0 , -1 * mapHeight + 1,
+														xpos +1, 1, -1 * mapHeight + 1,
+														xpos , 1 , -1 * mapHeight + 1});
+			//rear
+			cubes[i][5] = FloatBuffer.wrap(new float[] {xpos      , 0 , -1 *  mapHeight,
+														xpos + 1  , 0 , -1 * mapHeight ,
+														xpos + 1  , 1 , -1 * mapHeight ,
+														xpos + 1  , 1 , -1 * mapHeight });		
 		}
 	}
 
@@ -128,8 +174,8 @@ public class LostRenderer implements Renderer {
 		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 		*/
 		// draw cube
-		GLU.gluLookAt(gl, mapWidth + 8, 5, mapHeight / 3 , 
-						  mapWidth / 2, 0, -1 * mapHeight / 2, 
+		GLU.gluLookAt(gl, camX , camY, camZ , 
+						  toviewX, toviewY, toviewZ, 
 						  0, 1, 0);
 /*		
 		gl.glTranslatef(0, -2, -20);
@@ -150,6 +196,20 @@ public class LostRenderer implements Renderer {
 				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 			}
 		}
+		
+		for (int i = 0 ; i < nbCubes ; i++)
+		{
+			
+		
+			for (int k = 0; k < 6; k++)
+			{
+				gl.glColor4f(0,1,0,0.5f);
+				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubes[i][k]);
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+			}
+		}
 		/*
 		for (int i = 0; i < 6; i++)
 		{
@@ -164,7 +224,7 @@ public class LostRenderer implements Renderer {
 		pyramidRot += 0.8f;
 		cubeRot -= 0.5f;
 		*/
-		rotation += 2.8f;
+		//rotation += 2.8f;
 
 	}  
 
@@ -180,5 +240,6 @@ public class LostRenderer implements Renderer {
 		//GLU.gluLookAt(gl, 5, 1, -1, 5, 0, 3, 0, 1, 0);
 		//GLU.gluLookAt(gl, 0, 0, 20, 0, 0, 0, 0, 1, 0);
 	}
+	
 
 }
