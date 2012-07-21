@@ -10,7 +10,7 @@ public class Game {
 	private Hero hero;
 	private MapInterface currentMap;
 	private static float CUBE_SPEED = 1;
-	private static float HERO_SPEED = 2;
+	private static float HERO_SPEED = 2.5f;
 	private static float CUBE_ROTATION_SPEED = 60;
 	private long lastTime = 0;
 	
@@ -46,8 +46,29 @@ public class Game {
 		switch (hero.getDirection())
 		{
 			case Hero.DIRECTION_LEFT:
-				hero.setX(hero.getX() - period / ( ((float)((float)period / 1000)) * HERO_SPEED) );
+			{
+				hero.setX(hero.getX() - ( ((float)((float)period / 1000)) * HERO_SPEED) );
+				hero.setDirection(Hero.DIRECTION_NONE); 
 				break;
+			}
+			case Hero.DIRECTION_RIGHT:
+			{
+				hero.setX(hero.getX() +   ( ((float)((float)period / 1000)) * HERO_SPEED) );
+				hero.setDirection(Hero.DIRECTION_NONE); 
+				break;
+			}
+			case Hero.DIRECTION_UP:
+			{
+				hero.setZ(hero.getZ() -  ( ((float)((float)period / 1000)) * HERO_SPEED) );
+				hero.setDirection(Hero.DIRECTION_NONE); 
+				break;
+			}
+			case Hero.DIRECTION_DOWN:
+			{
+				hero.setZ(hero.getZ() +  ( ((float)((float)period / 1000)) * HERO_SPEED) );
+				hero.setDirection(Hero.DIRECTION_NONE); 
+				break;
+			}
 		}
 	}
 	

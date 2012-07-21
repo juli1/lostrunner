@@ -233,7 +233,7 @@ public class LostRenderer implements Renderer
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glPopMatrix();
-		
+		 
 		  /* For text import
 	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
