@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -31,6 +32,8 @@ public class LostRenderer implements Renderer
 	private int textures[];
 	private static final int NB_TEXTURES = 8;
 	private static FloatBuffer[] cubeVertexBfr;
+	private static FloatBuffer doorVertexBfr;
+	private static FloatBuffer heroVertexBfr;
 	private Context context;
 	
 	private boolean showFPS = true;
@@ -65,6 +68,8 @@ public class LostRenderer implements Renderer
 		{
 			cubeVertexBfr[i] = FloatBuffer.wrap(cubeCoords[i]);
 		}
+		doorVertexBfr = FloatBuffer.wrap(doorCoords);
+		heroVertexBfr = FloatBuffer.wrap(heroCoords);
 	}
 	
 	public void enableShowFPS ()
@@ -79,6 +84,14 @@ public class LostRenderer implements Renderer
 		this.showFPS = false;
 	}
 	
+	private static float [] doorCoords = new float[] {1, 2, 0, 
+													  0, 2, 0, 
+													  0,0, 0, 
+													  1,0, 0};
+	private static float [] heroCoords = new float[] {0.75f, 2, 0, 
+													  0.25f, 2, 0, 
+													  0.25f,0, 0, 
+													  0.75f,0, 0};
 	private static float[][] cubeCoords = new float[][] {
 			new float[] { // top
 					 0.5f, 0.5f,-0.5f,
@@ -202,8 +215,26 @@ public class LostRenderer implements Renderer
 			
 			gl.glPopMatrix();
 		}
-	
-		  /*
+		
+		gl.glPushMatrix();
+		gl.glTranslatef(currentGame.getCurrentMap().getExitPositionX() , 0, currentGame.getCurrentMap().getExitPositionZ());
+		gl.glColor4f(0,0,1,0.5f);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, doorVertexBfr);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glPopMatrix();
+		
+		gl.glPushMatrix();
+		gl.glTranslatef(currentGame.getHero().getX() , 0, currentGame.getHero().getZ());
+		gl.glColor4f(0,1,1,0.5f);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroVertexBfr);
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glPopMatrix();
+		
+		  /* For text import
 	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
 	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function

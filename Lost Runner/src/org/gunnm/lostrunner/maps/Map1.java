@@ -7,7 +7,10 @@ public class Map1 implements MapInterface {
 	private int MAP_WIDTH = 5;
 	private int MAP_DEPTH = 10;
 	private int cubesPositions[][];
-	
+	private int heroPositionX;
+	private int heroPositionZ;
+	private int exitPositionX;
+	private int exitPositionZ;
 	
 	public Map1()
 	{
@@ -15,8 +18,34 @@ public class Map1 implements MapInterface {
 		for (int i = 0 ; i < NB_CUBES ; i++)
 		{
 			cubesPositions[i][0] = i;
-			cubesPositions[i][1] = -i;
+			cubesPositions[i][1] = -MAP_DEPTH + i;
 		}
+		this.heroPositionX = 2;
+		this.heroPositionZ = 1;
+		
+
+		this.exitPositionX = 4;
+		this.exitPositionZ = -MAP_DEPTH;
+	}	
+
+	public int getHeroPositionX ()
+	{
+		return this.heroPositionX;
+	}
+	
+	public int getHeroPositionZ ()
+	{
+		return this.heroPositionZ;
+	}
+	
+	public int getExitPositionX ()
+	{
+		return this.exitPositionX;
+	}
+	
+	public int getExitPositionZ ()
+	{
+		return this.exitPositionZ;
 	}
 	
 	public int getNbCubes ()
