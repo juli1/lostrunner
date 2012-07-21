@@ -5,8 +5,10 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLU;
+import org.gunnm.lostrunner.model.Game;
+
 import android.opengl.GLSurfaceView.Renderer;
+import android.opengl.GLU;
 import android.util.Log;
 
 public class LostRenderer implements Renderer {
@@ -24,6 +26,15 @@ public class LostRenderer implements Renderer {
 	public static float toviewY = 0;
 	public static float toviewZ = -1 * mapHeight / 2;
 	
+	
+	private Game currentGame;
+	
+	public LostRenderer (Game g)
+	{
+		super ();
+		this.currentGame = g;
+	}
+	private static float[][] cubeCoords;
 	/*
 	private static float[][] cubeCoords = new float[][] {
 		new float[] { // top
@@ -81,6 +92,8 @@ public class LostRenderer implements Renderer {
 	private static float pyramidRot;
 	private static float cubeRot;
 	*/
+	private static FloatBuffer[] cubeVertexBfr;
+
 	static
 	{
 		/*
@@ -197,6 +210,60 @@ public class LostRenderer implements Renderer {
 			}
 		}
 		
+		for (int i = 0 ; i < currentGame.getCurrentMap().getNbCubes() ; i++)
+		{
+			cubeCoords = new float[][] {
+					new float[] { // top
+						currentGame.getCube(i).getX() + 1, 1, currentGame.getCube(i).getZ() + 0,
+						currentGame.getCube(i).getX() + 0, 1, currentGame.getCube(i).getZ() + 0,
+						currentGame.getCube(i).getX() + 0, 1, currentGame.getCube(i).getZ() + 1,
+						currentGame.getCube(i).getX() + 1, 1, currentGame.getCube(i).getZ() + 1
+					},
+					new float[] { // bottom
+							currentGame.getCube(i).getX() +1,0, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +0,0, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +0,0,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +1,0,currentGame.getCube(i).getZ() + 0
+					},
+					new float[] { // front
+							currentGame.getCube(i).getX() + 1, 1, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +0, 1, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +0,0, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +1,0, currentGame.getCube(i).getZ() + 1
+					},
+					new float[] { // back
+							currentGame.getCube(i).getX() +1,0,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +0,0,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +0, 1,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +1, 1,currentGame.getCube(i).getZ() + 0
+					},
+					new float[] { // left
+							currentGame.getCube(i).getX() +0, 1, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +0, 1,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +0,0,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +0,-1, currentGame.getCube(i).getZ() + 1
+					},
+					new float[] { // right
+							currentGame.getCube(i).getX() +1, 1,currentGame.getCube(i).getZ() + 0,
+							currentGame.getCube(i).getX() +1, 1, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +1,0, currentGame.getCube(i).getZ() + 1,
+							currentGame.getCube(i).getX() +1,0,currentGame.getCube(i).getZ() + 0
+					},
+				};
+			cubeVertexBfr = new FloatBuffer[6];
+
+			for (int k = 0; k < 6; k++)
+			{
+				cubeVertexBfr[k] = FloatBuffer.wrap(cubeCoords[k]);
+
+				gl.glColor4f(0,1,0,0.5f);
+				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+			}
+		}
+		/*
 		for (int i = 0 ; i < nbCubes ; i++)
 		{
 			
@@ -210,6 +277,7 @@ public class LostRenderer implements Renderer {
 				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 			}
 		}
+		*/
 		/*
 		for (int i = 0; i < 6; i++)
 		{
