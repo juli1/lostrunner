@@ -21,7 +21,7 @@ public class Map1 implements MapInterface {
 			cubesPositions[i][1] = -MAP_DEPTH + i;
 		}
 		this.heroPositionX = 2;
-		this.heroPositionZ = 1;
+		this.heroPositionZ = -1;
 		
 
 		this.exitPositionX = 4;

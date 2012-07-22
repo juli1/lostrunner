@@ -1,5 +1,7 @@
 package org.gunnm.lostrunner.model;
 
+import android.util.Log;
+
 public class Hero {
 	private float posX = 0;
 	private float posY = 0;
@@ -56,6 +58,7 @@ public class Hero {
 	
 	public void setX (float x)
 	{
+//		Log.i ("HERO", "Set X to: " + x);
 		this.posX = x;
 	}
 	
@@ -66,6 +69,7 @@ public class Hero {
 	
 	public void setZ (float z)
 	{
+//		Log.i ("HERO", "Set Z to: " + z);
 		this.posZ = z;
 	}
 	

@@ -36,7 +36,7 @@ public class LostRenderer implements Renderer
 	private static FloatBuffer heroVertexBfr;
 	private Context context;
 	
-	private boolean showFPS = true;
+	private boolean showFPS = false;
 	private long startTime;
 	private long nbFrames;
 	

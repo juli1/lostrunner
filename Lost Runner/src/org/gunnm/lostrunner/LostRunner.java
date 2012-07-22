@@ -33,7 +33,7 @@ public class LostRunner extends Activity {
         	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         	WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
-        Game game = new Game (new Map1());
+        Game game = new Game ();
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
         surface = new GLSurfaceView(this);
