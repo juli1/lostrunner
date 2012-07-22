@@ -70,7 +70,7 @@ public class Game {
 				//Log.i ("Game", "Potential Collision with cube " + i); 
 				
 				if ((hero.getZ() > cube.getZ() ) &&
-				   (hero.getZ() < cube.getZ() + 1))
+				   (hero.getZ() < cube.getZ() + 1.5f))
 				{  
 					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
 					Log.i ("Game", "Collision");
@@ -130,8 +130,16 @@ public class Game {
 		
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
-			cubes[i].setZ(cubes[i].getZ() + ( ((float)((float)period / 1000)) * CUBE_SPEED) );
-			cubes[i].setRotation(cubes[i].getRotation() + ( ((float)((float)period / 1000)) * CUBE_ROTATION_SPEED) );
+			if (cubes[i].isVisible())
+			{
+				cubes[i].setZ(cubes[i].getZ() + ( ((float)((float)period / 1000)) * CUBE_SPEED) );
+				cubes[i].setRotation(cubes[i].getRotation() + ( ((float)((float)period / 1000)) * CUBE_ROTATION_SPEED) );
+				
+				if (cubes[i].getZ() >= 0)
+				{
+					cubes[i].setVisible(false);
+				}
+			}
 		}
 		
 		

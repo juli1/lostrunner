@@ -1,5 +1,7 @@
 package org.gunnm.lostrunner.graphics;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Calendar;
 
@@ -66,10 +68,10 @@ public class LostRenderer implements Renderer
 		
 		for (int i = 0 ; i < 6 ; i++)
 		{
-			cubeVertexBfr[i] = FloatBuffer.wrap(cubeCoords[i]);
+			cubeVertexBfr[i] = makeFloatBuffer(cubeCoords[i]);
 		}
-		doorVertexBfr = FloatBuffer.wrap(doorCoords);
-		heroVertexBfr = FloatBuffer.wrap(heroCoords);
+		doorVertexBfr = makeFloatBuffer(doorCoords);
+		heroVertexBfr = makeFloatBuffer(heroCoords);
 	}
 	
 	public void enableShowFPS ()
@@ -131,7 +133,14 @@ public class LostRenderer implements Renderer
 				},
 			};
 	
-	
+	   private FloatBuffer makeFloatBuffer(float[] arr) {
+	        ByteBuffer bb = ByteBuffer.allocateDirect(arr.length*4);
+	        bb.order(ByteOrder.nativeOrder());
+	        FloatBuffer fb = bb.asFloatBuffer();
+	        fb.put(arr);
+	        fb.position(0);
+	        return fb;
+	    }
 	
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -163,7 +172,7 @@ public class LostRenderer implements Renderer
 		{
 			for (int j = 0 ; j < currentGame.getCurrentMap().getMapDepth() ; j++)
 			{
-				gamePlate[i][j] = FloatBuffer.wrap(new float[]{i    , 0 , -j,
+				gamePlate[i][j] = makeFloatBuffer(new float[]{i    , 0 , -j,
 						                                      i+1  ,  0 , -j,
 						                                      i+1, 0, -j-1,
 						                                      i, 0 , -j-1});
@@ -197,7 +206,12 @@ public class LostRenderer implements Renderer
 		}
 		
 		for (int i = 0 ; i < currentGame.getCurrentMap().getNbCubes() ; i++)
-		{		
+		{
+			if (currentGame.getCube(i).isVisible() == false)
+			{
+				continue;
+			}
+			
 			gl.glPushMatrix();
 			
 			gl.glTranslatef(currentGame.getCube(i).getX() + 0.5f, 0.5f, currentGame.getCube(i).getZ());
@@ -214,6 +228,7 @@ public class LostRenderer implements Renderer
 			}
 			
 			gl.glPopMatrix();
+			
 		}
 		
 		gl.glPushMatrix();
