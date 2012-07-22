@@ -27,12 +27,10 @@ public class Key implements OnKeyListener
 	
 		if (event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			Log.i("KEY", "Keydown event");
-
 
 			if (event.getKeyCode()  == KeyEvent.KEYCODE_DPAD_LEFT)
 			{
-				Log.i("KEY", "Going left");
+				//Log.i("KEY", "Going left");
 				//LostRenderer.camX -= 0.2;
 				game.getHero().setDirection(Hero.DIRECTION_LEFT);
 
@@ -40,7 +38,7 @@ public class Key implements OnKeyListener
 			 
 			if (event.getKeyCode()  == KeyEvent.KEYCODE_DPAD_RIGHT)
 			{
-				Log.i("KEY", "Going right");
+				//Log.i("KEY", "Going right");
 				//LostRenderer.camX += 0.2;
 				game.getHero().setDirection(Hero.DIRECTION_RIGHT);
 				
@@ -48,14 +46,14 @@ public class Key implements OnKeyListener
 
 			if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP)
 			{
-				Log.i("KEY", "Going up");
+				//Log.i("KEY", "Going up");
 				//LostRenderer.camZ -= 0.2;
 				game.getHero().setDirection(Hero.DIRECTION_UP);
 			}
 			
 			if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN)
 			{
-				Log.i("KEY", "Going down");
+				//Log.i("KEY", "Going down");
 				//LostRenderer.camZ += 0.2;
 				game.getHero().setDirection(Hero.DIRECTION_DOWN);
 			}

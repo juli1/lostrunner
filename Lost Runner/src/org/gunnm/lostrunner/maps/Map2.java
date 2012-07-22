@@ -1,6 +1,6 @@
 package org.gunnm.lostrunner.maps;
 
-public class Map1 implements MapInterface {
+public class Map2 implements MapInterface {
 
 	private int NB_CUBES = 5;
 	
@@ -12,7 +12,7 @@ public class Map1 implements MapInterface {
 	private int exitPositionX;
 	private int exitPositionZ;
 	
-	public Map1()
+	public Map2()
 	{
 		cubesPositions = new int[NB_CUBES][2];
 		for (int i = 0 ; i < NB_CUBES ; i++)
@@ -20,11 +20,11 @@ public class Map1 implements MapInterface {
 			cubesPositions[i][0] = i;
 			cubesPositions[i][1] = -MAP_DEPTH + i;
 		}
-		this.heroPositionX = 2;
-		this.heroPositionZ = -4;
+		this.heroPositionX = 3;
+		this.heroPositionZ = -3;
 		
 
-		this.exitPositionX = 4;
+		this.exitPositionX = 1;
 		this.exitPositionZ = -MAP_DEPTH;
 	}	
 

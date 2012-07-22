@@ -12,6 +12,7 @@ public class Hero {
 	public final static int DIRECTION_RIGHT = 2;
 	public final static int DIRECTION_UP = 3;
 	public final static int DIRECTION_DOWN = 4;
+	private int nbLifes;
 	
 	public Hero()
 	{
@@ -29,6 +30,17 @@ public class Hero {
 		posY = y;
 		posZ = z;
 		currentDirection = DIRECTION_NONE;
+		nbLifes = 3;
+	}
+	
+	public int getNbLifes ()
+	{
+		return this.nbLifes;
+	}
+	
+	public void setNbLifes (int n)
+	{
+		this.nbLifes = n;
 	}
 	
 	public void setDirection (int d)

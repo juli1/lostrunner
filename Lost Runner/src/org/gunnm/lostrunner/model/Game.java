@@ -60,10 +60,28 @@ public class Game {
 	
 	public boolean detectCollision ()
 	{
+		Cube cube;
+		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
+		{
+			cube = cubes[i];
+			if ((hero.getX() > cube.getX()) &&
+			    (hero.getX() < cube.getX()+1))
+			{
+				//Log.i ("Game", "Potential Collision with cube " + i); 
+				
+				if ((hero.getZ() > cube.getZ() ) &&
+				   (hero.getZ() < cube.getZ() + 1))
+				{  
+					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+					Log.i ("Game", "Collision");
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	
-	
+	 
 	public boolean detectEndOfLevel ()
 	{
 		//Log.i ("Game" , "HeroX="+hero.getX()+";heroZ="+hero.getZ()+";exitX"+currentMap.getExitPositionX()+";exitZ="+currentMap.getExitPositionZ());
@@ -97,6 +115,15 @@ public class Game {
 		long currentTime;
 		long period;
 		boolean endLevel;
+		boolean collision;
+		
+		endLevel = false;
+		collision = false;
+		
+		if (hero.getNbLifes() <= 0)
+		{
+			return;
+		}
 		
 		currentTime  = Calendar.getInstance().getTimeInMillis();
 		period = currentTime - lastTime;
@@ -174,7 +201,12 @@ public class Game {
 			}
 		}
 		
-		detectCollision ();
+		collision = detectCollision ();
+		if (collision)
+		{
+			hero.setNbLifes(hero.getNbLifes() - 1); 
+			loadMap (currentMap);
+		}
 	
 		lastTime = currentTime;
 		
