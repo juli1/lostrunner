@@ -157,7 +157,7 @@ public class Touch implements OnTouchListener {
 			
 			if ( (posX > zoneBullet[0]) && (posX < zoneBullet[1]) && (posY > zoneBullet[2]) && (posY < zoneBullet[3]) )
 			{
-				//Log.i(TAG, "Bullet");
+				Log.i(TAG, "Bullet");
 				currentGame.enableShoot();
 				return true;
 			}

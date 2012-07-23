@@ -24,7 +24,7 @@ public class Game {
 	private final static Class[] maps = {Map1.class, Map2.class};
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
-	
+	private boolean[][] destroyed;
 	
 	
 	private void loadMap (MapInterface map)
@@ -38,15 +38,17 @@ public class Game {
 			cubes[i] = new Cube (map.getCubePositionX(i), map.getCubePositionZ(i));
 		}
 		
-		hasBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
+		hasBomb    = new boolean[map.getMapWidth()][map.getMapDepth()];
 		hasBigBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
+		destroyed  = new boolean[map.getMapWidth()][map.getMapDepth()];
 		
 		for (int i = 0 ; i < map.getMapWidth() ; i++)
 		{
-			for (int j = 0 ; j < map.getMapWidth() ; j++)
+			for (int j = 0 ; j < map.getMapDepth() ; j++)
 			{
 				hasBomb[i][j] 		= false;
 				hasBigBomb[i][j] 	= false;
+				destroyed[i][j] 	= false;
 			}	
 		}
 		
@@ -79,6 +81,39 @@ public class Game {
 	public boolean detectCollision ()
 	{
 		Cube cube;
+		int cubeCoarsePosX;
+		int cubeCoarsePosZ;
+		int heroCoarsePosX;
+		int heroCoarsePosZ;
+		
+		heroCoarsePosX = (int)Math.floor( (double)hero.getX());
+		heroCoarsePosZ = (int)Math.floor( (double) ( -1 * hero.getZ()));
+		
+		if (heroCoarsePosX >= currentMap.getMapWidth())
+		{
+			heroCoarsePosX = currentMap.getMapWidth() - 1;
+		}
+		if (heroCoarsePosX < 0)
+		{
+			heroCoarsePosX = 0;
+		}
+		
+		if (heroCoarsePosZ >= currentMap.getMapDepth())
+		{
+			heroCoarsePosZ = currentMap.getMapDepth() - 1;
+		}
+
+		if (heroCoarsePosZ < 0)
+		{
+			heroCoarsePosZ = 0;
+		}
+		
+		//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";heroCoarseX="+ heroCoarsePosX + ";heroCoarseZ=" + heroCoarsePosZ);
+		if (destroyed[heroCoarsePosX][heroCoarsePosZ])
+		{
+			return true;
+		}
+		
 		//Log.i("GAME", "try to detect collision, heroX = "  + hero.getX() + "heroZ=" + hero.getZ());
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
@@ -99,6 +134,18 @@ public class Game {
 					return true;
 				}
 			}
+			cubeCoarsePosX = (int)Math.floor( (double)cube.getX());
+			cubeCoarsePosZ = (int)Math.floor( (double) ( -1 * cube.getZ()));
+			//Log.i ("Game", "CubeCoarseX="+ cubeCoarsePosX + ";cubeCoarseZ="+cubeCoarsePosZ + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+			if ((hasBomb(cubeCoarsePosX, cubeCoarsePosZ)) || (hasBigBomb(cubeCoarsePosX, cubeCoarsePosZ)))
+			{
+				cube.setActive(false);
+				cube.setVisible(false);
+				if (hasBigBomb(cubeCoarsePosX, cubeCoarsePosZ))
+				{
+					destroyed[cubeCoarsePosX][cubeCoarsePosZ] = true;
+				}
+			}
 		}
 		return false;
 	}
@@ -112,7 +159,7 @@ public class Game {
 			if ( (hero.getX() > currentMap.getExitPositionX()) &&
 				 (hero.getX() < currentMap.getExitPositionX() + 1) &&
 				 (hero.getZ() <= currentMap.getExitPositionZ()))
-			{
+			{ 
 //				Log.i ("Game" , "End of gane");
 				return true;
 			}
@@ -131,6 +178,15 @@ public class Game {
 		return false;
 	}
 	
+	public boolean isActive ()
+	{
+		if (hero.getNbLifes() <= 0)
+		{
+			return false;
+		}
+		
+		return true;
+	}
 	
 	public void update ()
 	{
@@ -144,7 +200,7 @@ public class Game {
 		endLevel = false;
 		collision = false;
 		
-		if (hero.getNbLifes() <= 0)
+		if (this.isActive() == false)
 		{
 			return;
 		}
@@ -262,8 +318,12 @@ public class Game {
 		x = (int)Math.floor((double)hero.getX());
 		z = (int)Math.floor((double) ( -1 * hero.getZ()));
 		Log.i("GAME", "try to put bomb at x=" + x + ";z="+z);
-		try {
-			hasBomb[x][z] = true;
+		try 
+		{
+			if ( ! hasBigBomb[x][z])
+			{
+				hasBomb[x][z] = true;
+			}
 		}
 		catch (Exception e)
 		{
@@ -273,12 +333,101 @@ public class Game {
 	
 	public void enableBigBomb ()
 	{
+		int x;
+		int z;
 		
+		x = (int)Math.floor((double)hero.getX());
+		z = (int)Math.floor((double) ( -1 * hero.getZ()));
+		Log.i("GAME", "try to put big bomb at x=" + x + ";z="+z);
+		try {
+			if ( ! hasBomb[x][z])
+			{
+				hasBigBomb[x][z] = true;
+			}
+		}
+		catch (Exception e)
+		{
+			
+		}
 	}
 	
 	public void enableShoot ()
 	{
+		Cube cube;
+		Cube toDestroy;
 		
+		toDestroy = null;
+		
+		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
+		{
+			cube = cubes[i];
+			if (cube.isVisible() == false)
+				continue;
+			
+
+			
+			if ((hero.getX() > cube.getX()) &&
+			    (hero.getX() <= cube.getX()+1))
+			    
+			{
+				Log.i("Game", "Cube at posX" + cube.getX() + ";posZ=" + cube.getZ());
+				//(cube.getZ() < hero.getZ())
+				if (toDestroy == null)
+				{
+					toDestroy = cubes[i];
+				} 
+				else
+				{
+					if (toDestroy.getZ() < cubes[i].getZ())
+					{
+						toDestroy = cubes[i];
+					}
+				} 
+			}		
+		}
+		
+		if (toDestroy != null)
+		{
+			Log.i("Game", "Destroy cube at posX" + toDestroy.getX() + ";posZ=" + toDestroy.getZ());
+			toDestroy.setVisible(false);
+			toDestroy.setActive(false);
+		}
+	}
+	
+	public boolean hasBomb (int x, int z)
+	{
+		try
+		{
+			return hasBomb[x][z];
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean hasBigBomb (int x, int z)
+	{
+		try
+		{
+			return hasBigBomb[x][z];
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean isDestroyed (int x, int z)
+	{
+		try
+		{
+			return destroyed[x][z];
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			return false;
+		}
 	}
 	
 }

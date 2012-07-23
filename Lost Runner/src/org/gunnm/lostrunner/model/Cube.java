@@ -6,6 +6,7 @@ public class Cube {
 	private float posY;
 	private float rotation;
 	private boolean visible;
+	private boolean active;
 	
 	public Cube (int x, int z)
 	{
@@ -19,6 +20,7 @@ public class Cube {
 		this.posY = y;
 		this.rotation = 0;
 		this.visible = true;
+		this.active = true;
 	}
 
 	
@@ -70,5 +72,15 @@ public class Cube {
 	public boolean isVisible ()
 	{
 		return this.visible;
+	}
+	
+	public void setActive (boolean b)
+	{
+		this.active = b;
+	}
+	
+	public boolean getActive ()
+	{
+		return (this.active);
 	}
 }

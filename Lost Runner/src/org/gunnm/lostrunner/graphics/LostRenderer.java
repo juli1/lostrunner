@@ -193,6 +193,24 @@ public class LostRenderer implements Renderer
 		{
 			for (int j = 0 ; j < currentGame.getCurrentMap().getMapDepth() ; j++)
 			{
+				if (currentGame.isDestroyed(i, j))
+				{
+					continue;
+				}
+				
+				gl.glColor4f(1, 0, 0, 0.5f);
+				
+				if (currentGame.hasBigBomb(i, j))
+				{
+					gl.glColor4f(1, 0.5f, 0.5f, 0.5f);	
+				}
+				
+				if (currentGame.hasBomb(i, j))
+				{
+					gl.glColor4f(1, 0.2f, 0.2f, 0.5f);	
+				}
+					
+				
 				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, gamePlate[i][j]);
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
