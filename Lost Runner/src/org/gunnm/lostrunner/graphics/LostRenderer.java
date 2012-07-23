@@ -25,14 +25,11 @@ import android.util.Log;
 public class LostRenderer implements Renderer 
 {
 	private static FloatBuffer[][] gamePlate;
-	public static float camX = 0;
-	public static float camY = 0;
-	public static float camZ = 0;
-	public static float toviewX = 0;
-	public static float toviewY = 0;
-	public static float toviewZ = 0;
-	private int textures[];
-	private static final int NB_TEXTURES = 8;
+	public float camX = 0;
+	public float camY = 0;
+	public float camZ = 0;
+	public float camAngle;
+
 	private static FloatBuffer[] cubeVertexBfr;
 	private static FloatBuffer doorVertexBfr;
 	private static FloatBuffer heroVertexBfr;
@@ -50,19 +47,15 @@ public class LostRenderer implements Renderer
 	public LostRenderer (Context c, Game g)
 	{
 		super ();
-		this.textures = new int[NB_TEXTURES];
 		this.currentGame = g;
 		this.context = c;
 		this.startTime = Calendar.getInstance().getTimeInMillis();
 		this.nbFrames = 0;
 		
-		camX = g.getCurrentMap().getMapWidth();
-		camY = 4;
-		camZ = 3;
-		
-		toviewX = g.getCurrentMap().getMapWidth() / 2;
-		toviewY = 0;
-		toviewZ = -1 * g.getCurrentMap().getMapDepth() / 2;
+		camX = 7;
+		camY = 4.5f;
+		camZ = 2;
+		camAngle = -45;
 		
 		cubeVertexBfr = new FloatBuffer[6];
 		
@@ -188,10 +181,12 @@ public class LostRenderer implements Renderer
 	      gl.glLoadIdentity();              
 
 	      currentGame.update();
-		
-		GLU.gluLookAt(gl, camX , camY, camZ , 
-						  toviewX, toviewY, toviewZ, 
-						  0, 1, 0);
+
+	  	
+	      gl.glRotatef(20, 1, 0, 0);
+	      gl.glRotatef(camAngle, 0, 1, 0);
+		  gl.glTranslatef(-camX, -camY, -camZ);
+			
 
 		gl.glColor4f(1, 0, 0, 0.5f);
 		for (int i = 0 ; i < currentGame.getCurrentMap().getMapWidth() ; i++)
@@ -266,6 +261,11 @@ public class LostRenderer implements Renderer
 	      gl.glDisable( GL10.GL_BLEND ); 
 	      */
 		
+		
+	    //gl.glTranslatef(toviewX, toviewY, toviewZ);
+//	    gl.glRotatef(45, 0, 1, 0);
+	   
+
 		if (this.showFPS)
 		{
 			this.nbFrames = this.nbFrames + 1;
@@ -295,5 +295,64 @@ public class LostRenderer implements Renderer
 		GLU.gluPerspective(gl,90.0f, (float)width / (float)height , 0.1f, 100.0f);
 	}
 	
+	
+	public void moveLeft ()
+	{
+		if (this.camAngle >= 45)
+		{
+			return;
+		}
+			if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
+			{
+				Log.i("CAM", "first case");
+				this.camAngle = this.camAngle + 2;
+				this.camX     = this.camX - 0.2f;
+				this.camZ     = this.camZ - 0.1f;
+			}
+			else
+			{
+				Log.i("CAM", "second case");
+				this.camAngle = this.camAngle + 2;
+				this.camX     = this.camX - 0.2f;
+				this.camZ     = this.camZ + 0.1f;
+			}
+		
+		
+	}
+	
+	public void moveRight ()
+	{
+		if (this.camAngle <= -45)
+		{
+			return;
+		}
+		
+			if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
+			{
+				Log.i("CAM", "first case");
+				this.camAngle = this.camAngle - 2;
+				this.camX     = this.camX + 0.2f;
+				this.camZ     = this.camZ + 0.1f;
+			}
+			else
+			{
+				Log.i("CAM", "second case");
+				this.camAngle = this.camAngle - 2;
+				this.camX     = this.camX + 0.2f;
+				this.camZ     = this.camZ - 0.1f;
+			}
+		
+	} 
+	
+	public void zoomIn ()
+	{
+		this.camZ = this.camZ - 0.2f;
+	}
 
+
+	public void zoomOut ()
+	{
+		this.camZ = this.camZ + 0.2f; 
+	}
+	
 }

@@ -61,19 +61,23 @@ public class Game {
 	public boolean detectCollision ()
 	{
 		Cube cube;
+		//Log.i("GAME", "try to detect collision, heroX = "  + hero.getX() + "heroZ=" + hero.getZ());
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
 			cube = cubes[i];
+			if (cube.isVisible() == false)
+				continue;
+			
 			if ((hero.getX() > cube.getX()) &&
-			    (hero.getX() < cube.getX()+1))
+			    (hero.getX() <= cube.getX()+1))
 			{
 				//Log.i ("Game", "Potential Collision with cube " + i); 
 				
 				if ((hero.getZ() > cube.getZ() ) &&
 				   (hero.getZ() < cube.getZ() + 1.5f))
 				{  
-					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
-					Log.i ("Game", "Collision");
+					//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+					//Log.i ("Game", "Collision");
 					return true;
 				}
 			}
@@ -116,6 +120,8 @@ public class Game {
 		long period;
 		boolean endLevel;
 		boolean collision;
+		
+		
 		
 		endLevel = false;
 		collision = false;

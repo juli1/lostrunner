@@ -1,8 +1,8 @@
 package org.gunnm.lostrunner;
 
 import org.gunnm.lostrunner.controller.Key;
+import org.gunnm.lostrunner.controller.Touch;
 import org.gunnm.lostrunner.graphics.LostRenderer;
-import org.gunnm.lostrunner.maps.Map1;
 import org.gunnm.lostrunner.model.Game;
 
 import android.app.Activity;
@@ -41,6 +41,7 @@ public class LostRunner extends Activity {
         renderer = new LostRenderer(this, game);
         surface.setRenderer(renderer);
         surface.setOnKeyListener(new Key(renderer, game));
+        surface.setOnTouchListener(new Touch(this, renderer, game));
         surface.setFocusable(true);
         setContentView(surface);
     }

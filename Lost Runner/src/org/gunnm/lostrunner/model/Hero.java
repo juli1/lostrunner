@@ -13,6 +13,9 @@ public class Hero {
 	public final static int DIRECTION_UP = 3;
 	public final static int DIRECTION_DOWN = 4;
 	private int nbLifes;
+	private int nbBombs;
+	private int nbBigBombs;
+	private int nbBullets;
 	
 	public Hero()
 	{
@@ -26,11 +29,45 @@ public class Hero {
 	
 	public Hero (float x, float y, float z)
 	{
-		posX = x;
-		posY = y;
-		posZ = z;
-		currentDirection = DIRECTION_NONE;
-		nbLifes = 3;
+		posX 				= x;
+		posY 				= y;
+		posZ 				= z;
+		currentDirection 	= DIRECTION_NONE;
+		nbLifes 			= 3;
+		nbBullets			= 0;
+		nbBigBombs			= 0;
+		nbBombs				= 0;
+	}
+	
+	
+	public int getNbBombs ()
+	{
+		return this.nbBombs;
+	}
+	
+	public int getNbBigBombs ()
+	{
+		return this.nbBigBombs;
+	}
+	
+	public int getNbBullets ()
+	{
+		return this.nbBullets;
+	}
+	
+	public void setNbBombs  (int n)
+	{
+		this.nbBombs = n;
+	}
+	
+	public void setNbBigBombs (int n)
+	{
+		this.nbBigBombs = n;
+	}
+	
+	public void setNbBullets (int n)
+	{
+		this.nbBullets = n;
 	}
 	
 	public int getNbLifes ()
