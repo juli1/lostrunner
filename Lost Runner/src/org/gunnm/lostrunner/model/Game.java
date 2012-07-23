@@ -193,7 +193,7 @@ public class Game {
 		
 		if (endLevel)
 		{
-			if (currentMapIndex < NB_MAPS)
+			if (currentMapIndex < NB_MAPS - 1)
 			{
 				currentMapIndex = currentMapIndex + 1;
 				try {
