@@ -315,6 +315,11 @@ public class Game {
 		int x;
 		int z;
 		
+		if (hero.getNbBombs() <= 0)
+		{
+			return;
+		}
+		
 		x = (int)Math.floor((double)hero.getX());
 		z = (int)Math.floor((double) ( -1 * hero.getZ()));
 		Log.i("GAME", "try to put bomb at x=" + x + ";z="+z);
@@ -322,6 +327,7 @@ public class Game {
 		{
 			if ( ! hasBigBomb[x][z])
 			{
+				hero.setNbBombs(hero.getNbBombs() - 1);
 				hasBomb[x][z] = true;
 			}
 		}
@@ -336,12 +342,18 @@ public class Game {
 		int x;
 		int z;
 		
+		if (hero.getNbBigBombs() <= 0)
+		{
+			return;
+		}
+		
 		x = (int)Math.floor((double)hero.getX());
 		z = (int)Math.floor((double) ( -1 * hero.getZ()));
 		Log.i("GAME", "try to put big bomb at x=" + x + ";z="+z);
 		try {
 			if ( ! hasBomb[x][z])
 			{
+				hero.setNbBigBombs(hero.getNbBigBombs() - 1);
 				hasBigBomb[x][z] = true;
 			}
 		}
@@ -357,6 +369,11 @@ public class Game {
 		Cube toDestroy;
 		
 		toDestroy = null;
+		
+		if (hero.getNbBullets() <= 0)
+		{
+			return;
+		}
 		
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
@@ -391,6 +408,8 @@ public class Game {
 			Log.i("Game", "Destroy cube at posX" + toDestroy.getX() + ";posZ=" + toDestroy.getZ());
 			toDestroy.setVisible(false);
 			toDestroy.setActive(false);
+			hero.setNbBullets (hero.getNbBullets() - 1);
+
 		}
 	}
 	
