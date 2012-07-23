@@ -54,6 +54,9 @@ public class LostRenderer implements Renderer
 	private int currentCameraZoom;
 	private int currentCameraMove;
 	
+	private int screenWidth;
+	private int screenHeight;
+	
 	public void disableCameraMove ()
 	{
 		this.currentCameraMove 	= CAMERA_MOVE_NONE;
@@ -210,14 +213,38 @@ public class LostRenderer implements Renderer
 			this.updateZoom();
 		}
 
+
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+		
+		
 		
 	      gl.glMatrixMode( GL10.GL_MODELVIEW );       
 	      gl.glLoadIdentity();              
 
+	      
+	      /* Start text stuff */
+	      gl.glPushMatrix();
+			gl.glTranslatef(-120, 150, -200);
+			  gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+		      gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+		      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
+		      // TEST: render the entire font texture
+		      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
+
+		      // TEST: render some strings with the font
+		      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
+		      glText.draw( "Lifes: " + currentGame.getHero().getNbLifes(), 0, 20 );          // Draw Test String
+		      glText.draw( "Bullets: " + currentGame.getHero().getNbBullets(), 150, 20 );          // Draw Test String
+		      glText.draw( "SuperBombs: " + currentGame.getHero().getNbBigBombs(), 0, 0 );          // Draw Test String
+		      glText.draw( "Bombs: " + currentGame.getHero().getNbBombs(), 150, 0 );          // Draw Test String
+		      glText.end(); 
+		      gl.glDisable( GL10.GL_BLEND);
+		      gl.glDisable( GL10.GL_TEXTURE_2D);
+		      gl.glPopMatrix();
+	      /* end of text stuff */
 	      currentGame.update();
 
-	  	
+	      /* Camera stuff */
 	      gl.glRotatef(20, 1, 0, 0);
 	      gl.glRotatef(camAngle, 0, 1, 0);
 		  gl.glTranslatef(-camX, -camY, -camZ);
@@ -296,29 +323,9 @@ public class LostRenderer implements Renderer
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glPopMatrix();
-		 
-		  /* For text import
-	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
-	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
-	      // TEST: render the entire font texture
-	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-
-	      // TEST: render some strings with the font
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Test String :)", 0, 0 );          // Draw Test String
-	      glText.draw( "Line 1", 50, 50 );                // Draw Test String
-	      glText.draw( "Line 2", 100, 100 );              // Draw Test String
-	      glText.end();
-	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-	      gl.glDisable( GL10.GL_BLEND ); 
-	      */
 		
-		
-	    //gl.glTranslatef(toviewX, toviewY, toviewZ);
-//	    gl.glRotatef(45, 0, 1, 0);
-	   
 
+		
 		if (this.showFPS)
 		{
 			this.nbFrames = this.nbFrames + 1;
@@ -336,16 +343,22 @@ public class LostRenderer implements Renderer
 	}  
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
+		this.screenWidth  = width;
+		this.screenHeight = height;
+		
 		if (height == 0)
 		{
 			height = 1;
 		}
 	    // Setup orthographic projection
-	    gl.glMatrixMode( GL10.GL_PROJECTION );          // Activate Projection Matrix
+		
+	    gl.glMatrixMode( GL10.GL_PROJECTION );       
 		gl.glViewport(0, 0, width, height);
 		
 		gl.glLoadIdentity();
-		GLU.gluPerspective(gl,90.0f, (float)width / (float)height , 0.1f, 100.0f);
+		GLU.gluPerspective(gl,90.0f, (float)width / (float)height , 0.1f, 200.0f);
+		
+
 	}
 	
 	
