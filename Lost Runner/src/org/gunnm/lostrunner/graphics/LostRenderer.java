@@ -43,14 +43,39 @@ public class LostRenderer implements Renderer
 	private Game currentGame;
 	private GLText glText;
 	
+	private final static int CAMERA_ZOOM_IN   = 1;
+	private final static int CAMERA_ZOOM_OUT  = 2;
+	private final static int CAMERA_ZOOM_NONE = 3;
+	
+	private final static int CAMERA_MOVE_LEFT   = 1;
+	private final static int CAMERA_MOVE_RIGHT  = 2;
+	private final static int CAMERA_MOVE_NONE   = 3;
+	
+	private int currentCameraZoom;
+	private int currentCameraMove;
+	
+	public void disableCameraMove ()
+	{
+		this.currentCameraMove 	= CAMERA_MOVE_NONE;
+	}
+	
+	public void disableCameraZoom ()
+	{
+		this.currentCameraZoom 	= CAMERA_ZOOM_NONE;
+	}
+	
+	
+	
 	
 	public LostRenderer (Context c, Game g)
 	{
 		super ();
-		this.currentGame = g;
-		this.context = c;
-		this.startTime = Calendar.getInstance().getTimeInMillis();
-		this.nbFrames = 0;
+		this.currentCameraMove 	= CAMERA_MOVE_NONE;
+		this.currentCameraZoom	= CAMERA_ZOOM_NONE;
+		this.currentGame 		= g;
+		this.context 			= c;
+		this.startTime 			= Calendar.getInstance().getTimeInMillis();
+		this.nbFrames 			= 0;
 		
 		camX = 7;
 		camY = 4.5f;
@@ -174,6 +199,16 @@ public class LostRenderer implements Renderer
 	}
 
 	public void onDrawFrame(GL10 gl) {
+		
+		if (this.currentCameraMove != CAMERA_MOVE_NONE)
+		{
+			this.updateMove();
+		}
+		
+		if (this.currentCameraZoom != CAMERA_ZOOM_NONE)
+		{
+			this.updateZoom();
+		}
 
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
@@ -316,61 +351,101 @@ public class LostRenderer implements Renderer
 	
 	public void moveLeft ()
 	{
-		if (this.camAngle >= 45)
-		{
-			return;
-		}
-			if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
-			{
-				Log.i("CAM", "first case");
-				this.camAngle = this.camAngle + 2;
-				this.camX     = this.camX - 0.2f;
-				this.camZ     = this.camZ - 0.1f;
-			}
-			else
-			{
-				Log.i("CAM", "second case");
-				this.camAngle = this.camAngle + 2;
-				this.camX     = this.camX - 0.2f;
-				this.camZ     = this.camZ + 0.1f;
-			}
-		
-		
+
+		this.currentCameraMove = CAMERA_MOVE_LEFT;
 	}
 	
 	public void moveRight ()
 	{
-		if (this.camAngle <= -45)
-		{
-			return;
-		}
-		
-			if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
-			{
-				Log.i("CAM", "first case");
-				this.camAngle = this.camAngle - 2;
-				this.camX     = this.camX + 0.2f;
-				this.camZ     = this.camZ + 0.1f;
-			}
-			else
-			{
-				Log.i("CAM", "second case");
-				this.camAngle = this.camAngle - 2;
-				this.camX     = this.camX + 0.2f;
-				this.camZ     = this.camZ - 0.1f;
-			}
-		
+
+		this.currentCameraMove = CAMERA_MOVE_RIGHT;
 	} 
 	
 	public void zoomIn ()
 	{
-		this.camZ = this.camZ - 0.2f;
+		this.currentCameraZoom = CAMERA_ZOOM_IN;
+		
+		
 	}
 
 
 	public void zoomOut ()
 	{
+		this.currentCameraZoom = CAMERA_ZOOM_OUT;
 		this.camZ = this.camZ + 0.2f; 
+	}
+	
+	
+	public void updateMove ()
+	{
+		switch (this.currentCameraMove)
+		{
+			case CAMERA_MOVE_LEFT:
+			{
+				if (this.camAngle >= 45)
+				{
+					return;
+				}
+					if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
+					{
+						//Log.i("CAM", "first case");
+						this.camAngle = this.camAngle + 2;
+						this.camX     = this.camX - 0.2f;
+						this.camZ     = this.camZ - 0.1f;
+					}
+					else
+					{
+						//Log.i("CAM", "second case");
+						this.camAngle = this.camAngle + 2;
+						this.camX     = this.camX - 0.2f;
+						this.camZ     = this.camZ + 0.1f;
+					}
+					break;
+			}
+			
+			case CAMERA_MOVE_RIGHT:
+			{
+				if (this.camAngle <= -45)
+				{
+					return;
+				}
+				
+				if (camX < this.currentGame.getCurrentMap().getMapWidth() / 2)
+				{
+					//Log.i("CAM", "first case");
+					this.camAngle = this.camAngle - 2;
+					this.camX     = this.camX + 0.2f;
+					this.camZ     = this.camZ + 0.1f;
+				}
+				else
+				{
+					//Log.i("CAM", "second case");
+					this.camAngle = this.camAngle - 2;
+					this.camX     = this.camX + 0.2f;
+					this.camZ     = this.camZ - 0.1f;
+				}
+				break;
+			}
+		}
+	}
+	
+	
+	public void updateZoom ()
+	{
+		switch (this.currentCameraZoom)
+		{
+			case CAMERA_ZOOM_IN:
+			{
+				this.camZ = this.camZ - 0.2f;
+				break;
+			}
+			
+			case CAMERA_ZOOM_OUT:
+			{
+				this.camZ = this.camZ + 0.2f;
+				break;
+			}
+		}
 	}
 	
 }

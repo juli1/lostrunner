@@ -122,6 +122,13 @@ public class Touch implements OnTouchListener {
 	{
 		float posX;
 		float posY;
+		if (event.getAction() == MotionEvent.ACTION_UP)
+		{
+			currentGame.getHero().setDirection(Hero.DIRECTION_NONE);
+			renderer.disableCameraZoom();
+			renderer.disableCameraMove();
+		}
+		
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
 			
@@ -131,14 +138,14 @@ public class Touch implements OnTouchListener {
 			if ( (posX > zoneMoveLeft[0]) && (posX < zoneMoveLeft[1]) && (posY > zoneMoveLeft[2]) && (posY < zoneMoveLeft[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_LEFT);
-				//Log.i(TAG, "Move left");
+				Log.i(TAG, "Move left");
 				return true;
 			}
 			
 			if ( (posX > zoneMoveRight[0]) && (posX < zoneMoveRight[1]) && (posY > zoneMoveRight[2]) && (posY < zoneMoveRight[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_RIGHT);
-				//Log.i(TAG, "Move right");
+				Log.i(TAG, "Move right");
 				return true;
 			}
 
@@ -151,7 +158,7 @@ public class Touch implements OnTouchListener {
 			if ( (posX > zoneMoveDown[0]) && (posX < zoneMoveDown[1]) && (posY > zoneMoveDown[2]) && (posY < zoneMoveDown[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_DOWN);
-				//Log.i(TAG, "Move down");
+				Log.i(TAG, "Move down");
 				return true;
 			}
 			

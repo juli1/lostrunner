@@ -58,6 +58,11 @@ public class Game {
 	
 	public Game()
 	{
+		this.reset ();
+	}
+	
+	public void reset ()
+	{
 
 		MapInterface firstMap = null;
 		try {
@@ -230,7 +235,7 @@ public class Game {
 				if (hero.getX() >= 0)
 				{
 					hero.setX(hero.getX() - ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					hero.setDirection(Hero.DIRECTION_NONE); 
+					//hero.setDirection(Hero.DIRECTION_NONE); 
 					
 				}
 				break;
@@ -240,7 +245,7 @@ public class Game {
 				if (hero.getX() < currentMap.getMapWidth() - 1 )
 				{
 					hero.setX(hero.getX() +   ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					hero.setDirection(Hero.DIRECTION_NONE); 
+					//hero.setDirection(Hero.DIRECTION_NONE); 
 					
 				}
 				break;
@@ -250,7 +255,7 @@ public class Game {
 				if (hero.getZ() > - currentMap.getMapDepth() )
 					{
 					hero.setZ(hero.getZ() -  ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					hero.setDirection(Hero.DIRECTION_NONE); 
+					//hero.setDirection(Hero.DIRECTION_NONE); 
 					
 				}
 				break;
@@ -260,7 +265,7 @@ public class Game {
 				if (hero.getZ() < 0)
 				{
 					hero.setZ(hero.getZ() +  ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					hero.setDirection(Hero.DIRECTION_NONE); 
+					//hero.setDirection(Hero.DIRECTION_NONE); 
 					
 				
 				}
@@ -384,11 +389,12 @@ public class Game {
 
 			
 			if ((hero.getX() > cube.getX()) &&
-			    (hero.getX() <= cube.getX()+1))
+			    (hero.getX() <= cube.getX()+1) &&
+			    (cube.getZ() < hero.getZ())) 
 			    
 			{
-				Log.i("Game", "Cube at posX" + cube.getX() + ";posZ=" + cube.getZ());
-				//(cube.getZ() < hero.getZ())
+				//Log.i("Game", "Cube at posX" + cube.getX() + ";posZ=" + cube.getZ());
+				
 				if (toDestroy == null)
 				{
 					toDestroy = cubes[i];
@@ -405,7 +411,7 @@ public class Game {
 		
 		if (toDestroy != null)
 		{
-			Log.i("Game", "Destroy cube at posX" + toDestroy.getX() + ";posZ=" + toDestroy.getZ());
+			//Log.i("Game", "Destroy cube at posX" + toDestroy.getX() + ";posZ=" + toDestroy.getZ());
 			toDestroy.setVisible(false);
 			toDestroy.setActive(false);
 			hero.setNbBullets (hero.getNbBullets() - 1);

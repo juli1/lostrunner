@@ -20,7 +20,7 @@ public class LostRunner extends Activity {
 	private boolean 		fullScreen = false;
 	private GLSurfaceView 	surface;
 	private LostRenderer	renderer;
-	
+	private Game			currentGame;
 	private GestureDetector gestureDetector;
 	private static boolean 	fullscreen;
 	 
@@ -33,15 +33,15 @@ public class LostRunner extends Activity {
         	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         	WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
-        Game game = new Game ();
+        currentGame = new Game ();
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
         surface = new GLSurfaceView(this);
        
-        renderer = new LostRenderer(this, game);
+        renderer = new LostRenderer(this, currentGame);
         surface.setRenderer(renderer);
-        surface.setOnKeyListener(new Key(renderer, game));
-        surface.setOnTouchListener(new Touch(this, renderer, game));
+        surface.setOnKeyListener(new Key(renderer, currentGame));
+        surface.setOnTouchListener(new Touch(this, renderer, currentGame));
         surface.setFocusable(true);
         setContentView(surface);
     }
@@ -60,6 +60,10 @@ public class LostRunner extends Activity {
 	protected void onResume() {
 		super.onResume();
 		surface.onResume();
+		if (currentGame.isActive() == false)
+		{
+			currentGame.reset ();
+		}
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
