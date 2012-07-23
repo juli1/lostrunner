@@ -158,22 +158,26 @@ public class Touch implements OnTouchListener {
 			if ( (posX > zoneBullet[0]) && (posX < zoneBullet[1]) && (posY > zoneBullet[2]) && (posY < zoneBullet[3]) )
 			{
 				//Log.i(TAG, "Bullet");
+				currentGame.enableShoot();
 				return true;
 			}
 			if ( (posX > zoneBomb[0]) && (posX < zoneBomb[1]) && (posY > zoneBomb[2]) && (posY < zoneBomb[3]) )
 			{
 				Log.i(TAG, "Bomb");
+				currentGame.enableBomb();
 				return true;
 			}
 			if ( (posX > zoneBigBomb[0]) && (posX < zoneBigBomb[1]) && (posY > zoneBigBomb[2]) && (posY < zoneBigBomb[3]) )
 			{
 				//Log.i(TAG, "BigBomb");
+				currentGame.enableBigBomb();
 				return true;
 			}
 			
 			if ( (posX > zoneZoomIn[0]) && (posX < zoneZoomIn[1]) && (posY > zoneZoomIn[2]) && (posY < zoneZoomIn[3]) )
 			{
 				renderer.zoomIn ();
+				
 				//Log.i(TAG, "ZoomIn");
 				return true;
 			}

@@ -16,10 +16,15 @@ public class Game {
 	private static float CUBE_SPEED = 1;
 	private static float HERO_SPEED = 2.5f;
 	private static float CUBE_ROTATION_SPEED = 60;
+	
+	
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private final static int NB_MAPS = 2;
 	private final static Class[] maps = {Map1.class, Map2.class};
+	private boolean[][] hasBomb;
+	private boolean[][] hasBigBomb;
+	
 	
 	
 	private void loadMap (MapInterface map)
@@ -32,6 +37,19 @@ public class Game {
 		{
 			cubes[i] = new Cube (map.getCubePositionX(i), map.getCubePositionZ(i));
 		}
+		
+		hasBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
+		hasBigBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
+		
+		for (int i = 0 ; i < map.getMapWidth() ; i++)
+		{
+			for (int j = 0 ; j < map.getMapWidth() ; j++)
+			{
+				hasBomb[i][j] 		= false;
+				hasBigBomb[i][j] 	= false;
+			}	
+		}
+		
 		lastTime = Calendar.getInstance().getTimeInMillis();
 	}
 	
@@ -235,4 +253,32 @@ public class Game {
 	{
 		return this.currentMap;
 	}
+	
+	public void enableBomb ()
+	{
+		int x;
+		int z;
+		
+		x = (int)Math.floor((double)hero.getX());
+		z = (int)Math.floor((double) ( -1 * hero.getZ()));
+		Log.i("GAME", "try to put bomb at x=" + x + ";z="+z);
+		try {
+			hasBomb[x][z] = true;
+		}
+		catch (Exception e)
+		{
+			
+		}
+	}
+	
+	public void enableBigBomb ()
+	{
+		
+	}
+	
+	public void enableShoot ()
+	{
+		
+	}
+	
 }
