@@ -126,10 +126,10 @@ public class LostRenderer implements Renderer
 		iconLifeSmall = new LostIcon (c, "life.png", -6f, 4.0f, -10.0f, true);
 		
 		
-		iconZoomIn = new LostIcon (c, "zoomin.png", -5.5f, 8.5f, -10.0f);
-		iconZoomOut = new LostIcon (c, "zoomout.png", -3.0f, 8.5f, -10.0f);
-		iconCameraLeft = new LostIcon (c, "camleft.png", 3.0f, 8.5f, -10.0f);
-		iconCameraRight = new LostIcon (c, "camright.png", 5.5f, 8.5f, -10.0f);
+		iconZoomIn = new LostIcon (c, "zoomin.png",5.5f, 8.5f, -10.0f);
+		iconZoomOut = new LostIcon (c, "zoomout.png",3.0f, 8.5f, -10.0f );
+		iconCameraLeft = new LostIcon (c, "camleft.png", -5.5f, 8.5f, -10.0f);
+		iconCameraRight = new LostIcon (c, "camright.png",  -3.0f, 8.5f, -10.0f);
 	}
 
 	public void enableShowFPS ()

@@ -90,8 +90,8 @@ public class Touch implements OnTouchListener {
 		
 		if (screenWidth < screenHeight)
 		{
-			dividerWidth = 8;
-			dividerHeight = 6;
+			dividerWidth = 6;
+			dividerHeight = 8;
 
 			this.orientation = ORIENTATION_PORTRAIT;
 
@@ -106,7 +106,7 @@ public class Touch implements OnTouchListener {
 		screenWidthPart = screenWidth / dividerWidth;
 		screenHeightPart = screenHeight / dividerHeight;
 		zoneMoveLeft 	= new int[]{0,screenWidthPart , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1) };
-		zoneMoveRight 	= new int[]{screenWidthPart,screenWidthPart*2 , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1)};
+		zoneMoveRight 	= new int[]{screenWidthPart*2,screenWidthPart*3 , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1)};
 		zoneMoveUp 		= new int[]{0,screenWidthPart*2,screenHeightPart * (dividerHeight - 3) ,screenHeightPart * (dividerHeight - 2)};
 		zoneMoveDown 	= new int[]{0,screenWidthPart*2, screenHeightPart * (dividerHeight - 1) ,screenHeightPart * dividerHeight};
 		zoneBullet 		= new int[]{screenWidthPart* (dividerWidth - 3) ,screenWidthPart* (dividerWidth - 2), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
@@ -176,7 +176,7 @@ public class Touch implements OnTouchListener {
 			}
 			if ( (posX > zoneBigBomb[0]) && (posX < zoneBigBomb[1]) && (posY > zoneBigBomb[2]) && (posY < zoneBigBomb[3]) )
 			{
-				//Log.i(TAG, "BigBomb");
+				Log.i(TAG, "BigBomb");
 				currentGame.enableBigBomb();
 				return true;
 			}
@@ -185,28 +185,28 @@ public class Touch implements OnTouchListener {
 			{
 				renderer.zoomIn ();
 				
-				//Log.i(TAG, "ZoomIn");
+				Log.i(TAG, "ZoomIn");
 				return true;
 			}
 			
 			if ( (posX > zoneZoomOut[0]) && (posX < zoneZoomOut[1]) && (posY > zoneZoomOut[2]) && (posY < zoneZoomOut[3]) )
 			{
 				renderer.zoomOut ();
-				//Log.i(TAG, "Zoom Out");
+				Log.i(TAG, "Zoom Out");
 				return true;
 			}
 			 
 			if ( (posX > zoneCamLeft[0]) && (posX < zoneCamLeft[1]) && (posY > zoneCamLeft[2]) && (posY < zoneCamLeft[3]) )
 			{
 				renderer.moveLeft ();
-				//Log.i(TAG, "Cam left");
+				Log.i(TAG, "Cam left");
 				return true;
 			}
 			
 			if ( (posX > zoneCamRight[0]) && (posX < zoneCamRight[1]) && (posY > zoneCamRight[2]) && (posY < zoneCamRight[3]) )
 			{
 				renderer.moveRight ();
-				//Log.i(TAG, "Cam right");
+				Log.i(TAG, "Cam right");
 				return true;
 			}
 		}
