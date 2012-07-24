@@ -61,6 +61,10 @@ public class LostRenderer implements Renderer
 	LostIcon iconDirectionRight;
 	LostIcon iconDirectionUp;
 	LostIcon iconDirectionDown;
+	LostIcon iconGunSmall;
+	LostIcon iconBombSmall;
+	LostIcon iconBigBombSmall;
+	LostIcon iconLifeSmall;
 	LostIcon iconGun;
 	LostIcon iconBomb;
 	LostIcon iconBigBomb;
@@ -107,13 +111,25 @@ public class LostRenderer implements Renderer
 		doorVertexBfr = makeFloatBuffer(doorCoords);
 		heroVertexBfr = makeFloatBuffer(heroCoords);
 		
-		iconDirectionLeft = new LostIcon (c, "direction.png");
-		iconDirectionDown = new LostIcon (c, "direction.png");
-		iconDirectionUp = new LostIcon (c, "direction.png");
-		iconDirectionRight = new LostIcon (c, "direction.png");
-		iconGun = new LostIcon (c, "gun.png");
-		iconBomb = new LostIcon (c, "bomb1.png");
-		iconBigBomb = new LostIcon (c, "bomb2.png");
+
+		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.5f, -7.5f, -10.0f);
+		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.5f, -9.0f, -10.0f);
+		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.5f, -6.0f, -10.0f);
+		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.5f, -7.5f, -10.0f);
+		iconGun = new LostIcon (c, "gun.png", 0.5f, -9.0f, -10.0f);
+		iconBomb = new LostIcon (c, "bomb1.png", 3.0f, -9.0f, -10.0f);
+		iconBigBomb = new LostIcon (c, "bomb2.png", 5.5f, -9.0f, -10.0f);
+		
+		iconGunSmall = new LostIcon (c, "gun.png", -6f, 7.0f, -10.0f, true);
+		iconBombSmall = new LostIcon (c, "bomb1.png", -6f, 6.0f, -10.0f, true);
+		iconBigBombSmall = new LostIcon (c, "bomb2.png", -6f, 5.0f, -10.0f, true);
+		iconLifeSmall = new LostIcon (c, "life.png", -6f, 4.0f, -10.0f, true);
+		
+		
+		iconZoomIn = new LostIcon (c, "zoomin.png", -5.5f, 8.5f, -10.0f);
+		iconZoomOut = new LostIcon (c, "zoomout.png", -3.0f, 8.5f, -10.0f);
+		iconCameraLeft = new LostIcon (c, "camleft.png", 3.0f, 8.5f, -10.0f);
+		iconCameraRight = new LostIcon (c, "camright.png", 5.5f, 8.5f, -10.0f);
 	}
 
 	public void enableShowFPS ()
@@ -186,28 +202,37 @@ public class LostRenderer implements Renderer
 
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
-		// Set the background frame color
-		gl.glClearColor( 0.5f, 0.5f, 0.5f, 1.0f );
-
+		iconDirectionLeft.loadGLTexture(gl, context);
+		iconDirectionDown.loadGLTexture(gl, context);
+		iconDirectionUp.loadGLTexture(gl, context);
+		iconDirectionRight.loadGLTexture(gl, context);
+		iconGun.loadGLTexture(gl, context);
+		iconBomb.loadGLTexture(gl, context);
+		iconBigBomb.loadGLTexture(gl, context);
+		iconZoomIn.loadGLTexture(gl, context);
+		iconZoomOut.loadGLTexture(gl, context);
+		iconCameraLeft.loadGLTexture(gl, context);
+		iconCameraRight.loadGLTexture(gl, context);
+		iconGunSmall.loadGLTexture(gl, context);
+		iconBombSmall.loadGLTexture(gl, context);
+		iconLifeSmall.loadGLTexture(gl, context);
+		iconBigBombSmall.loadGLTexture(gl, context);
 		// Create the GLText
 		glText = new GLText( gl, context.getAssets() );
-
 		// Load the font from file (set size + padding), creates the texture
 		// NOTE: after a successful call to this the font is ready for rendering!
 		glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
-
+		
+		
+	    gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(gl.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		gl.glClearColor(0, 0, 0, 0);
 
-		gl.glClearDepthf(1.0f);
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		gl.glDepthFunc(GL10.GL_LEQUAL);
-
-		gl.glEnable(GL10.GL_CULL_FACE);
-		gl.glCullFace(GL10.GL_BACK);
-
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		
 		gamePlate = new FloatBuffer[currentGame.getCurrentMap().getMapWidth()][currentGame.getCurrentMap().getMapDepth()];
 
 		for (int i = 0 ; i < currentGame.getCurrentMap().getMapWidth() ; i++)
@@ -351,7 +376,7 @@ public class LostRenderer implements Renderer
 		
 		/* Start text stuff */
 		gl.glPushMatrix();
-		gl.glTranslatef(-120, 150, -200);
+		gl.glTranslatef(-110, 110, -200);
 		gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 		gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
 		gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
@@ -360,59 +385,39 @@ public class LostRenderer implements Renderer
 
 		// TEST: render some strings with the font
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-		glText.draw( "Lifes: " + currentGame.getHero().getNbLifes(), 0, 20 );          // Draw Test String
-		glText.draw( "Bullets: " + currentGame.getHero().getNbBullets(), 170, 20 );          // Draw Test String
-		glText.draw( "SuperBombs: " + currentGame.getHero().getNbBigBombs(), 0, 0 );          // Draw Test String
-		glText.draw( "Bombs: " + currentGame.getHero().getNbBombs(), 170, 0 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBullets(), 0, 20 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, 0 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, -20 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 0, -40 );          // Draw Test String
 		if (this.showFPS)
 		{
-			glText.draw( fps + "fps", 170, -20 );          // Draw Test String
+			glText.draw( fps + "fps", 190, 20 );          // Draw Test String
 		}
 		glText.end();
 		
+		
+		gl.glPopMatrix();
+
+		iconDirectionLeft.draw(gl);
+		
+		iconDirectionDown.draw(gl);
+		iconDirectionRight.draw(gl);
+		iconDirectionUp.draw(gl);
+		iconGun.draw(gl);
+		iconBomb.draw(gl);
+		iconBigBomb.draw(gl);
+		iconCameraLeft.draw(gl);
+		iconCameraRight.draw(gl);
+		iconZoomIn.draw(gl);
+		iconZoomOut.draw(gl);
+		iconGunSmall.draw(gl);
+		iconBombSmall.draw(gl);
+		iconLifeSmall.draw(gl);
+		iconBigBombSmall.draw(gl);
+		
+		
 		gl.glDisable( GL10.GL_BLEND);
 		gl.glDisable( GL10.GL_TEXTURE_2D);
-		gl.glPopMatrix();
-		
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(-5.5f, -7.0f, -10.0f);
-		iconDirectionLeft.draw(gl);
-		gl.glPopMatrix();
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(-4.0f, -9.0f, -10.0f);
-		iconDirectionDown.draw(gl);
-		gl.glPopMatrix();
-
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(-2.5f, -7.0f, -10.0f);
-		iconDirectionRight.draw(gl);
-		gl.glPopMatrix();
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(-4.0f, -5.0f, -10.0f);
-		iconDirectionUp.draw(gl);
-		gl.glPopMatrix();
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(-0.0f, -8.0f, -10.0f);
-		iconGun.draw(gl);
-		gl.glPopMatrix();
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(2.5f, -8.0f, -10.0f);
-		iconBomb.draw(gl);
-		gl.glPopMatrix();
-		
-		gl.glPushMatrix();
-		gl.glTranslatef(5.0f, -8.0f, -10.0f);
-		iconBigBomb.draw(gl);
-		gl.glPopMatrix();
-
-
-		
 	}  
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
