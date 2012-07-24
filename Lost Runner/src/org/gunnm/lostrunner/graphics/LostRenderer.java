@@ -1,5 +1,6 @@
 package org.gunnm.lostrunner.graphics;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -13,6 +14,7 @@ import org.gunnm.lostrunner.model.Game;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -56,6 +58,21 @@ public class LostRenderer implements Renderer
 
 	private int screenWidth;
 	private int screenHeight;
+	
+	private int[] 		textureGround 	= new int[1];
+	private int[] 		textureDoor 	= new int[1];
+	private int[] 		textureCube 	= new int[1];
+	
+	private FloatBuffer textureBuffer;  // buffer holding the texture coordinates
+
+	private float texture[] = {
+	// Mapping coordinates for the vertices
+			1.0f, 0.0f,      // bottom right (V3)
+			0.0f, 0.0f,     // top right    (V4)
+			0.0f, 1.0f,     // bottom left  (V1)
+			1.0f, 1.0f,     // top left     (V2)	
+	};
+	
 	
 	LostIcon iconDirectionLeft;
 	LostIcon iconDirectionRight;
@@ -111,6 +128,9 @@ public class LostRenderer implements Renderer
 		doorVertexBfr = makeFloatBuffer(doorCoords);
 		heroVertexBfr = makeFloatBuffer(heroCoords);
 		
+		textureBuffer = ByteBuffer.allocateDirect(texture.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		textureBuffer.put(texture);
+		textureBuffer.position(0);
 
 		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.5f, -7.5f, -10.0f);
 		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.5f, -9.0f, -10.0f);
@@ -132,6 +152,36 @@ public class LostRenderer implements Renderer
 		iconCameraRight = new LostIcon (c, "camright.png",  -3.0f, 8.5f, -10.0f);
 	}
 
+	public void loadGLTexture(GL10 gl, String filename, int[] textures) 
+	{
+		
+		Bitmap bitmap;
+		try 
+		{
+			bitmap = BitmapFactory.decodeStream(context.getAssets().open(filename));
+		} 
+		catch (IOException e) 
+		{
+			Log.i("LostIcon", "Error when trying to load texture" + filename);
+			return;
+		}
+		
+		gl.glGenTextures(1, textures, 0);
+		
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0]);
+
+		// create nearest filtered texture
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
+		gl.glTexParameterx(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
+		
+		// Use Android GLUtils to specify a two-dimensional texture image from our bitmap
+		GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
+
+		bitmap.recycle();
+	}
+	
 	public void enableShowFPS ()
 	{
 		this.showFPS = true;
@@ -217,6 +267,11 @@ public class LostRenderer implements Renderer
 		iconBombSmall.loadGLTexture(gl, context);
 		iconLifeSmall.loadGLTexture(gl, context);
 		iconBigBombSmall.loadGLTexture(gl, context);
+		
+		loadGLTexture(gl, "metal.png", textureCube);
+		loadGLTexture(gl, "wood.png", textureGround);
+		loadGLTexture(gl, "wood.png", textureDoor);
+		
 		// Create the GLText
 		glText = new GLText( gl, context.getAssets() );
 		// Load the font from file (set size + padding), creates the texture
@@ -303,7 +358,7 @@ public class LostRenderer implements Renderer
 					continue;
 				}
 
-				gl.glColor4f(1, 0, 0, 0.5f);
+				gl.glColor4f(1, 1, 1, 1);
 
 				if (currentGame.hasBigBomb(i, j))
 				{
@@ -314,12 +369,25 @@ public class LostRenderer implements Renderer
 				{
 					gl.glColor4f(1, 0.2f, 0.2f, 0.5f);	
 				}
-
-
+				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureGround[0]);
 				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+				
+				gl.glFrontFace(GL10.GL_CW);
+				
 				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, gamePlate[i][j]);
+				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+
 				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+				gl.glDisable( GL10.GL_BLEND );  
+				gl.glDisable( GL10.GL_TEXTURE_2D );
 			}
 		}
 
@@ -338,11 +406,32 @@ public class LostRenderer implements Renderer
 
 			for (int k = 0; k < 6; k++)
 			{
+				/*
 				gl.glColor4f(0,1,0,0.5f);
 				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+				*/
+				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureCube[0]);
+				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+				
+				gl.glFrontFace(GL10.GL_CW);
+				
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
+				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+
+				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+				gl.glDisable( GL10.GL_BLEND );  
+				gl.glDisable( GL10.GL_TEXTURE_2D );
 			}
 
 			gl.glPopMatrix();
@@ -351,12 +440,30 @@ public class LostRenderer implements Renderer
 
 		gl.glPushMatrix();
 		gl.glTranslatef(currentGame.getCurrentMap().getExitPositionX() , 0, currentGame.getCurrentMap().getExitPositionZ());
-		gl.glColor4f(0,0,1,0.5f);
+		
+		gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+		gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureDoor[0]);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		
+		gl.glFrontFace(GL10.GL_CW);
+		
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, doorVertexBfr);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisable( GL10.GL_BLEND );  
+		gl.glDisable( GL10.GL_TEXTURE_2D );
 		gl.glPopMatrix();
+		
+		
+		
 
 		gl.glPushMatrix();
 		gl.glTranslatef(currentGame.getHero().getX() , 0, currentGame.getHero().getZ());
