@@ -11,6 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.gunnm.lostrunner.R;
 import org.gunnm.lostrunner.model.Game;
+import org.gunnm.lostrunner.model.Hero;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -48,9 +49,11 @@ public class LostRenderer implements Renderer
 	LostIcon iconZoomOut;
 	LostIcon iconCameraLeft;
 	LostIcon iconCameraRight;
-	private static FloatBuffer[] cubeVertexBfr;
-	private static FloatBuffer doorVertexBfr;
-	private static FloatBuffer heroVertexBfr;
+	
+	private static FloatBuffer[] 	heroBodyVertexBfr;
+	private static FloatBuffer[] 	heroMemberVertexBfr;
+	private static FloatBuffer[] 	cubeVertexBfr;
+	private static FloatBuffer 		doorVertexBfr;
 	private Context context;
 
 	private boolean showFPS = true;
@@ -175,8 +178,84 @@ public class LostRenderer implements Renderer
 				0.5f,-0.5f,-0.5f
 		},
 	};
+	private static float[][] heroBodyCoords = new float[][] {
+		new float[] { //top
+				0.1f, 0.5f,-0.1f,
+				-0.1f, 0.5f,-0.1f,
+				-0.1f, 0.5f, 0.1f,
+				0.1f, 0.5f, 0.1f
+		},
+		new float[] { //bottom
+				0.1f,-0.5f, 0.1f,
+				-0.1f,-0.5f, 0.1f,
+				-0.1f,-0.5f,-0.1f,
+				0.1f,-0.5f,-0.1f
+		},
+		new float[] { //front
+				0.1f, 0.5f, 0.1f,
+				-0.1f, 0.5f, 0.1f,
+				-0.1f,-0.5f, 0.1f,
+				0.1f,-0.5f, 0.1f
+		},
+		new float[] { //back
+				0.1f,-0.5f,-0.1f,
+				-0.1f,-0.5f,-0.1f,
+				-0.1f, 0.5f,-0.1f,
+				0.1f, 0.5f,-0.1f
+		},
+		new float[] { //left
+				-0.1f, 0.5f, 0.1f,
+				-0.1f, 0.5f,-0.1f,
+				-0.1f,-0.5f,-0.1f,
+				-0.1f,-0.5f, 0.1f
+		},
+		new float[] {//right
+				0.1f, 0.5f,-0.1f,
+				0.1f, 0.5f, 0.1f,
+				0.1f,-0.5f, 0.1f,
+				0.1f,-0.5f,-0.1f
+		},
+	};
 	
-
+	private static float[][] heroMemberCoords = new float[][] {
+		new float[] { 
+				0.1f, 0,-0.1f,
+				-0.1f, 0,-0.1f,
+				-0.1f, 0, 0.1f,
+				0.1f, 0, 0.1f
+		},
+		new float[] { 
+				0.1f,-0.4f, 0.1f,
+				-0.1f,-0.4f, 0.1f,
+				-0.1f,-0.4f,-0.1f,
+				0.1f,-0.4f,-0.1f
+		},
+		new float[] { 
+				0.1f, 0, 0.1f,
+				-0.1f, 0, 0.1f,
+				-0.1f,-0.4f, 0.1f,
+				0.1f,-0.4f, 0.1f
+		},
+		new float[] { 
+				0.1f,-0.4f,-0.1f,
+				-0.1f,-0.4f,-0.1f,
+				-0.1f, 0,-0.1f,
+				0.1f, 0,-0.1f
+		},
+		new float[] { 
+				-0.1f, 0, 0.1f,
+				-0.1f, 0,-0.1f,
+				-0.f,-0.4f,-0.1f,
+				-0.1f,-0.4f, 0.1f
+		},
+		new float[] {
+				0.1f, 0,-0.1f,
+				0.1f, 0, 0.1f,
+				0.1f,-0.4f, 0.1f,
+				0.1f,-0.4f,-0.1f
+		},
+	};
+	
 	
 	
 	public void disableCameraMove ()
@@ -207,15 +286,20 @@ public class LostRenderer implements Renderer
 		camZ = 2;
 		camAngle = -45;
 
-		cubeVertexBfr = new FloatBuffer[6];
-		textureCubeBuffer = new FloatBuffer[6];
+		cubeVertexBfr 		= new FloatBuffer[6];
+		textureCubeBuffer 	= new FloatBuffer[6];
+		heroBodyVertexBfr 	= new FloatBuffer[6];
+		heroMemberVertexBfr = new FloatBuffer[6];
+		
 		for (int i = 0 ; i < 6 ; i++)
 		{
 			cubeVertexBfr[i] = makeFloatBuffer(cubeCoords[i]);
 			textureCubeBuffer[i] = makeFloatBuffer(textureCubeCoords[i]);
+			heroMemberVertexBfr[i] = makeFloatBuffer(heroMemberCoords[i]);
+			heroBodyVertexBfr[i] = makeFloatBuffer(heroBodyCoords[i]);
 		}
 		doorVertexBfr = makeFloatBuffer(doorCoords);
-		heroVertexBfr = makeFloatBuffer(heroCoords);
+		
 		
 		textureBuffer = ByteBuffer.allocateDirect(texture.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		textureBuffer.put(texture);
@@ -532,20 +616,12 @@ public class LostRenderer implements Renderer
 
 		gl.glPushMatrix();
 		gl.glTranslatef(currentGame.getHero().getX() , 0, currentGame.getHero().getZ());
-		gl.glColor4f(0,1,1,0.5f);
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroVertexBfr);
-		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		drawHero (gl);
 		gl.glPopMatrix();
 		gl.glPopMatrix();
 		/* Finish to draw the scene */
 		
-		
-		
-		
-		
-		
+
 		/* Start text stuff */
 		gl.glPushMatrix();
 		gl.glTranslatef(-110, 110, -200);
@@ -711,4 +787,87 @@ public class LostRenderer implements Renderer
 		}
 	}
 
+	
+	public void drawHero (GL10 gl)
+	{
+		gl.glColor4f(1,1,1,0.5f);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		
+		switch (currentGame.getHero().getDirection())
+		{
+			case Hero.DIRECTION_LEFT:
+			{
+				gl.glRotatef(90, 0, 1, 0);
+				break;
+			}
+			case Hero.DIRECTION_RIGHT:
+			{
+				gl.glRotatef(-90, 0, 1, 0);
+				break;
+			}
+			case Hero.DIRECTION_DOWN:
+			{
+				gl.glRotatef(-180, 0, 1, 0);
+				break;
+			}
+		}
+		
+		gl.glTranslatef(0, 0.5f, 0);
+		
+		
+		for (int k = 0; k < 6; k++)
+		{
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroBodyVertexBfr[k]);
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		}
+		
+		// Draw Right leg
+		gl.glPushMatrix();
+		gl.glTranslatef(0.2f, -0.5f, 0);
+		gl.glRotatef(currentGame.getHero().getLegsAngles() , 1, 0, 0);
+		for (int k = 0; k < 6; k++)
+		{
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroMemberVertexBfr[k]);
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		}
+		gl.glPopMatrix();
+		// Draw Left leg
+		gl.glPushMatrix();
+		gl.glTranslatef(-0.2f, -0.5f, 0);
+		gl.glRotatef(currentGame.getHero().getLegsAngles() * -1, 1, 0, 0);
+		for (int k = 0; k < 6; k++)
+		{
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroMemberVertexBfr[k]);
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		}
+		gl.glPopMatrix();
+		
+		
+		// Draw Left arm
+		gl.glPushMatrix();
+		gl.glTranslatef(-0.2f, 0.3f, 0);
+		gl.glRotatef(currentGame.getHero().getArmsAngles() * -1, 1, 0, 0);
+		for (int k = 0; k < 6; k++)
+		{
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroMemberVertexBfr[k]);
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		}
+		gl.glPopMatrix();
+		
+		
+		// Draw Right arm
+		gl.glPushMatrix();
+		gl.glTranslatef(0.2f, 0.3f, 0);
+		gl.glRotatef(currentGame.getHero().getArmsAngles(), 1, 0, 0);
+		for (int k = 0; k < 6; k++)
+		{
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroMemberVertexBfr[k]);
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		}
+		gl.glPopMatrix();
+		
+		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+	}
+	
 }

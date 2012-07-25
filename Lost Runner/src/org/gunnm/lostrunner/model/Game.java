@@ -239,7 +239,7 @@ public class Game {
 			}
 		}
 		
-		
+		hero.updateAngles();
 		switch (hero.getDirection())
 		{
 			case Hero.DIRECTION_LEFT:
