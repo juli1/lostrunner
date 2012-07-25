@@ -304,6 +304,10 @@ public class Game {
 					e.printStackTrace();
 				}
 			}
+			else
+			{
+				this.completed = true;
+			}
 		}
 		
 		collision = detectCollision ();
