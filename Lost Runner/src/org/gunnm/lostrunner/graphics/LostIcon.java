@@ -24,7 +24,12 @@ public class LostIcon {
 	private float 		translationY;
 	private float 		translationZ;
 	private int[] 		textures 	= new int[1];
-	private boolean 	isSmall;
+	private int 		type;
+	public final static int ICON_SMALL 		= 1;
+	public final static int ICON_MEDIUM 	= 2;
+	public final static int ICON_BIG 		= 3;
+	
+	
 	private float vertices[] = {
 			1, 1, 0,
 			-1, 1, 0,
@@ -42,9 +47,9 @@ public class LostIcon {
 			1.0f, 1.0f,     // top left     (V2)	
 	};
 	
-	public LostIcon (Context c, String f, float tx, float ty, float tz, boolean isSmall)
+	public LostIcon (Context c, String f, float tx, float ty, float tz, int t)
 	{
-
+		int divider;
 		context = c;
 		filename = f;
 		
@@ -52,14 +57,33 @@ public class LostIcon {
 		ByteBuffer vertexByteBuffer;
 		ByteBuffer byteBuffer;
 
-		if (isSmall)
+
+		this.type = t;
+		
+		switch (this.type)
 		{
-			for (int i = 0 ; i < this.vertices.length ; i++)
+			case ICON_SMALL:
 			{
-				this.vertices[i] = this.vertices[i] / 3;
+				divider = 3;
+				break;
+			}
+			case ICON_MEDIUM:
+			{
+				divider = 2;
+				break;
+			}
+			default:
+			{
+				divider = 1;
+				break;
 			}
 		}
 		
+		for (int i = 0 ; i < this.vertices.length ; i++)
+		{
+			this.vertices[i] = this.vertices[i] / divider;
+		}
+
 		vertexByteBuffer= ByteBuffer.allocateDirect(vertices.length * 4);
 		vertexByteBuffer.order(ByteOrder.nativeOrder());
 		vertexBuffer = vertexByteBuffer.asFloatBuffer();
@@ -74,15 +98,15 @@ public class LostIcon {
 		this.translationX = tx;
 		this.translationY = ty;
 		this.translationZ = tz;
-
-		this.isSmall = isSmall;
 		vertexBuffer.position(0);
+		
+		
 	}
 	
 	public LostIcon (Context c, String f, float tx, float ty, float tz) 
 	{
 
-		this (c, f, tx, ty, tz, false);
+		this (c, f, tx, ty, tz, ICON_BIG);
 	}
 
 	public void loadGLTexture(GL10 gl, Context context) 

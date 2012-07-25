@@ -25,7 +25,7 @@ public class Game {
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
-	
+	private boolean completed;
 	
 	private void loadMap (MapInterface map)
 	{
@@ -72,8 +72,11 @@ public class Game {
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		}
-		
+		this.completed = false;
 		hero = new Hero ();
+		hero.setNbBullets(1);
+		hero.setNbBombs(1);
+		hero.setNbBigBombs(1);
 		loadMap (firstMap);
 		currentMapIndex = 0;	
 	}
@@ -189,8 +192,16 @@ public class Game {
 		{
 			return false;
 		}
-		
+		if (completed)
+		{
+			return false;
+		}
 		return true;
+	}
+	
+	public boolean isCompleted ()
+	{
+		return completed;
 	}
 	
 	public void update ()
@@ -207,6 +218,7 @@ public class Game {
 		
 		if (this.isActive() == false)
 		{
+
 			return;
 		}
 		

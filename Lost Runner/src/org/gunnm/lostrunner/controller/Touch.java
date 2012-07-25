@@ -105,10 +105,10 @@ public class Touch implements OnTouchListener {
 		
 		screenWidthPart = screenWidth / dividerWidth;
 		screenHeightPart = screenHeight / dividerHeight;
-		zoneMoveLeft 	= new int[]{0,screenWidthPart , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1) };
-		zoneMoveRight 	= new int[]{screenWidthPart*2,screenWidthPart*3 , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1)};
-		zoneMoveUp 		= new int[]{0,screenWidthPart*2,screenHeightPart * (dividerHeight - 3) ,screenHeightPart * (dividerHeight - 2)};
-		zoneMoveDown 	= new int[]{0,screenWidthPart*2, screenHeightPart * (dividerHeight - 1) ,screenHeightPart * dividerHeight};
+		zoneMoveLeft 	= new int[]{0                    ,screenWidthPart       ,  screenHeightPart  * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1) };
+		zoneMoveRight 	= new int[]{screenWidthPart*2    ,screenWidthPart* 3 , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1)};
+		zoneMoveUp 		= new int[]{0                    ,screenWidthPart*2     ,  screenHeightPart  * (dividerHeight - 3) ,screenHeightPart * (dividerHeight - 2)};
+		zoneMoveDown 	= new int[]{0                    ,screenWidthPart*2     , screenHeightPart   * (int)(dividerHeight - 2) ,screenHeightPart * dividerHeight};
 		zoneBullet 		= new int[]{screenWidthPart* (dividerWidth - 3) ,screenWidthPart* (dividerWidth - 2), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
 		zoneBomb 		= new int[]{screenWidthPart* (dividerWidth - 2) ,screenWidthPart* (dividerWidth - 1), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
 		zoneBigBomb 	= new int[]{screenWidthPart* (dividerWidth - 1) ,screenWidthPart* (dividerWidth - 0), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};

@@ -32,6 +32,22 @@ public class LostRenderer implements Renderer
 	public float camZ = 0;
 	public float camAngle;
 
+	
+	LostIcon iconDirectionLeft;
+	LostIcon iconDirectionRight;
+	LostIcon iconDirectionUp;
+	LostIcon iconDirectionDown;
+	LostIcon iconGunSmall;
+	LostIcon iconBombSmall;
+	LostIcon iconBigBombSmall;
+	LostIcon iconLifeSmall;
+	LostIcon iconGun;
+	LostIcon iconBomb;
+	LostIcon iconBigBomb;
+	LostIcon iconZoomIn;
+	LostIcon iconZoomOut;
+	LostIcon iconCameraLeft;
+	LostIcon iconCameraRight;
 	private static FloatBuffer[] cubeVertexBfr;
 	private static FloatBuffer doorVertexBfr;
 	private static FloatBuffer heroVertexBfr;
@@ -64,7 +80,8 @@ public class LostRenderer implements Renderer
 	private int[] 		textureCube 	= new int[1];
 	
 	private FloatBuffer textureBuffer;  // buffer holding the texture coordinates
-
+	private FloatBuffer[] textureCubeBuffer;  // buffer holding the texture coordinates
+	
 	private float texture[] = {
 	// Mapping coordinates for the vertices
 			1.0f, 0.0f,      // bottom right (V3)
@@ -73,22 +90,93 @@ public class LostRenderer implements Renderer
 			1.0f, 1.0f,     // top left     (V2)	
 	};
 	
+	private static float textureCubeCoords[][] = new float[][] {
+			new float[] 
+					{1.0f, 0.0f,   
+					0.0f, 0.0f,   
+					0.0f, 1.0f,     
+					1.0f, 1.0f,     
+			},
+			new float[] 
+					{1.0f, 0.0f,     
+					0.0f, 0.0f,     
+					0.0f, 1.0f,     
+					1.0f, 1.0f,    
+			},
+			new float[] 
+					{1.0f, 0.0f,      
+					0.0f, 0.0f,     
+					0.0f, 1.0f,     
+					1.0f, 1.0f,    
+			},
+			new float[]
+					{1.0f, 0.0f,   
+					0.0f, 0.0f,   
+					0.0f, 1.0f,     
+					1.0f, 1.0f,     
+			},
+			new float[] 
+					{1.0f, 0.0f,  
+					0.0f, 0.0f, 
+					0.0f, 1.0f,  
+					1.0f, 1.0f,  
+			},
+			new float[]
+					{1.0f, 0.0f,  
+					0.0f, 0.0f,    
+					0.0f, 1.0f,    
+					1.0f, 1.0f,    
+			},
+	};
+
+	private static float [] doorCoords = new float[] {1, 2, 0, 
+		0, 2, 0, 
+		0,0, 0, 
+		1,0, 0};
+	private static float [] heroCoords = new float[] {0.75f, 2, 0, 
+		0.25f, 2, 0, 
+		0.25f,0, 0, 
+		0.75f,0, 0};
+	private static float[][] cubeCoords = new float[][] {
+		new float[] { 
+				0.5f, 0.5f,-0.5f,
+				-0.5f, 0.5f,-0.5f,
+				-0.5f, 0.5f, 0.5f,
+				0.5f, 0.5f, 0.5f
+		},
+		new float[] { 
+				0.5f,-0.5f, 0.5f,
+				-0.5f,-0.5f, 0.5f,
+				-0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,-0.5f
+		},
+		new float[] { 
+				0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f, 0.5f,
+				-0.5f,-0.5f, 0.5f,
+				0.5f,-0.5f, 0.5f
+		},
+		new float[] { 
+				0.5f,-0.5f,-0.5f,
+				-0.5f,-0.5f,-0.5f,
+				-0.5f, 0.5f,-0.5f,
+				0.5f, 0.5f,-0.5f
+		},
+		new float[] { 
+				-0.5f, 0.5f, 0.5f,
+				-0.5f, 0.5f,-0.5f,
+				-0.5f,-0.5f,-0.5f,
+				-0.5f,-0.5f, 0.5f
+		},
+		new float[] {
+				0.5f, 0.5f,-0.5f,
+				0.5f, 0.5f, 0.5f,
+				0.5f,-0.5f, 0.5f,
+				0.5f,-0.5f,-0.5f
+		},
+	};
 	
-	LostIcon iconDirectionLeft;
-	LostIcon iconDirectionRight;
-	LostIcon iconDirectionUp;
-	LostIcon iconDirectionDown;
-	LostIcon iconGunSmall;
-	LostIcon iconBombSmall;
-	LostIcon iconBigBombSmall;
-	LostIcon iconLifeSmall;
-	LostIcon iconGun;
-	LostIcon iconBomb;
-	LostIcon iconBigBomb;
-	LostIcon iconZoomIn;
-	LostIcon iconZoomOut;
-	LostIcon iconCameraLeft;
-	LostIcon iconCameraRight;
+
 	
 	
 	public void disableCameraMove ()
@@ -120,10 +208,11 @@ public class LostRenderer implements Renderer
 		camAngle = -45;
 
 		cubeVertexBfr = new FloatBuffer[6];
-
+		textureCubeBuffer = new FloatBuffer[6];
 		for (int i = 0 ; i < 6 ; i++)
 		{
 			cubeVertexBfr[i] = makeFloatBuffer(cubeCoords[i]);
+			textureCubeBuffer[i] = makeFloatBuffer(textureCubeCoords[i]);
 		}
 		doorVertexBfr = makeFloatBuffer(doorCoords);
 		heroVertexBfr = makeFloatBuffer(heroCoords);
@@ -134,22 +223,22 @@ public class LostRenderer implements Renderer
 
 		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.5f, -7.5f, -10.0f);
 		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.5f, -9.0f, -10.0f);
-		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.5f, -6.0f, -10.0f);
+		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.5f, -5.5f, -10.0f);
 		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.5f, -7.5f, -10.0f);
 		iconGun = new LostIcon (c, "gun.png", 0.5f, -9.0f, -10.0f);
 		iconBomb = new LostIcon (c, "bomb1.png", 3.0f, -9.0f, -10.0f);
 		iconBigBomb = new LostIcon (c, "bomb2.png", 5.5f, -9.0f, -10.0f);
 		
-		iconGunSmall = new LostIcon (c, "gun.png", -6f, 7.0f, -10.0f, true);
-		iconBombSmall = new LostIcon (c, "bomb1.png", -6f, 6.0f, -10.0f, true);
-		iconBigBombSmall = new LostIcon (c, "bomb2.png", -6f, 5.0f, -10.0f, true);
-		iconLifeSmall = new LostIcon (c, "life.png", -6f, 4.0f, -10.0f, true);
+		iconGunSmall = new LostIcon (c, "gun.png", -6f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBombSmall = new LostIcon (c, "bomb1.png", -6f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBigBombSmall = new LostIcon (c, "bomb2.png", -6f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconLifeSmall = new LostIcon (c, "life.png", -6f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
 		
 		
-		iconZoomIn = new LostIcon (c, "zoomin.png",5.5f, 8.5f, -10.0f);
-		iconZoomOut = new LostIcon (c, "zoomout.png",3.0f, 8.5f, -10.0f );
-		iconCameraLeft = new LostIcon (c, "camleft.png", -5.5f, 8.5f, -10.0f);
-		iconCameraRight = new LostIcon (c, "camright.png",  -3.0f, 8.5f, -10.0f);
+		iconZoomIn = new LostIcon (c, "zoomin.png",5.5f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
+		iconZoomOut = new LostIcon (c, "zoomout.png",3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconCameraLeft = new LostIcon (c, "camleft.png", -5.5f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
+		iconCameraRight = new LostIcon (c, "camright.png",  -3.0f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
 	}
 
 	public void loadGLTexture(GL10 gl, String filename, int[] textures) 
@@ -194,52 +283,6 @@ public class LostRenderer implements Renderer
 		this.showFPS = false;
 	}
 
-	private static float [] doorCoords = new float[] {1, 2, 0, 
-		0, 2, 0, 
-		0,0, 0, 
-		1,0, 0};
-	private static float [] heroCoords = new float[] {0.75f, 2, 0, 
-		0.25f, 2, 0, 
-		0.25f,0, 0, 
-		0.75f,0, 0};
-	private static float[][] cubeCoords = new float[][] {
-		new float[] { // top
-				0.5f, 0.5f,-0.5f,
-				-0.5f, 0.5f,-0.5f,
-				-0.5f, 0.5f, 0.5f,
-				0.5f, 0.5f, 0.5f
-		},
-		new float[] { // bottom
-				0.5f,-0.5f, 0.5f,
-				-0.5f,-0.5f, 0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f
-		},
-		new float[] { // front
-				0.5f, 0.5f, 0.5f,
-				-0.5f, 0.5f, 0.5f,
-				-0.5f,-0.5f, 0.5f,
-				0.5f,-0.5f, 0.5f
-		},
-		new float[] { // back
-				0.5f,-0.5f,-0.5f,
-				-0.5f,-0.5f,-0.5f,
-				-0.5f, 0.5f,-0.5f,
-				0.5f, 0.5f,-0.5f
-		},
-		new float[] { // left
-				-0.5f, 0.5f, 0.5f,
-				-0.5f, 0.5f,-0.5f,
-				-0.5f,-0.5f,-0.5f,
-				-0.5f,-0.5f, 0.5f
-		},
-		new float[] { // right
-				0.5f, 0.5f,-0.5f,
-				0.5f, 0.5f, 0.5f,
-				0.5f,-0.5f, 0.5f,
-				0.5f,-0.5f,-0.5f
-		},
-	};
 
 	private FloatBuffer makeFloatBuffer(float[] arr) {
 		ByteBuffer bb = ByteBuffer.allocateDirect(arr.length*4);
@@ -268,9 +311,9 @@ public class LostRenderer implements Renderer
 		iconLifeSmall.loadGLTexture(gl, context);
 		iconBigBombSmall.loadGLTexture(gl, context);
 		
-		loadGLTexture(gl, "metal.png", textureCube);
-		loadGLTexture(gl, "wood.png", textureGround);
-		loadGLTexture(gl, "wood.png", textureDoor);
+		loadGLTexture(gl, "metal2.png", textureCube);
+		loadGLTexture(gl, "ground4.png", textureGround);
+		loadGLTexture(gl, "door2.png", textureDoor);
 		
 		// Create the GLText
 		glText = new GLText( gl, context.getAssets() );
@@ -337,7 +380,24 @@ public class LostRenderer implements Renderer
 		gl.glMatrixMode( GL10.GL_MODELVIEW );       
 		gl.glLoadIdentity();   
 		
-
+		if (currentGame.isCompleted())
+		{
+			/* Start text stuff */
+			gl.glPushMatrix();
+			gl.glTranslatef(-50, 80, -200);
+			gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+			gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+			gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
+			// TEST: render the entire font texture
+			gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
+	
+			// TEST: render some strings with the font
+			glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
+			glText.draw( "Congratulations !", 0, 0 );          // Draw Test String
+			glText.end();
+			gl.glPopMatrix();
+		}
+		
 		/* Camera stuff */
 		gl.glPushMatrix();
 		currentGame.update();
@@ -415,19 +475,22 @@ public class LostRenderer implements Renderer
 				*/
 				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+
 				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureCube[0]);
+
 				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
+				gl.glEnable(GL10.GL_DEPTH_TEST);
+				gl.glDepthFunc(GL10.GL_LEQUAL);
 				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 				
 				gl.glFrontFace(GL10.GL_CW);
 				
 				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
-				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCubeBuffer[k]);
 
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-
+				gl.glDisable(GL10.GL_DEPTH_TEST);
 				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 				gl.glDisable( GL10.GL_BLEND );  
@@ -446,6 +509,8 @@ public class LostRenderer implements Renderer
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureDoor[0]);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LEQUAL);
 
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		
@@ -455,7 +520,7 @@ public class LostRenderer implements Renderer
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-
+		gl.glDisable(GL10.GL_DEPTH_TEST);
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glDisable( GL10.GL_BLEND );  
