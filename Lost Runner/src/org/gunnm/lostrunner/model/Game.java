@@ -137,8 +137,8 @@ public class Game {
 				if ((hero.getZ() > cube.getZ() ) &&
 				   (hero.getZ() < cube.getZ() + 1.5f))
 				{  
-					//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
-					//Log.i ("Game", "Collision");
+					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+					Log.i ("Game", "Collision with cube" + i);
 					return true;
 				}
 			}
@@ -254,7 +254,7 @@ public class Game {
 			}
 			case Hero.DIRECTION_RIGHT:
 			{
-				if (hero.getX() < currentMap.getMapWidth() - 1 )
+				if (hero.getX() < currentMap.getMapWidth() )
 				{
 					hero.setX(hero.getX() +   ( ((float)((float)period / 1000)) * HERO_SPEED) );
 					//hero.setDirection(Hero.DIRECTION_NONE); 

@@ -281,10 +281,10 @@ public class LostRenderer implements Renderer
 		this.startTime 			= Calendar.getInstance().getTimeInMillis();
 		this.nbFrames 			= 0;
 
-		camX = 7;
+		camX = 3;
 		camY = 4.5f;
 		camZ = 2;
-		camAngle = -45;
+		camAngle = -15;
 
 		cubeVertexBfr 		= new FloatBuffer[6];
 		textureCubeBuffer 	= new FloatBuffer[6];
