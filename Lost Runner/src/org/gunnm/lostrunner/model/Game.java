@@ -206,10 +206,12 @@ public class Game {
 	{
 		if (hero.getNbLifes() <= 0)
 		{
+			sound.stopTrack();
 			return false;
 		}
 		if (completed)
 		{
+			sound.stopTrack();
 			return false;
 		}
 		return true;

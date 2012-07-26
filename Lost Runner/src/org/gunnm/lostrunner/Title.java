@@ -54,6 +54,7 @@ public class Title extends Activity implements OnTouchListener
 		display = wm.getDefaultDisplay();
 		this.screenWidth 	= display.getWidth();
 		this.screenHeight 	= display.getHeight();
+		sound.startTrack();
     }
 		 
 	public boolean onTouch(View v, MotionEvent event)
@@ -77,6 +78,8 @@ public class Title extends Activity implements OnTouchListener
 			{
 				//Log.i("Title","Start or continue");
 				sound.playSound(Sound.SELECTION);
+				sound.startTrack();
+
 	        	Intent intent = new Intent(this, org.gunnm.lostrunner.Main.class);
 	        	startActivity(intent);
 			}
@@ -103,11 +106,13 @@ public class Title extends Activity implements OnTouchListener
 	protected void onPause() {
 		super.onPause();
 		surface.onPause();
+		sound.stopTrack();
 	}
 
 	protected void onResume() {
 		super.onResume();
 		surface.onResume();
+		sound.startTrack();
 	}
 		
 	
