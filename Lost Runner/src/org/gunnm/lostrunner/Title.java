@@ -106,7 +106,6 @@ public class Title extends Activity implements OnTouchListener
 	protected void onPause() {
 		super.onPause();
 		surface.onPause();
-		sound.stopTrack();
 	}
 
 	protected void onResume() {
