@@ -22,17 +22,15 @@ public class LostRunner extends Activity {
 	private LostRenderer	renderer;
 	private Game			currentGame;
 	private GestureDetector gestureDetector;
-	private static boolean 	fullscreen;
 	 
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        if (fullScreen) {
-        	requestWindowFeature(Window.FEATURE_NO_TITLE);  
-        	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
-        	WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
+       
+        requestWindowFeature(Window.FEATURE_NO_TITLE);  
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
+        WindowManager.LayoutParams.FLAG_FULLSCREEN);
         currentGame = new Game ();
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
@@ -83,17 +81,7 @@ public class LostRunner extends Activity {
     		this.currentApp = app;
     	}
 
-		public boolean onDoubleTap(MotionEvent e) {
 
-			LostRunner.fullscreen = !LostRunner.fullscreen;
-			
-			Intent intent = new Intent(currentApp, LostRunner.class);
-			startActivity(intent);
-
-			currentApp.finish();
-			
-			return true;
-		}
     }
 }
 
