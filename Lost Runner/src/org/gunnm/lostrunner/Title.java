@@ -5,6 +5,7 @@ import org.gunnm.lostrunner.controller.Touch;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.graphics.TitleRenderer;
 import org.gunnm.lostrunner.model.Game;
+import org.gunnm.lostrunner.sounds.Sound;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,18 +30,20 @@ public class Title extends Activity implements OnTouchListener
 	private static boolean 	fullscreen;
 	private int screenWidth;
 	private int screenHeight;
+	private Sound sound;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		WindowManager wm;
 		Display display;
 		
         super.onCreate(savedInstanceState);
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
+        sound = Sound.getInstance(this);
         surface = new GLSurfaceView(this);
-       
         renderer = new TitleRenderer(this);
         surface.setRenderer(renderer);
         surface.setOnTouchListener (this);
@@ -73,6 +76,7 @@ public class Title extends Activity implements OnTouchListener
 			if ( (posY < 3 * partSize) &&  (posY > 2 * partSize))
 			{
 				//Log.i("Title","Start or continue");
+				sound.playSound(Sound.SELECTION);
 	        	Intent intent = new Intent(this, org.gunnm.lostrunner.Main.class);
 	        	startActivity(intent);
 			}
@@ -82,6 +86,7 @@ public class Title extends Activity implements OnTouchListener
 			}
 			if ( (posY < 5 * partSize) &&  (posY > 4 * partSize))
 			{
+				sound.playSound(Sound.SELECTION);
 				//Log.i("Title","instructions");
 	        	Intent intent = new Intent(this, org.gunnm.lostrunner.Instructions.class);
 	        	startActivity(intent);

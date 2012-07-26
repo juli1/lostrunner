@@ -5,7 +5,9 @@ import java.util.Calendar;
 import org.gunnm.lostrunner.maps.Map1;
 import org.gunnm.lostrunner.maps.Map2;
 import org.gunnm.lostrunner.maps.MapInterface;
+import org.gunnm.lostrunner.sounds.Sound;
 
+import android.content.Context;
 import android.util.Log;
 
 public class Game {
@@ -26,6 +28,8 @@ public class Game {
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
 	private boolean completed;
+	private Sound sound;
+	
 	
 	private void loadMap (MapInterface map)
 	{
@@ -56,8 +60,9 @@ public class Game {
 	}
 	
 	
-	public Game()
+	public Game(Context c)
 	{
+		sound = Sound.getInstance (c);
 		this.reset ();
 	}
 	
@@ -120,6 +125,7 @@ public class Game {
 		//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";heroCoarseX="+ heroCoarsePosX + ";heroCoarseZ=" + heroCoarsePosZ);
 		if (destroyed[heroCoarsePosX][heroCoarsePosZ])
 		{
+			sound.playSound(Sound.DEATH);
 			return true;
 		}
 		
@@ -140,6 +146,7 @@ public class Game {
 				{  
 					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
 					Log.i ("Game", "Collision with cube" + i);
+					sound.playSound(Sound.DEATH);
 					return true;
 				}
 			}
@@ -170,6 +177,14 @@ public class Game {
 				 (hero.getZ() <= currentMap.getExitPositionZ()))
 			{ 
 //				Log.i ("Game" , "End of gane");
+				if (currentMapIndex >= NB_MAPS - 1)
+				{
+					sound.playSound(Sound.FINISHED);
+				}
+				else
+				{
+					sound.playSound(Sound.LEVEL_COMPLETED);
+				}
 				return true;
 			}
 		}
@@ -402,7 +417,7 @@ public class Game {
 		Cube toDestroy;
 		
 		toDestroy = null;
-		
+		sound.playSound(Sound.GUN);
 		if (hero.getNbBullets() <= 0)
 		{
 			return;

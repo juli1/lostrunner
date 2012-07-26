@@ -1,0 +1,78 @@
+package org.gunnm.lostrunner.sounds;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.util.Log;
+
+public class Sound {
+
+	private Context context;
+	private String levelCompleted = "levelcompleted.wav";
+	private String selection      = "selection.wav";
+	private String death      = "death.wav";
+	private String finished      = "finished.wav";
+	private String gun      = "gun.wav";
+	private String bomb      = "bomb.wav";
+	private String bigBomb      = "bigbomb.wav";
+	private SoundPool soundPool;
+	private HashMap  poolMap;
+	private AudioManager audioManager;
+	public static final int SELECTION = 1;
+	public static final int LEVEL_COMPLETED = 2;
+	public static final int DEATH = 3;
+	public static final int FINISHED = 4;
+	public static final int GUN = 5;
+	public static final int BOMB = 6;
+	public static final int BIG_BOMB = 7;
+	private static Sound instance = null;
+	
+	public Sound (Context c)
+	{
+		this.context = c;
+		soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+	    poolMap = new HashMap();
+	    audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+	}
+	
+	public static Sound getInstance (Context c)
+	{
+		if (instance == null)
+		{
+			instance = new Sound (c);
+			instance.initSounds();
+		}
+		return instance;
+	}
+	
+	
+	public void initSounds ()
+	{
+
+	    try {
+			poolMap.put(SELECTION, soundPool.load(context.getAssets().openFd(selection), 0));
+			poolMap.put(LEVEL_COMPLETED, soundPool.load(context.getAssets().openFd(levelCompleted), 0));
+			poolMap.put(BOMB, soundPool.load(context.getAssets().openFd(bomb), 0));
+			poolMap.put(BIG_BOMB, soundPool.load(context.getAssets().openFd(bigBomb), 0));
+			poolMap.put(GUN, soundPool.load(context.getAssets().openFd(gun), 0));
+			poolMap.put(FINISHED, soundPool.load(context.getAssets().openFd(finished), 0));
+			poolMap.put(DEATH, soundPool.load(context.getAssets().openFd(death), 0));
+		} catch (IOException e) {
+			
+			Log.i("Sound", "Error when trying to load sound");
+		}
+	}
+	
+	
+	public void playSound(int index)
+	{
+		float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		streamVolume = streamVolume / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+	    soundPool.play( (Integer) poolMap.get(index), streamVolume, streamVolume, 1, 0, 1f);
+	}
+	
+	
+}
