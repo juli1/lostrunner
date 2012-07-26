@@ -17,7 +17,7 @@ public class Game {
 	private static float HERO_SPEED = 2.5f;
 	private static float CUBE_ROTATION_SPEED = 60;
 	
-	
+	private long elapsed;
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private final static int NB_MAPS = 2;
@@ -72,7 +72,8 @@ public class Game {
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		}
-		this.completed = false;
+		this.elapsed 	= 0;
+		this.completed 	= false;
 		hero = new Hero ();
 		hero.setNbBullets(1);
 		hero.setNbBombs(1);
@@ -204,6 +205,16 @@ public class Game {
 		return completed;
 	}
 	
+	public int getElapsedSec ()
+	{
+		return (int)(elapsed / 1000);
+	}
+	
+	public long getElapsedMsec ()
+	{
+		return elapsed;
+	}
+	
 	public void update ()
 	{
 		long currentTime;
@@ -222,8 +233,9 @@ public class Game {
 			return;
 		}
 		
-		currentTime  = Calendar.getInstance().getTimeInMillis();
-		period = currentTime - lastTime;
+		currentTime  	= Calendar.getInstance().getTimeInMillis();
+		period 			= currentTime - lastTime;
+		elapsed 		= elapsed + period;
 		
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{

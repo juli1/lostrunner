@@ -2,6 +2,7 @@ package org.gunnm.lostrunner;
 
 import org.gunnm.lostrunner.controller.Key;
 import org.gunnm.lostrunner.controller.Touch;
+import org.gunnm.lostrunner.graphics.InstructionsRenderer;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.graphics.TitleRenderer;
 import org.gunnm.lostrunner.model.Game;
@@ -21,14 +22,15 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class LostRunnerTitle extends Activity implements OnTouchListener
+public class Instructions extends Activity implements OnTouchListener
 {
 	
-	private GLSurfaceView 	surface;
-	private TitleRenderer	renderer;
-	private static boolean 	fullscreen;
+	private GLSurfaceView 			surface;
+	private InstructionsRenderer	renderer;
 	private int screenWidth;
 	private int screenHeight;
+	private int oldPositionX;
+	private int oldPositionY;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		WindowManager wm;
@@ -41,7 +43,7 @@ public class LostRunnerTitle extends Activity implements OnTouchListener
         
         surface = new GLSurfaceView(this);
        
-        renderer = new TitleRenderer(this);
+        renderer = new InstructionsRenderer(this);
         surface.setRenderer(renderer);
         surface.setOnTouchListener (this);
         surface.setFocusable (true);
@@ -51,6 +53,8 @@ public class LostRunnerTitle extends Activity implements OnTouchListener
 		display = wm.getDefaultDisplay();
 		this.screenWidth 	= display.getWidth();
 		this.screenHeight 	= display.getHeight();
+		this.oldPositionX   = 0;
+		this.oldPositionY   = 0;
     }
 		 
 	public boolean onTouch(View v, MotionEvent event)
@@ -65,24 +69,44 @@ public class LostRunnerTitle extends Activity implements OnTouchListener
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
+			oldPositionX = (int) event.getX();
+			oldPositionY = (int) event.getY();
+		}
+		if (event.getAction() == MotionEvent.ACTION_UP)
+		{
 			posX = (int) event.getX();
 			posY = (int) event.getY();
-			//Log.i("Title", "screenWidth=" + screenWidth + ";screenHeight=" + this.screenHeight + ";posX=" + posX + ";posY=" + posY);
 			
 			
-			if ( (posY < 3 * partSize) &&  (posY > 2 * partSize))
+			if ( Math.abs(posX - oldPositionX) > (screenWidth / 3))
 			{
-				//Log.i("Title","Start or continue");
-	        	Intent intent = new Intent(this, org.gunnm.lostrunner.LostRunner.class);
-	        	startActivity(intent);
-			}
-			if ( (posY < 4 * partSize) &&  (posY > 3 * partSize))
-			{
-				//Log.i("Title","scores");
-			}
-			if ( (posY < 5 * partSize) &&  (posY > 4 * partSize))
-			{
-				//Log.i("Title","instructions");
+				if (posX > oldPositionX)
+				{
+					//Log.i("Instructions", "Going right");
+					if (renderer.getPage() == InstructionsRenderer.PAGE_MOVE)
+					{
+			        	Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
+			        	startActivity(intent);
+					}
+					else
+					{
+						renderer.setPage(renderer.getPage() - 1);
+					}
+				}
+				else
+				{
+					//Log.i("Instructions", "Going left");
+			
+					if (renderer.getPage() == InstructionsRenderer.PAGE_UTILS)
+					{
+			        	Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
+			        	startActivity(intent);
+					}
+					else
+					{
+						renderer.setPage(renderer.getPage() + 1);
+					}
+				}
 			}
 		}
 		return true;

@@ -637,9 +637,12 @@ public class LostRenderer implements Renderer
 		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, 0 );          // Draw Test String
 		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, -20 );          // Draw Test String
 		glText.draw( "" + currentGame.getHero().getNbLifes(), 0, -40 );          // Draw Test String
+		
+		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );          // Draw Test String
+		
 		if (this.showFPS)
 		{
-			glText.draw( fps + "fps", 190, 20 );          // Draw Test String
+			glText.draw( fps + "fps", 190, 0 );          // Draw Test String
 		}
 		glText.end();
 		

@@ -15,7 +15,7 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class LostRunner extends Activity {
+public class Main extends Activity {
 	
 	private boolean 		fullScreen = false;
 	private GLSurfaceView 	surface;
@@ -75,9 +75,9 @@ public class LostRunner extends Activity {
 	
 	private class GlAppGestureListener extends GestureDetector.SimpleOnGestureListener
     {
-    	private LostRunner currentApp;
+    	private Main currentApp;
     	
-    	public GlAppGestureListener(LostRunner app) {
+    	public GlAppGestureListener(Main app) {
     		this.currentApp = app;
     	}
 

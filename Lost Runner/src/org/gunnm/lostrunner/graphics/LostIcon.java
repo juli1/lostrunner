@@ -25,14 +25,25 @@ public class LostIcon {
 	private float 		translationZ;
 	private int[] 		textures 	= new int[1];
 	private int 		type;
+	private int			form;
+	
 	public final static int ICON_SMALL 		= 1;
 	public final static int ICON_MEDIUM 	= 2;
 	public final static int ICON_BIG 		= 3;
+	public final static int FORM_SQUARE     = 1;
+	public final static int FORM_RECTANGLE  = 2;
 	
-	
-	private float vertices[] = {
+	private float verticesSquare[] = {
 			1, 1, 0,
 			-1, 1, 0,
+			-1,-1, 0,
+			1,-1, 0
+	};	
+	
+
+	private float verticesRectangle[] = {
+			1, 2, 0,
+			-1, 2, 0,
 			-1,-1, 0,
 			1,-1, 0
 	};	
@@ -49,16 +60,24 @@ public class LostIcon {
 	
 	public LostIcon (Context c, String f, float tx, float ty, float tz, int t)
 	{
+		this (c,f,tx,ty,tz,t,FORM_SQUARE);
+	}
+	
+	public LostIcon (Context c, String f, float tx, float ty, float tz, int t, int fo)
+	{
 		int divider;
-		context = c;
-		filename = f;
 		
-		
+		float[] vertices;
 		ByteBuffer vertexByteBuffer;
 		ByteBuffer byteBuffer;
 
-
+		context = c;
+		filename = f;
+		
+		this.form = fo;
 		this.type = t;
+		
+		vertices = null;
 		
 		switch (this.type)
 		{
@@ -79,9 +98,24 @@ public class LostIcon {
 			}
 		}
 		
-		for (int i = 0 ; i < this.vertices.length ; i++)
+		switch (fo)
 		{
-			this.vertices[i] = this.vertices[i] / divider;
+			case FORM_RECTANGLE:
+			{
+				vertices = verticesRectangle;
+				break;
+			}
+			
+			default:
+			{
+				vertices = verticesSquare;
+				break;
+			}
+		}
+		
+		for (int i = 0 ; i < vertices.length ; i++)
+		{
+			vertices[i] = vertices[i] / divider;
 		}
 
 		vertexByteBuffer= ByteBuffer.allocateDirect(vertices.length * 4);

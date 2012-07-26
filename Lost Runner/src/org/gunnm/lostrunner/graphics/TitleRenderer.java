@@ -28,8 +28,8 @@ public class TitleRenderer implements Renderer
 	
 	private final int ANGLE_INCREASE = 1;
 	private final int ANGLE_DECREASE = 2;
-	private final int ANGLE_INCREMENT = 40;
-	private final int ANGLE_MAX = 60;
+	private final int ANGLE_INCREMENT = 12;
+	private final int ANGLE_MAX = 10;
 	private LostIcon iconLogo;
 	
 	public TitleRenderer (Context c)
@@ -39,8 +39,8 @@ public class TitleRenderer implements Renderer
 		this.startTime = Calendar.getInstance().getTimeInMillis();
 		this.lastTime = this.startTime;
 		this.context  = c;
-		this.angleNewGame = 3;
-		this.angleOnlineScores = -3;
+		this.angleNewGame = 5;
+		this.angleOnlineScores = -5;
 		this.angleInstructions = 0;
 		this.angleNewGameDirection = ANGLE_INCREASE;
 		this.angleOnlineScoresDirection = ANGLE_DECREASE;
@@ -143,7 +143,7 @@ public class TitleRenderer implements Renderer
 		  currentTime = Calendar.getInstance().getTimeInMillis();
 		  deltaTime = currentTime - lastTime;
 		  
-		  updateAngles (deltaTime);
+		  //updateAngles (deltaTime);
 		  lastTime = currentTime;
 		  //Log.i ("TitleRenderer", "Angle instructions=" + angleInstructions + ";anglerecords=" + angleOnlineScores + ";angleNewGame = " + angleNewGame);
 	      // Redraw background color
@@ -168,21 +168,16 @@ public class TitleRenderer implements Renderer
 	      
 	      iconLogo.draw(gl);
 	      
-	      // TEST: render some strings with the font
 	      gl.glPushMatrix(); 
 	      gl.glTranslatef (20,100,-50);
-	      //gl.glRotatef(angleInstructions, 0, 1, 0);
 
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Lost", -11, -50 );          // Draw Test String
 	      glText.end();                                   // End Text Rendering
 	      gl.glPopMatrix();
 	      
-	      // TEST: render some strings with the font
 	      gl.glPushMatrix(); 
 	      gl.glTranslatef (0,100,-60);
-	      //gl.glRotatef(angleInstructions, 0, 1, 0);
-
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Runner", 0, -50 );          // Draw Test String
 	      glText.end();                                   // End Text Rendering
@@ -191,16 +186,17 @@ public class TitleRenderer implements Renderer
 	      
 	      // TEST: render some strings with the font
 	      gl.glPushMatrix(); 
+
+	      gl.glRotatef(angleInstructions, 0, 1, 0);
 	      gl.glTranslatef (-50,-50,-150);
-	      //gl.glRotatef(angleInstructions, 0, 1, 0);
 
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Game Instructions", 0, -100 );          // Draw Test String
 	      glText.end();                                   // End Text Rendering
 	      gl.glPopMatrix();
-	      
+	       
 	      gl.glPushMatrix();
-	      //gl.glRotatef(angleOnlineScores, 0, 1, 0);
+	      gl.glRotatef(angleOnlineScores, 0, 1, 0);
 	      gl.glTranslatef (-50,-50,-150);
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Online Records", 10, 0 );                // Draw Test String
@@ -208,7 +204,7 @@ public class TitleRenderer implements Renderer
 	      gl.glPopMatrix();
 	      
 	      gl.glPushMatrix();
-	      //gl.glRotatef(angleNewGame, 0, 1, 0);
+	      gl.glRotatef(angleNewGame, 0, 1, 0);
 	      gl.glTranslatef (-50,-50,-150);
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Start or Continue", 5, 100 );              // Draw Test String
