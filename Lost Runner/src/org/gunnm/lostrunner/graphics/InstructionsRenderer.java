@@ -323,7 +323,7 @@ public class InstructionsRenderer implements Renderer
 	      glText.end();
 	      
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
-	      glText.draw( "To shoot a buller, you have to ", 0, base - ( 8 * lineHeight));
+	      glText.draw( "To shoot a bullet, you have to ", 0, base - ( 8 * lineHeight));
 	      glText.end();
 	      glText.begin( 1.0f, 0.0f, 0.0f, 1.0f );         
 	      glText.draw( "press the icon at the bottom.", 0, base - ( 9 * lineHeight));
