@@ -75,8 +75,6 @@ public class LostRenderer implements Renderer
 	private int currentCameraZoom;
 	private int currentCameraMove;
 
-	private int screenWidth;
-	private int screenHeight;
 	
 	private int[] 		textureGround 	= new int[1];
 	private int[] 		textureDoor 	= new int[1];
@@ -306,18 +304,18 @@ public class LostRenderer implements Renderer
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 
-		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.5f, -7.5f, -10.0f);
-		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.5f, -9.0f, -10.0f);
-		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.5f, -5.5f, -10.0f);
-		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.5f, -7.5f, -10.0f);
-		iconGun = new LostIcon (c, "gun.png", 0.5f, -9.0f, -10.0f);
-		iconBomb = new LostIcon (c, "bomb1.png", 3.0f, -9.0f, -10.0f);
-		iconBigBomb = new LostIcon (c, "bomb2.png", 5.5f, -9.0f, -10.0f);
+		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.0f, -7.0f, -10.0f);
+		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.0f, -8.5f, -10.0f);
+		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.0f, -5.0f, -10.0f);
+		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.0f, -7.0f, -10.0f);
+		iconGun = new LostIcon (c, "gun.png", 0f, -9.0f, -10.0f);
+		iconBomb = new LostIcon (c, "bomb1.png", 2.5f, -9.0f, -10.0f);
+		iconBigBomb = new LostIcon (c, "bomb2.png", 5.0f, -9.0f, -10.0f);
 		
-		iconGunSmall = new LostIcon (c, "gun.png", -6f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBombSmall = new LostIcon (c, "bomb1.png", -6f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBigBombSmall = new LostIcon (c, "bomb2.png", -6f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconLifeSmall = new LostIcon (c, "life.png", -6f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconGunSmall = new LostIcon (c, "gun.png", -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBombSmall = new LostIcon (c, "bomb1.png", -5.5f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBigBombSmall = new LostIcon (c, "bomb2.png", -5.5f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconLifeSmall = new LostIcon (c, "life.png", -5.5f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
 		
 		
 		iconZoomIn = new LostIcon (c, "zoomin.png",5.5f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
@@ -507,12 +505,12 @@ public class LostRenderer implements Renderer
 
 				if (currentGame.hasBigBomb(i, j))
 				{
-					gl.glColor4f(1, 0.5f, 0.5f, 0.5f);	
+					gl.glColor4f(1, 1,1, 0.3f);	
 				}
 
 				if (currentGame.hasBomb(i, j))
 				{
-					gl.glColor4f(1, 0.2f, 0.2f, 0.5f);	
+					gl.glColor4f(1,1 ,1, 0.7f);	
 				}
 				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
@@ -634,10 +632,10 @@ public class LostRenderer implements Renderer
 
 		// TEST: render some strings with the font
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-		glText.draw( "" + currentGame.getHero().getNbBullets(), 0, 20 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, 0 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbBombs(), 0, -20 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbLifes(), 0, -40 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBullets(), 10, 20 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, 0 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, -20 );          // Draw Test String
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, -40 );          // Draw Test String
 		
 		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );          // Draw Test String
 		
@@ -672,10 +670,8 @@ public class LostRenderer implements Renderer
 		gl.glDisable( GL10.GL_TEXTURE_2D);
 	}  
 
-	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		this.screenWidth  = width;
-		this.screenHeight = height;
-
+	public void onSurfaceChanged(GL10 gl, int width, int height) 
+	{
 		if (height == 0)
 		{
 			height = 1;
@@ -687,8 +683,6 @@ public class LostRenderer implements Renderer
 
 		gl.glLoadIdentity();
 		GLU.gluPerspective(gl,90.0f, (float)width / (float)height , 0.1f, 200.0f);
-
-
 	}
 
 

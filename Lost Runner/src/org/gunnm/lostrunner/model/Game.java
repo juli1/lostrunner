@@ -161,6 +161,10 @@ public class Game {
 				{
 					destroyed[cubeCoarsePosX][cubeCoarsePosZ] = true;
 				}
+				else
+				{
+					hasBomb[cubeCoarsePosX][cubeCoarsePosZ] = false;
+				}
 			}
 		}
 		return false;
@@ -424,7 +428,7 @@ public class Game {
 		{
 			return;
 		}
-		
+		hero.setNbBullets (hero.getNbBullets() - 1);
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
 			cube = cubes[i];
@@ -459,7 +463,7 @@ public class Game {
 			//Log.i("Game", "Destroy cube at posX" + toDestroy.getX() + ";posZ=" + toDestroy.getZ());
 			toDestroy.setVisible(false);
 			toDestroy.setActive(false);
-			hero.setNbBullets (hero.getNbBullets() - 1);
+			
 
 		}
 	}
