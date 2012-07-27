@@ -56,7 +56,33 @@ public class Instructions extends Activity implements OnTouchListener
 		this.oldPositionX   = 0;
 		this.oldPositionY   = 0;
     }
-		 
+	public void movePreviousPage ()
+	{
+		if (renderer.getPage() == InstructionsRenderer.PAGE_MOVE)
+		{
+			Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
+			startActivity(intent);
+		}
+		else
+		{
+			renderer.setPage(renderer.getPage() - 1);
+		}
+	}
+	
+	public void moveNextPage  ()
+	{
+		
+		if (renderer.getPage() == InstructionsRenderer.PAGE_UTILS)
+		{
+        	Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
+        	startActivity(intent);
+		}
+		else
+		{
+			renderer.setPage(renderer.getPage() + 1);
+		}
+	}
+	
 	public boolean onTouch(View v, MotionEvent event)
 	{
 		int posX;
@@ -71,6 +97,17 @@ public class Instructions extends Activity implements OnTouchListener
 		{
 			oldPositionX = (int) event.getX();
 			oldPositionY = (int) event.getY();
+			posX = (int) event.getX();
+			posY = (int) event.getY();
+			
+			if ( (posX < screenWidth / 2) && (posY > screenHeight * 0.8))
+			{
+				movePreviousPage();
+			}
+			if ( (posX > screenWidth / 2) && (posY > screenHeight * 0.8))
+			{
+				moveNextPage();
+			}
 		}
 		if (event.getAction() == MotionEvent.ACTION_UP)
 		{
@@ -82,30 +119,14 @@ public class Instructions extends Activity implements OnTouchListener
 			{
 				if (posX > oldPositionX)
 				{
+					movePreviousPage ();
 					//Log.i("Instructions", "Going right");
-					if (renderer.getPage() == InstructionsRenderer.PAGE_MOVE)
-					{
-			        	Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
-			        	startActivity(intent);
-					}
-					else
-					{
-						renderer.setPage(renderer.getPage() - 1);
-					}
+
 				}
 				else
 				{
 					//Log.i("Instructions", "Going left");
-			
-					if (renderer.getPage() == InstructionsRenderer.PAGE_UTILS)
-					{
-			        	Intent intent = new Intent(this, org.gunnm.lostrunner.Title.class);
-			        	startActivity(intent);
-					}
-					else
-					{
-						renderer.setPage(renderer.getPage() + 1);
-					}
+					moveNextPage();
 				}
 			}
 		}

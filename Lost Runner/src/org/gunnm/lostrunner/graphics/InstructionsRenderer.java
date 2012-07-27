@@ -30,6 +30,8 @@ public class InstructionsRenderer implements Renderer
 	private LostIcon bitmapInstructions2;
 	private LostIcon bitmapInstructions3;
 	private LostIcon bitmapInstructions4;
+	private LostIcon iconLeft;
+	private LostIcon iconRight;
 	
 	public InstructionsRenderer (Context c)
 	{
@@ -46,7 +48,8 @@ public class InstructionsRenderer implements Renderer
 		bitmapInstructions2 = new LostIcon (c, "instructionsgun.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
 		bitmapInstructions3 = new LostIcon (c, "bomb.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
 		bitmapInstructions4 = new LostIcon (c, "utils.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
-		
+		iconRight 			= new LostIcon (c, "direction-right.png", 2.5f, -4.5f, -3.0f, LostIcon.ICON_SMALL);
+		iconLeft 			= new LostIcon (c, "direction-left.png", -2.5f, -4.5f, -3.0f, LostIcon.ICON_SMALL);
 	}
 
 	public int getPage ()
@@ -77,6 +80,8 @@ public class InstructionsRenderer implements Renderer
 	      bitmapInstructions2.loadGLTexture(gl, context);
 	      bitmapInstructions3.loadGLTexture(gl, context);
 	      bitmapInstructions4.loadGLTexture(gl, context);
+	      iconLeft.loadGLTexture(gl, context);
+	      iconRight.loadGLTexture(gl, context);
 	}
 	
 	public void onDrawFrame(GL10 gl) {
@@ -170,7 +175,8 @@ public class InstructionsRenderer implements Renderer
 	public void displayPage4(GL10 gl)
 	{
 	      bitmapInstructions4.draw(gl);
-	      
+	      iconLeft.draw(gl);
+	      iconRight.draw(gl);
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -225,7 +231,8 @@ public class InstructionsRenderer implements Renderer
 	public void displayPage3(GL10 gl)
 	{
 	      bitmapInstructions3.draw(gl);
-	      
+	      iconLeft.draw(gl);
+	      iconRight.draw(gl);
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -288,7 +295,8 @@ public class InstructionsRenderer implements Renderer
 	public void displayPage2(GL10 gl)
 	{
 	      bitmapInstructions2.draw(gl);
-	      
+	      iconLeft.draw(gl);
+	      iconRight.draw(gl);
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -340,7 +348,8 @@ public class InstructionsRenderer implements Renderer
 	public void displayPage1(GL10 gl)
 	{
 	      bitmapInstructions1.draw(gl);
-	      
+	      iconLeft.draw(gl);
+	      iconRight.draw(gl);
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -387,6 +396,7 @@ public class InstructionsRenderer implements Renderer
 	      glText.end(); 
 	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glDisable( GL10.GL_BLEND );                   // Enable Alpha Blend
+	      
 	}
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) {

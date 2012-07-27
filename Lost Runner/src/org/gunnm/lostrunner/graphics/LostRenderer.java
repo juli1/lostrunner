@@ -81,6 +81,7 @@ public class LostRenderer implements Renderer
 	private int[] 		textureGround 	= new int[1];
 	private int[] 		textureDoor 	= new int[1];
 	private int[] 		textureCube 	= new int[1];
+	private int[] 		textureFace 	= new int[1];
 	
 	private FloatBuffer textureBuffer;  // buffer holding the texture coordinates
 	private FloatBuffer[] textureCubeBuffer;  // buffer holding the texture coordinates
@@ -398,7 +399,7 @@ public class LostRenderer implements Renderer
 		loadGLTexture(gl, "metal2.png", textureCube);
 		loadGLTexture(gl, "ground4.png", textureGround);
 		loadGLTexture(gl, "door2.png", textureDoor);
-		
+		loadGLTexture(gl, "face.png", textureFace);
 		// Create the GLText
 		glText = new GLText( gl, context.getAssets() );
 		// Load the font from file (set size + padding), creates the texture
@@ -820,8 +821,35 @@ public class LostRenderer implements Renderer
 		
 		for (int k = 0; k < 6; k++)
 		{
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroBodyVertexBfr[k]);
-			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+			if (k == 2)
+			{
+				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+
+				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureFace[0]);
+
+				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+				gl.glEnable(GL10.GL_DEPTH_TEST);
+				gl.glDepthFunc(GL10.GL_LEQUAL);
+				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+				
+				gl.glFrontFace(GL10.GL_CW);
+				
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroBodyVertexBfr[k]);
+
+				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+				gl.glDisable(GL10.GL_DEPTH_TEST);
+				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+				gl.glDisable( GL10.GL_BLEND );  
+				gl.glDisable( GL10.GL_TEXTURE_2D );
+			}
+			else
+			{
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, heroBodyVertexBfr[k]);
+				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+			}
 		}
 		
 		// Draw Right leg
