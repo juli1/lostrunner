@@ -794,9 +794,10 @@ public class LostRenderer implements Renderer
 	
 	public void drawHero (GL10 gl)
 	{
-		gl.glColor4f(1,1,1,0.5f);
+		gl.glColor4f(1,1,1,1.0f);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LEQUAL);
 		switch (currentGame.getHero().getDirection())
 		{
 			case Hero.DIRECTION_LEFT:
@@ -821,7 +822,7 @@ public class LostRenderer implements Renderer
 		
 		for (int k = 0; k < 6; k++)
 		{
-			if (k == 2)
+			if (k == 3)
 			{
 				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
@@ -829,8 +830,7 @@ public class LostRenderer implements Renderer
 				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureFace[0]);
 
 				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				gl.glEnable(GL10.GL_DEPTH_TEST);
-				gl.glDepthFunc(GL10.GL_LEQUAL);
+
 				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 				
 				gl.glFrontFace(GL10.GL_CW);
@@ -840,9 +840,9 @@ public class LostRenderer implements Renderer
 				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-				gl.glDisable(GL10.GL_DEPTH_TEST);
+				gl.glDisable( GL10.GL_BLEND ); 
 				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				gl.glDisable( GL10.GL_BLEND );  
+ 
 				gl.glDisable( GL10.GL_TEXTURE_2D );
 			}
 			else
@@ -898,6 +898,7 @@ public class LostRenderer implements Renderer
 		gl.glPopMatrix();
 		
 		gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+		gl.glDisable(GL10.GL_DEPTH_TEST);	
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 	}
 	

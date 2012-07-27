@@ -27,7 +27,7 @@ public class Key implements OnKeyListener
 		
 		if (event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			Log.i("KEY", "Down key, code=" + event.getKeyCode());
+			//Log.i("KEY", "Down key, code=" + event.getKeyCode());
 			if (event.getKeyCode()  == KeyEvent.KEYCODE_DPAD_LEFT)
 			{
 				//Log.i("KEY", "Going left");
