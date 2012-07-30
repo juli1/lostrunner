@@ -28,7 +28,7 @@ public class TitleRenderer implements Renderer
 	
 	private final int ANGLE_INCREASE = 1;
 	private final int ANGLE_DECREASE = 2;
-	private final int ANGLE_INCREMENT = 12;
+	private final int ANGLE_INCREMENT = 1;
 	private final int ANGLE_MAX = 10;
 	private LostIcon iconLogo;
 	
@@ -70,10 +70,22 @@ public class TitleRenderer implements Renderer
 
 	private void updateAngles (long delta)
 	{
+		if ((delta % 3) == 0)
+		{
+			return;
+		}
+		if ((delta % 6) == 0)
+		{
+			return;
+		}
+		if ((delta % 5) == 0)
+		{
+			return;
+		}
 		
 		if (this.angleInstructionsDirection == ANGLE_INCREASE)
 		{
-			this.angleInstructions = this.angleInstructions + (  (ANGLE_INCREMENT * delta) / 1000);
+			this.angleInstructions = this.angleInstructions + ANGLE_INCREMENT;
 			if (this.angleInstructions > ANGLE_MAX)
 			{
 				this.angleInstructions = ANGLE_MAX;
@@ -82,7 +94,7 @@ public class TitleRenderer implements Renderer
 		}
 		else
 		{
-			this.angleInstructions = this.angleInstructions - ((ANGLE_INCREMENT * delta) / 1000);
+			this.angleInstructions = this.angleInstructions - ANGLE_INCREMENT;
 			if (this.angleInstructions < -ANGLE_MAX)
 			{
 				this.angleInstructions = -ANGLE_MAX;
@@ -93,7 +105,7 @@ public class TitleRenderer implements Renderer
 		if (this.angleNewGameDirection == ANGLE_INCREASE)
 		{
 			//Log.i("TitleRenderer", "Should increase the nesgame angle, old value="+ this.angleNewGame+ "increment=" + ANGLE_INCREMENT + "d=" + delta);
-			this.angleNewGame = this.angleNewGame + (  (ANGLE_INCREMENT * delta) / 1000);
+			this.angleNewGame = this.angleNewGame + ANGLE_INCREMENT;
 			if (this.angleNewGame > ANGLE_MAX)
 			{
 				this.angleNewGame = ANGLE_MAX;
@@ -105,7 +117,7 @@ public class TitleRenderer implements Renderer
 		{
 			//Log.i("TitleRenderer", "Should decrease the nesgame angle, old value="+ this.angleNewGame + "increment=" + ANGLE_INCREMENT + "d=" + delta);
 
-			this.angleNewGame = this.angleNewGame - (  (ANGLE_INCREMENT * delta) / 1000);
+			this.angleNewGame = this.angleNewGame - ANGLE_INCREMENT;
 			if (this.angleNewGame < -ANGLE_MAX)
 			{
 				this.angleNewGame = -ANGLE_MAX;
@@ -117,20 +129,20 @@ public class TitleRenderer implements Renderer
 		
 		if (this.angleOnlineScoresDirection == ANGLE_INCREASE)
 		{
-			this.angleOnlineScores = this.angleOnlineScores + (  (ANGLE_INCREMENT * delta) / 1000);
+			this.angleOnlineScores = this.angleOnlineScores +ANGLE_INCREMENT;
 			if (this.angleOnlineScores > ANGLE_MAX)
 			{
 				this.angleOnlineScores = ANGLE_MAX;
-				this.angleOnlineScores = ANGLE_DECREASE;
+				this.angleOnlineScoresDirection = ANGLE_DECREASE;
 			}
 		}
 		else
 		{
-			this.angleOnlineScores = this.angleNewGame - (  (ANGLE_INCREMENT * delta) / 1000);
+			this.angleOnlineScores = this.angleOnlineScores -ANGLE_INCREMENT;
 			if (this.angleOnlineScores < -ANGLE_MAX)
 			{
 				this.angleOnlineScores = -ANGLE_MAX;
-				this.angleOnlineScores = ANGLE_INCREASE;
+				this.angleOnlineScoresDirection = ANGLE_INCREASE;
 			}
 		}
 		
@@ -143,7 +155,7 @@ public class TitleRenderer implements Renderer
 		  currentTime = Calendar.getInstance().getTimeInMillis();
 		  deltaTime = currentTime - lastTime;
 		  
-		  //updateAngles (deltaTime);
+		  updateAngles (deltaTime);
 		  lastTime = currentTime;
 		  //Log.i ("TitleRenderer", "Angle instructions=" + angleInstructions + ";anglerecords=" + angleOnlineScores + ";angleNewGame = " + angleNewGame);
 	      // Redraw background color
@@ -188,7 +200,7 @@ public class TitleRenderer implements Renderer
 	      gl.glPushMatrix(); 
 
 	      gl.glRotatef(angleInstructions, 0, 1, 0);
-	      gl.glTranslatef (-50,-50,-150);
+	      gl.glTranslatef (-50,-20,-100);
 
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      glText.draw( "Game Instructions", 0, -100 );          // Draw Test String
@@ -197,17 +209,17 @@ public class TitleRenderer implements Renderer
 	       
 	      gl.glPushMatrix();
 	      gl.glRotatef(angleOnlineScores, 0, 1, 0);
-	      gl.glTranslatef (-50,-50,-150);
+	      gl.glTranslatef (-50,-20,-100);
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Online Records", 10, 0 );                // Draw Test String
+	      glText.draw( "Online Records", 4, -20 );                // Draw Test String
 	      glText.end();                                   // End Text Rendering
 	      gl.glPopMatrix();
 	      
 	      gl.glPushMatrix();
 	      gl.glRotatef(angleNewGame, 0, 1, 0);
-	      gl.glTranslatef (-50,-50,-150);
+	      gl.glTranslatef (-50,-20,-100);
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Start or Continue", 5, 100 );              // Draw Test String
+	      glText.draw( "Start or Continue", 2, 60 );              // Draw Test String
 	      glText.end();                                   // End Text Rendering
 	      gl.glPopMatrix();
 	      

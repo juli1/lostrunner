@@ -304,10 +304,10 @@ public class LostRenderer implements Renderer
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 
-		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.0f, -7.0f, -10.0f);
-		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.0f, -8.5f, -10.0f);
-		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.0f, -5.0f, -10.0f);
-		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.0f, -7.0f, -10.0f);
+		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.0f, -6.5f, -10.0f);
+		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.0f, -9.0f, -10.0f);
+		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.0f, -4.0f, -10.0f);
+		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.0f, -6.5f, -10.0f);
 		iconGun = new LostIcon (c, "gun.png", 0f, -9.0f, -10.0f);
 		iconBomb = new LostIcon (c, "bomb1.png", 2.5f, -9.0f, -10.0f);
 		iconBigBomb = new LostIcon (c, "bomb2.png", 5.0f, -9.0f, -10.0f);

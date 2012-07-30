@@ -44,10 +44,10 @@ public class InstructionsRenderer implements Renderer
 		this.currentPage = PAGE_MOVE;
 		
 		iconLogo = new LostIcon (c, "logo.png", -1.5f, 3.5f, -3.0f, LostIcon.ICON_BIG);
-		bitmapInstructions1 = new LostIcon (c, "instructions1.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
-		bitmapInstructions2 = new LostIcon (c, "instructionsgun.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
-		bitmapInstructions3 = new LostIcon (c, "bomb.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
-		bitmapInstructions4 = new LostIcon (c, "utils.png", 0.8f, -1.0f, -1.8f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
+		bitmapInstructions1 = new LostIcon (c, "instructions1.png", 0.1f, -1.0f, -1.5f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
+		bitmapInstructions2 = new LostIcon (c, "instructionsgun.png", 0.1f, -1.0f, -1.5f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
+		bitmapInstructions3 = new LostIcon (c, "bomb.png", 0.1f, -1.0f, -1.5f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
+		bitmapInstructions4 = new LostIcon (c, "utils.png", 0.1f, -1.0f, -1.5f, LostIcon.ICON_BIG, LostIcon.FORM_RECTANGLE);
 		iconRight 			= new LostIcon (c, "direction-right.png", 2.5f, -4.5f, -3.0f, LostIcon.ICON_SMALL);
 		iconLeft 			= new LostIcon (c, "direction-left.png", -2.5f, -4.5f, -3.0f, LostIcon.ICON_SMALL);
 	}
@@ -181,14 +181,14 @@ public class InstructionsRenderer implements Renderer
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
 
-	      
+	     
 	      gl.glMatrixMode( GL10.GL_PROJECTION );          // Activate Projection Matrix
 	      gl.glLoadIdentity();                            // Load Identity Matrix
 	      gl.glOrthof(                                    // Set Ortho Projection (Left,Right,Bottom,Top,Front,Back)
 	         0, screenWidth,
 	         0, screenHeight,
 	         1.0f, -1.0f
-	      );
+	      ); 
 	      
 	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
@@ -196,7 +196,7 @@ public class InstructionsRenderer implements Renderer
 
 	      // TEST: render the entire font texture
 	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-
+	      /*
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      int base = screenHeight - (screenHeight / 3 );
 	      int lineHeight = 20;
@@ -218,7 +218,7 @@ public class InstructionsRenderer implements Renderer
 	      glText.draw( "the top right. You can ", 0, base - ( 14 * lineHeight));
 	      glText.draw( "either zoom in or out.", 0, base - ( 15 * lineHeight));
 	      glText.end();  
-	      
+	      */
 	      
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         
 	      glText.draw( "Page 4/4", (screenWidth / 2) - 30, 0);
@@ -233,6 +233,7 @@ public class InstructionsRenderer implements Renderer
 	      bitmapInstructions3.draw(gl);
 	      iconLeft.draw(gl);
 	      iconRight.draw(gl);
+	      
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -249,10 +250,10 @@ public class InstructionsRenderer implements Renderer
 	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
 	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
-
+	     
 	      // TEST: render the entire font texture
 	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-
+	      /*
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      int base = screenHeight - (screenHeight / 3 );
 	      int lineHeight = 20;
@@ -282,13 +283,15 @@ public class InstructionsRenderer implements Renderer
 	      glText.draw( "disposed by pressing the icon", 0, base - ( 19 * lineHeight));
 	      glText.draw( "at the bottom.", 0, base - ( 20 * lineHeight));
 	      glText.end();
-	
+	       */
 	      
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         
 	      glText.draw( "Page 3/4", (screenWidth / 2) - 30, 0);
 	      glText.end(); 
+	      
 	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glDisable( GL10.GL_BLEND );                   // Enable Alpha Blend
+	      
 	}
 	
 	
@@ -297,6 +300,8 @@ public class InstructionsRenderer implements Renderer
 	      bitmapInstructions2.draw(gl);
 	      iconLeft.draw(gl);
 	      iconRight.draw(gl);
+	      
+	      
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -316,7 +321,7 @@ public class InstructionsRenderer implements Renderer
 
 	      // TEST: render the entire font texture
 	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-
+	      /*
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      int base = screenHeight - (screenHeight / 3 );
 	      int lineHeight = 20;
@@ -336,13 +341,14 @@ public class InstructionsRenderer implements Renderer
 	      glText.begin( 1.0f, 0.0f, 0.0f, 1.0f );         
 	      glText.draw( "press the icon at the bottom.", 0, base - ( 9 * lineHeight));
 	      glText.end();  
-	      
+	      */
 	      
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         
 	      glText.draw( "Page 2/4", (screenWidth / 2) - 30, 0);
 	      glText.end(); 
 	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glDisable( GL10.GL_BLEND );                   // Enable Alpha Blend
+	      
 	}
 	
 	public void displayPage1(GL10 gl)
@@ -350,6 +356,7 @@ public class InstructionsRenderer implements Renderer
 	      bitmapInstructions1.draw(gl);
 	      iconLeft.draw(gl);
 	      iconRight.draw(gl);
+	      
 	      // disable texture + alpha
 	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
 	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
@@ -369,7 +376,7 @@ public class InstructionsRenderer implements Renderer
 
 	      // TEST: render the entire font texture
 	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-
+	      /*
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 	      int base = screenHeight - (screenHeight / 3 );
 	      int lineHeight = 20;
@@ -389,13 +396,14 @@ public class InstructionsRenderer implements Renderer
 	      glText.begin( 1.0f, 0.0f, 0.0f, 1.0f );         
 	      glText.draw( "on the left side.", 0, base - ( 10 * lineHeight));
 	      glText.end();  
-	      
+	      */
 	      
 	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         
 	      glText.draw( "Page 1/4", (screenWidth / 2) - 30, 0);
 	      glText.end(); 
 	      gl.glDisable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 	      gl.glDisable( GL10.GL_BLEND );                   // Enable Alpha Blend
+	      
 	      
 	}
 

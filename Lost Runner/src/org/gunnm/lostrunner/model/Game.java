@@ -99,7 +99,11 @@ public class Game {
 		int cubeCoarsePosZ;
 		int heroCoarsePosX;
 		int heroCoarsePosZ;
+		float heroFineLeft;
+		float heroFineRight;
 		
+		heroFineLeft 	= hero.getX() - 0.2f;
+		heroFineRight 	= hero.getX() + 0.2f;
 		heroCoarsePosX = (int)Math.floor( (double)hero.getX());
 		heroCoarsePosZ = (int)Math.floor( (double) ( -1 * hero.getZ()));
 		
@@ -136,8 +140,11 @@ public class Game {
 			if (cube.isVisible() == false)
 				continue;
 			
-			if ((hero.getX() > cube.getX()) &&
-			    (hero.getX() <= cube.getX()+1))
+			if (((heroFineLeft > cube.getX()) &&
+			     (heroFineLeft <= cube.getX()+1)) ||
+			     ((heroFineRight > cube.getX()) &&
+			     (heroFineRight <= cube.getX()+1))
+			   )
 			{
 				//Log.i ("Game", "Potential Collision with cube " + i); 
 				
