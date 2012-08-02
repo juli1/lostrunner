@@ -6,6 +6,8 @@ import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.utils.Score;
 
+import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
+import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
@@ -91,6 +93,37 @@ public class Main extends Activity {
 
 
     }
+	
+	
+	 protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
+	 {
+
+		 scores = Score.getInstance();
+		 scores.setActivity(this);
+		 switch (requestCode) {
+
+		 case Score.SHOW_RESULT:
+			 if (scores.getScoreSubmitStatus() != OnScoreSubmitObserver.STATUS_ERROR_NETWORK) {
+				 // Show the post-score activity unless there has been a network error.
+				 startActivityForResult(new Intent(this, PostScoreOverlayActivity.class), Score.POST_SCORE);
+			 } else { 
+
+				 finish();
+			 }
+
+			 break;
+
+		 case Score.POST_SCORE:
+
+			 // Here we get notified that the PostScoreOverlay has finished.
+			 // in this example this simply means that we're ready to return to the main activity
+			 finish();
+			 break;
+		 default:
+			 break;
+		 }
+	 }
+	
 }
 
 

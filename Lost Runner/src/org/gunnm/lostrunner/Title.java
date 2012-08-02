@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -74,7 +75,7 @@ public class Title extends Activity implements OnTouchListener
         		Log.i("Title", "error when initializng scoreloop" + e.toString());
         	}
         }
-        
+        Score.getInstance().setInitialized(scoreLoopInitialized);
         sound = Sound.getInstance(this);
         surface = new GLSurfaceView(this);
         renderer = new TitleRenderer(this);
@@ -89,7 +90,7 @@ public class Title extends Activity implements OnTouchListener
 		this.screenHeight 	= display.getHeight();
 		
 		builder = new AlertDialog.Builder(this);
-		
+
 		sound.startTrack();
     }
 		 
@@ -110,12 +111,10 @@ public class Title extends Activity implements OnTouchListener
 		{
 			posX = (int) event.getX();
 			posY = (int) event.getY();
-			//Log.i("Title", "screenWidth=" + screenWidth + ";screenHeight=" + this.screenHeight + ";posX=" + posX + ";posY=" + posY);
 			
 			
 			if ( (posY < 3 * partSize) &&  (posY > 2 * partSize))
 			{
-				//Log.i("Title","Start or continue");
 				sound.playSound(Sound.SELECTION);
 				sound.startTrack();
 
@@ -152,14 +151,20 @@ public class Title extends Activity implements OnTouchListener
 			          AlertDialog alert = builder.create();  
 			          alert.show();
 			    }
-				//Log.i("Title","scores");
 			}
 			if ( (posY < 5 * partSize) &&  (posY > 4 * partSize))
 			{
 				sound.playSound(Sound.SELECTION);
-				//Log.i("Title","instructions");
-	        	Intent intent = new Intent(this, org.gunnm.lostrunner.Instructions.class);
-	        	startActivity(intent);
+				if ( (this.screenWidth < 400) || (this.screenHeight < 800))
+				{
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://julien.gunnm.org/data/misc/lost-runner-instructions.html")));
+						
+				}
+				else
+				{
+					Intent intent = new Intent(this, org.gunnm.lostrunner.Instructions.class);
+					startActivity(intent);
+				}
 			}
 		}
 		return true;

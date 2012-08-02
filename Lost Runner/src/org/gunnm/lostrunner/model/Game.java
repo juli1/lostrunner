@@ -6,6 +6,7 @@ import org.gunnm.lostrunner.maps.Map1;
 import org.gunnm.lostrunner.maps.Map2;
 import org.gunnm.lostrunner.maps.MapInterface;
 import org.gunnm.lostrunner.sounds.Sound;
+import org.gunnm.lostrunner.utils.Score;
 
 import android.content.Context;
 import android.util.Log;
@@ -347,6 +348,7 @@ public class Game {
 			else
 			{
 				this.completed = true;
+				Score.getInstance().registerScore(getElapsedSec());
 			}
 		}
 		
