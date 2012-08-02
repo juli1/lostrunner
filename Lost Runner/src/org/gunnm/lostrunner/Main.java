@@ -4,6 +4,9 @@ import org.gunnm.lostrunner.controller.Key;
 import org.gunnm.lostrunner.controller.Touch;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.model.Game;
+import org.gunnm.lostrunner.utils.Score;
+
+import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +25,7 @@ public class Main extends Activity {
 	private LostRenderer	renderer;
 	private Game			currentGame;
 	private GestureDetector gestureDetector;
-	 
+	private Score			scores;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,11 @@ public class Main extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+		scores 				= Score.getInstance ();
+		scores.setActivity(this);
+		ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(scores);
+        
         currentGame = new Game (this);
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         

@@ -1,0 +1,112 @@
+package org.gunnm.lostrunner.utils;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.scoreloop.client.android.core.model.Continuation;
+import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
+import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
+import com.scoreloop.client.android.ui.ShowResultOverlayActivity;
+
+public class Score implements OnScoreSubmitObserver {
+	private static Score 		instance 			= null;
+	private Activity 			relatedActivity;
+	private int  				scoreSubmitStatus;
+	public final static int    	SHOW_RESULT 		= 2;
+	public final static int    	POST_SCORE 			= 3;
+	
+	public Score ()
+	{
+		
+	}
+	
+	
+	public static Score getInstance ()
+	{
+		if (instance == null)
+		{
+			instance = new Score();
+		}
+		return instance;
+	}
+	
+	
+
+    public void registerScore (int score)
+    {
+    	Double result = new Double (score);
+    	ScoreloopManagerSingleton.get().onGamePlayEnded(result, null);
+    	return;
+    }
+    
+    public void setActivity (Activity a)
+    {
+    	this.relatedActivity = a;
+    }
+
+
+
+    public void onScoreSubmit(final int status, final Exception error) {
+    	SharedPreferences 	preferences;
+    	boolean 			useScoreloop;
+    	
+    	scoreSubmitStatus = status;
+
+    	if(relatedActivity == null)
+    	{
+    		return;
+    	}
+
+    	preferences = PreferenceManager.getDefaultSharedPreferences(relatedActivity);
+    	useScoreloop = preferences.getBoolean("use_scoreloop", false);
+    	
+    	if (useScoreloop)
+    	{
+    		checkTermsOfService();
+    		relatedActivity.startActivityForResult(new Intent(relatedActivity, ShowResultOverlayActivity.class), SHOW_RESULT);
+    	}
+    }
+    
+    
+    public int getScoreSubmitStatus ()
+    {
+    	return this.scoreSubmitStatus;
+    }
+    
+    public void checkTermsOfService ()
+    {
+    	final SharedPreferences preferences;
+	    boolean useScoreloop;
+	    
+    	if (relatedActivity == null)
+    	{
+    		return;
+    	}
+    	
+		preferences = PreferenceManager.getDefaultSharedPreferences(relatedActivity);
+	    	
+	    useScoreloop = preferences.getBoolean("use_scoreloop", false);
+	    if (useScoreloop)
+	    {
+
+	    	ScoreloopManagerSingleton.get().askUserToAcceptTermsOfService(relatedActivity, new Continuation<Boolean>() {
+	    		public void withValue(final Boolean value, final Exception error) {
+	    			if (value != null && value) {
+	    				preferences.edit().putBoolean("use_scoreloop", true);
+	    			}
+	    			else
+	    			{
+	    				preferences.edit().putBoolean("use_scoreloop", false);
+
+	    			}
+	    		}
+	    	});
+	    }
+	    else
+	    {
+	    	preferences.edit().putBoolean("use_scoreloop", false);
+	    }
+    }
+}

@@ -9,6 +9,7 @@
         android:theme="@style/AppTheme" >
         <activity android:name=".Main"/>
         <activity android:name=".Instructions"/>
+        <activity android:name=".Preferences"/>
         <activity
             android:name=".Title"
             android:label="@string/title_activity_main" >
@@ -18,6 +19,46 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <!-- Defining the ScoreloopCore activities -->
+         <!--
+		 <activity android:name="com.scoreloop.client.android.core.ui.ProxyActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize"/>
+		 -->
+		 
+		 <activity android:name="com.scoreloop.client.android.core.ui.ProxyActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" android:configChanges="orientation|keyboard|keyboardHidden"/> 
+		 
+		 <!-- Note: you may need to add more entries here for the payment methods you want to use. -->
+		 
+		 <!-- Defining the ScoreloopUI activities -->
+		 <activity android:name="com.scoreloop.client.android.ui.EntryScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+		 <activity android:name="com.scoreloop.client.android.ui.ShowResultOverlayActivity" android:theme="@style/sl_dialog"/>
+		
+		 <activity android:name="com.scoreloop.client.android.ui.component.market.MarketHeaderActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.market.MarketListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.entry.EntryListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.post.PostOverlayActivity" android:theme="@style/sl_dialog"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.score.ScoreHeaderActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.score.ScoreListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.user.UserAddBuddyListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.user.UserHeaderActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.user.UserDetailListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.user.UserListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.game.GameDetailHeaderActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.game.GameDetailListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.game.GameListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.profile.ProfileSettingsListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.component.profile.ProfileSettingsPictureListActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.LeaderboardsScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+		 
+		 <activity android:name="com.scoreloop.client.android.ui.framework.ScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+		 <activity android:name="com.scoreloop.client.android.ui.framework.TabsActivity"/>
+		 
+		
+		 <activity android:name="com.scoreloop.client.android.ui.PostScoreOverlayActivity"/>
+		 <activity android:name="com.scoreloop.client.android.ui.BuddiesScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+		<activity android:name="com.scoreloop.client.android.ui.SocialMarketScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+		 <activity android:name="com.scoreloop.client.android.ui.ProfileScreenActivity" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>        
+		        
+        
     </application>
 
 </manifest>

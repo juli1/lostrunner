@@ -6,16 +6,26 @@ import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.graphics.TitleRenderer;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.sounds.Sound;
+import org.gunnm.lostrunner.utils.Score;
+
+import com.scoreloop.client.android.core.model.Continuation;
+import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
+import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -31,6 +41,15 @@ public class Title extends Activity implements OnTouchListener
 	private int screenWidth;
 	private int screenHeight;
 	private Sound sound;
+	private Score scores;
+
+	AlertDialog.Builder builder;
+	private boolean scoreLoopInitialized = false;
+	
+	public Title ()
+	{
+        builder = new AlertDialog.Builder(this);
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		WindowManager wm;
@@ -41,6 +60,19 @@ public class Title extends Activity implements OnTouchListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);  
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        if (scoreLoopInitialized == false)
+        {
+        	try
+        	{
+        		ScoreloopManagerSingleton.init(this, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
+        		scoreLoopInitialized = true;
+        	}
+        	catch (IllegalStateException e)
+        	{
+        	
+        	}
+        }
         
         sound = Sound.getInstance(this);
         surface = new GLSurfaceView(this);
@@ -63,6 +95,9 @@ public class Title extends Activity implements OnTouchListener
 		int posY;
 		int divider;
 		int partSize;
+		final Activity currentActivity;
+		
+		currentActivity = this;
 		
 		divider = 6;
 		partSize = screenHeight / divider;
@@ -85,6 +120,34 @@ public class Title extends Activity implements OnTouchListener
 			}
 			if ( (posY < 4 * partSize) &&  (posY > 3 * partSize))
 			{
+				
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+			    boolean useScoreloop;
+
+			    useScoreloop = preferences.getBoolean("use_scoreloop", false);
+			    
+			    if (useScoreloop)
+			    {
+			    	ScoreloopManagerSingleton.get().askUserToAcceptTermsOfService( this, new Continuation<Boolean>() {
+			    		public void withValue(final Boolean value, final Exception error) {
+			    			if (value != null && value) {
+								Intent intent = new Intent(currentActivity, LeaderboardsScreenActivity.class);
+								startActivity(intent);
+			    			}
+			    		}
+			    	});
+			    }
+			    else
+			    {
+			    	  builder.setMessage("You must use Score Loop to get access to the leaderboard");  
+			          builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {  
+			               public void onClick(DialogInterface dialog, int which) {  
+			                    
+			               }  
+			          });  
+			          AlertDialog alert = builder.create();  
+			          alert.show();
+			    }
 				//Log.i("Title","scores");
 			}
 			if ( (posY < 5 * partSize) &&  (posY > 4 * partSize))
@@ -112,9 +175,26 @@ public class Title extends Activity implements OnTouchListener
 		super.onResume();
 		surface.onResume();
 		sound.startTrack();
+		scores = Score.getInstance();
+		scores.setActivity(this);
+		scores.checkTermsOfService();
+		
 	}
 		
-	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) 
+	    {
+	        case R.id.menu_settings:
+	        {
+	        	startActivity(new Intent(this, org.gunnm.lostrunner.Preferences.class));
+	            return true;
+	        }
+	        default:
+	        {
+	            return super.onOptionsItemSelected(item);
+	        }
+	    }
+	}
 }
 
 
