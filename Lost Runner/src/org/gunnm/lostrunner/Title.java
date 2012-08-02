@@ -48,7 +48,7 @@ public class Title extends Activity implements OnTouchListener
 	
 	public Title ()
 	{
-        builder = new AlertDialog.Builder(this);
+        
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,12 +65,13 @@ public class Title extends Activity implements OnTouchListener
         {
         	try
         	{
+        		Log.i("Title", "initialize scoreloop");
         		ScoreloopManagerSingleton.init(this, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
         		scoreLoopInitialized = true;
         	}
         	catch (IllegalStateException e)
         	{
-        	
+        		Log.i("Title", "error when initializng scoreloop" + e.toString());
         	}
         }
         
@@ -86,6 +87,9 @@ public class Title extends Activity implements OnTouchListener
 		display = wm.getDefaultDisplay();
 		this.screenWidth 	= display.getWidth();
 		this.screenHeight 	= display.getHeight();
+		
+		builder = new AlertDialog.Builder(this);
+		
 		sound.startTrack();
     }
 		 
@@ -139,7 +143,7 @@ public class Title extends Activity implements OnTouchListener
 			    }
 			    else
 			    {
-			    	  builder.setMessage("You must use Score Loop to get access to the leaderboard");  
+			    	  builder.setMessage("You must use Score Loop to get access to the leaderboard. Check game settings in the menu.");  
 			          builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {  
 			               public void onClick(DialogInterface dialog, int which) {  
 			                    
