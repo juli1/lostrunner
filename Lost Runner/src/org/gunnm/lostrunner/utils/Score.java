@@ -49,7 +49,11 @@ public class Score implements OnScoreSubmitObserver {
     public void registerScore (int score)
     {
     	Double result = new Double (score);
-    	ScoreloopManagerSingleton.get().onGamePlayEnded(result, null);
+    	
+    	if(this.useScoreLoop())
+    	{
+    		ScoreloopManagerSingleton.get().onGamePlayEnded(result, null);
+    	}
     	return;
     }
     

@@ -23,14 +23,46 @@ public class Game {
 	private long elapsed;
 	private long lastTime = 0;
 	private int currentMapIndex;
-	private final static int NB_MAPS = 2;
+	private long completedTime;
+	private final static int NB_MAPS = 1;
 	private final static Class[] maps = {Map1.class, Map2.class};
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
-	private boolean completed;
-	private Sound sound;
+	private boolean 	completed;
+	private Sound 		sound;
+	private static Game instance;
+	private boolean scoreSubmitted;
+	private boolean isStarted;
 	
+	
+	public static Game getInstance (Context c)
+	{
+		if (instance == null)
+		{
+			instance = new Game(c);
+		}
+		return instance;
+	}
+	
+	public long getCompletedTime ()
+	{
+		return this.completedTime;
+	}
+	
+	public boolean isStarted ()
+	{
+		return this.isStarted;
+	}
+	
+	public void start()
+	{
+		if (isStarted == false)
+		{
+			isStarted 				= true;
+			this.elapsed 			= 0;
+		}
+	}
 	
 	private void loadMap (MapInterface map)
 	{
@@ -64,7 +96,18 @@ public class Game {
 	public Game(Context c)
 	{
 		sound = Sound.getInstance (c);
+		
 		this.reset ();
+	}
+	
+	public void setScoreSubmitted (boolean b)
+	{
+		this.scoreSubmitted = b;
+	}
+	
+	public boolean getScoreSubmitted ()
+	{
+		return this.scoreSubmitted;
 	}
 	
 	public void reset ()
@@ -78,8 +121,10 @@ public class Game {
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		}
-		this.elapsed 	= 0;
-		this.completed 	= false;
+		this.elapsed 			= 0;
+		this.scoreSubmitted 	= false;
+		this.completed 			= false;
+		this.isStarted 			= false;
 		hero = new Hero ();
 		hero.setNbBullets(1);
 		hero.setNbBombs(1);
@@ -216,6 +261,11 @@ public class Game {
 	
 	public boolean isActive ()
 	{
+		if (isStarted == false)
+		{
+			return false;
+		}
+		
 		if (hero.getNbLifes() <= 0)
 		{
 			sound.stopTrack();
@@ -252,13 +302,12 @@ public class Game {
 		boolean collision;
 		
 		
-		
 		endLevel = false;
 		collision = false;
 		
+		
 		if (this.isActive() == false)
 		{
-
 			return;
 		}
 		
@@ -347,8 +396,8 @@ public class Game {
 			}
 			else
 			{
+				completedTime = Calendar.getInstance().getTimeInMillis();
 				this.completed = true;
-				Score.getInstance().registerScore(getElapsedSec());
 			}
 		}
 		

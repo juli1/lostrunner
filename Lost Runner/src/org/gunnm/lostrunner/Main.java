@@ -14,6 +14,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -28,6 +31,7 @@ public class Main extends Activity {
 	private Game			currentGame;
 	private GestureDetector gestureDetector;
 	private Score			scores;
+	private Handler			handler;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +41,16 @@ public class Main extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
+
+        handler = new Handler();
+        
 		scores 				= Score.getInstance ();
 		scores.setActivity(this);
 		ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(scores);
         
-        currentGame = new Game (this);
+        currentGame = Game.getInstance(this);
+        currentGame.start();
+        
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
         
         surface = new GLSurfaceView(this);
@@ -52,8 +61,23 @@ public class Main extends Activity {
         surface.setOnTouchListener(new Touch(this, renderer, currentGame));
         surface.setFocusable(true);
         setContentView(surface);
+		Log.i("Main", "onCreate");
+
     }
-		 
+	
+	
+	public void notifyScore ()
+	{
+		Looper.prepare ();
+		handler.post (new Runnable()
+		{
+			public void run()
+			{
+				Score.getInstance().registerScore(currentGame.getElapsedSec());
+			}
+		}
+		);
+	}
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -68,9 +92,11 @@ public class Main extends Activity {
 	protected void onResume() {
 		super.onResume();
 		surface.onResume();
+		Log.i("Main", "onResume");
 		if (currentGame.isActive() == false)
 		{
 			currentGame.reset ();
+			currentGame.start ();
 		}
 	}
 	
@@ -95,34 +121,6 @@ public class Main extends Activity {
     }
 	
 	
-	 protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
-	 {
-
-		 scores = Score.getInstance();
-		 scores.setActivity(this);
-		 switch (requestCode) {
-
-		 case Score.SHOW_RESULT:
-			 if (scores.getScoreSubmitStatus() != OnScoreSubmitObserver.STATUS_ERROR_NETWORK) {
-				 // Show the post-score activity unless there has been a network error.
-				 startActivityForResult(new Intent(this, PostScoreOverlayActivity.class), Score.POST_SCORE);
-			 } else { 
-
-				 finish();
-			 }
-
-			 break;
-
-		 case Score.POST_SCORE:
-
-			 // Here we get notified that the PostScoreOverlay has finished.
-			 // in this example this simply means that we're ready to return to the main activity
-			 finish();
-			 break;
-		 default:
-			 break;
-		 }
-	 }
 	
 }
 

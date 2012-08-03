@@ -10,6 +10,8 @@ import org.gunnm.lostrunner.utils.Score;
 
 import com.scoreloop.client.android.core.model.Continuation;
 import com.scoreloop.client.android.ui.LeaderboardsScreenActivity;
+import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
+import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
@@ -92,6 +94,7 @@ public class Title extends Activity implements OnTouchListener
 		builder = new AlertDialog.Builder(this);
 
 		sound.startTrack();
+		Log.i("Title", "onCreate");
     }
 		 
 	public boolean onTouch(View v, MotionEvent event)
@@ -178,15 +181,30 @@ public class Title extends Activity implements OnTouchListener
 	protected void onPause() {
 		super.onPause();
 		surface.onPause();
+		Log.i("Title", "onPause");
 	}
 
 	protected void onResume() {
+		Game currentGame;
+		Score score;
+		
 		super.onResume();
+		Log.i("Title", "onResume");
 		surface.onResume();
 		sound.startTrack();
 		scores = Score.getInstance();
 		scores.setActivity(this);
 		scores.checkTermsOfService();
+		
+		currentGame = Game.getInstance(this);
+		score = Score.getInstance();
+		score.setActivity(this);
+		if (currentGame.isCompleted() && ( ! currentGame.getScoreSubmitted()))
+		{
+			Log.i("Title", "onResume score not submitted");
+			score.registerScore(currentGame.getElapsedSec());
+			currentGame.setScoreSubmitted(true);
+		}
 		
 	}
 		
@@ -204,6 +222,31 @@ public class Title extends Activity implements OnTouchListener
 	        }
 	    }
 	}
+	
+	
+
+	 protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
+	 {
+
+		 scores = Score.getInstance();
+		 scores.setActivity(this);
+		 switch (requestCode) {
+
+		 case Score.SHOW_RESULT:
+			 if (scores.getScoreSubmitStatus() != OnScoreSubmitObserver.STATUS_ERROR_NETWORK) {
+				 // Show the post-score activity unless there has been a network error.
+				 startActivityForResult(new Intent(this, PostScoreOverlayActivity.class), Score.POST_SCORE);
+			 }
+
+			 break;
+
+		 case Score.POST_SCORE:
+
+			 break;
+		 default:
+			 break;
+		 }
+	 }
 }
 
 

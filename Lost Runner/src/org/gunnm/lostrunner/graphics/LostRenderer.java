@@ -9,6 +9,7 @@ import java.util.Calendar;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.gunnm.lostrunner.Main;
 import org.gunnm.lostrunner.R;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;
@@ -54,7 +55,7 @@ public class LostRenderer implements Renderer
 	private static FloatBuffer[] 	heroMemberVertexBfr;
 	private static FloatBuffer[] 	cubeVertexBfr;
 	private static FloatBuffer 		doorVertexBfr;
-	private Context context;
+	private Main mainActivity;
 
 	private boolean showFPS = true;
 	private long startTime;
@@ -75,6 +76,8 @@ public class LostRenderer implements Renderer
 	private int currentCameraZoom;
 	private int currentCameraMove;
 
+	
+	private boolean scoreNotified;
 	
 	private int[] 		textureGround 	= new int[1];
 	private int[] 		textureDoor 	= new int[1];
@@ -270,16 +273,18 @@ public class LostRenderer implements Renderer
 
 
 
-	public LostRenderer (Context c, Game g)
+	public LostRenderer (Main c, Game g)
 	{
 		super ();
 		this.currentCameraMove 	= CAMERA_MOVE_NONE;
 		this.currentCameraZoom	= CAMERA_ZOOM_NONE;
 		this.currentGame 		= g;
-		this.context 			= c;
+		this.mainActivity		= c;
 		this.startTime 			= Calendar.getInstance().getTimeInMillis();
 		this.nbFrames 			= 0;
-
+		this.scoreNotified 		= false;
+		
+		
 		camX = 3;
 		camY = 4.5f;
 		camZ = 2;
@@ -330,7 +335,7 @@ public class LostRenderer implements Renderer
 		Bitmap bitmap;
 		try 
 		{
-			bitmap = BitmapFactory.decodeStream(context.getAssets().open(filename));
+			bitmap = BitmapFactory.decodeStream(mainActivity.getAssets().open(filename));
 		} 
 		catch (IOException e) 
 		{
@@ -378,28 +383,28 @@ public class LostRenderer implements Renderer
 
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		iconDirectionLeft.loadGLTexture(gl, context);
-		iconDirectionDown.loadGLTexture(gl, context);
-		iconDirectionUp.loadGLTexture(gl, context);
-		iconDirectionRight.loadGLTexture(gl, context);
-		iconGun.loadGLTexture(gl, context);
-		iconBomb.loadGLTexture(gl, context);
-		iconBigBomb.loadGLTexture(gl, context);
-		iconZoomIn.loadGLTexture(gl, context);
-		iconZoomOut.loadGLTexture(gl, context);
-		iconCameraLeft.loadGLTexture(gl, context);
-		iconCameraRight.loadGLTexture(gl, context);
-		iconGunSmall.loadGLTexture(gl, context);
-		iconBombSmall.loadGLTexture(gl, context);
-		iconLifeSmall.loadGLTexture(gl, context);
-		iconBigBombSmall.loadGLTexture(gl, context);
+		iconDirectionLeft.loadGLTexture(gl, mainActivity);
+		iconDirectionDown.loadGLTexture(gl, mainActivity);
+		iconDirectionUp.loadGLTexture(gl, mainActivity);
+		iconDirectionRight.loadGLTexture(gl, mainActivity);
+		iconGun.loadGLTexture(gl, mainActivity);
+		iconBomb.loadGLTexture(gl, mainActivity);
+		iconBigBomb.loadGLTexture(gl, mainActivity);
+		iconZoomIn.loadGLTexture(gl, mainActivity);
+		iconZoomOut.loadGLTexture(gl, mainActivity);
+		iconCameraLeft.loadGLTexture(gl, mainActivity);
+		iconCameraRight.loadGLTexture(gl, mainActivity);
+		iconGunSmall.loadGLTexture(gl, mainActivity);
+		iconBombSmall.loadGLTexture(gl, mainActivity);
+		iconLifeSmall.loadGLTexture(gl, mainActivity);
+		iconBigBombSmall.loadGLTexture(gl, mainActivity);
 		
 		loadGLTexture(gl, "metal2.png", textureCube);
 		loadGLTexture(gl, "ground4.png", textureGround);
 		loadGLTexture(gl, "door2.png", textureDoor);
 		loadGLTexture(gl, "face.png", textureFace);
 		// Create the GLText
-		glText = new GLText( gl, context.getAssets() );
+		glText = new GLText( gl, mainActivity.getAssets() );
 		// Load the font from file (set size + padding), creates the texture
 		// NOTE: after a successful call to this the font is ready for rendering!
 		glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
@@ -430,11 +435,22 @@ public class LostRenderer implements Renderer
 
 	public void onDrawFrame(GL10 gl) {
 		long fps = 0;
-
+		long currentTime;
+		
+		currentTime = Calendar.getInstance().getTimeInMillis();
+		
+		if (currentGame.isCompleted() && ( ! scoreNotified ))
+		{
+			if ( (currentTime - currentGame.getCompletedTime()) > 5000)
+			{
+				mainActivity.finish();
+			}
+		}
+		
 		if (this.showFPS)
 		{
 			this.nbFrames = this.nbFrames + 1;
-			long currentTime = Calendar.getInstance().getTimeInMillis();
+			
 			long nbsec;
 			nbsec = 1;
 			nbsec = ((currentTime - startTime) / 1000 );
