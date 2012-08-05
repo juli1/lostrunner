@@ -2,49 +2,43 @@ package org.gunnm.lostrunner.maps;
 
 import org.gunnm.lostrunner.model.Cube;
 
-public class Map2 implements MapInterface {
+public class Map5 implements MapInterface {
 
-	private int NB_CUBES = 5;
+	private int NB_CUBES = 8;
 	
-	private int MAP_WIDTH = 5;
-	private int MAP_DEPTH = 10;
+	private int MAP_WIDTH = 6;
+	private int MAP_DEPTH = 16;
 	private int cubesPositions[][];
 	private int heroPositionX;
 	private int heroPositionZ;
 	private int exitPositionX;
 	private int exitPositionZ;
 	
-	public Map2()
+	public Map5()
 	{
 		cubesPositions = new int[NB_CUBES][2];
-		for (int i = 0 ; i < NB_CUBES ; i++)
+		int cubid;
+		cubid = 0;
+		for ( int i = 0 ; i < 4 ; i++)
 		{
-			cubesPositions[i][0] = i;
-			cubesPositions[i][1] = -MAP_DEPTH + i;
-		}
-		this.heroPositionX = 3;
-		this.heroPositionZ = -3;
+			cubesPositions[cubid][0] = MAP_WIDTH - i - 1;
+			cubesPositions[cubid][1] = -MAP_DEPTH + i;
+			cubid++;
+		}	
+		for ( int i = 0 ; i < 4  ; i++)
+		{
+			cubesPositions[cubid][0] =  i ;
+			cubesPositions[cubid][1] = -MAP_DEPTH + 7 + i;
+			cubid++;
+		}		
+		
+		this.heroPositionX = 2;
+		this.heroPositionZ = -1;
 		
 
-		this.exitPositionX = 1;
+		this.exitPositionX = 4;
 		this.exitPositionZ = -MAP_DEPTH;
 	}	
-	
-	
-	public boolean getCubeBouncing(int cubeId)
-	{
-		return false;
-	}
-	
-	public int getCubeDirection(int cubeId)
-	{
-		return Cube.DIRECTION_NORTH_TO_SOUTH;
-	}
-	
-	public int getCubeType (int cubeId)
-	{
-		return Cube.TYPE_VERTICAL;
-	}
 
 	public int getHeroPositionX ()
 	{
@@ -91,6 +85,21 @@ public class Map2 implements MapInterface {
 		return cubesPositions[cubeId][1];
 	}
 	
+	public boolean getCubeBouncing(int cubeId)
+	{
+		return true;
+	}
+	
+	public int getCubeDirection(int cubeId)
+	{
+		return Cube.DIRECTION_NORTH_TO_SOUTH;
+	}
+	
+	public int getCubeType (int cubeId)
+	{
+		return Cube.TYPE_VERTICAL;
+	}
+
 	public int getNbWarps()
 	{
 		return 0;

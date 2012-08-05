@@ -11,8 +11,10 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.gunnm.lostrunner.Main;
 import org.gunnm.lostrunner.R;
+import org.gunnm.lostrunner.model.Cube;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;
+import org.gunnm.lostrunner.model.Warp;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,6 +31,7 @@ import android.util.Log;
 public class LostRenderer implements Renderer 
 {
 	private static FloatBuffer[][] gamePlate;
+	private FloatBuffer warpBuffer;
 	public float camX = 0;
 	public float camY = 0;
 	public float camZ = 0;
@@ -285,10 +288,10 @@ public class LostRenderer implements Renderer
 		this.scoreNotified 		= false;
 		
 		
-		camX = 3;
+		camX = 0;
 		camY = 4.5f;
 		camZ = 2;
-		camAngle = -15;
+		camAngle = 25;
 
 		cubeVertexBfr 		= new FloatBuffer[6];
 		textureCubeBuffer 	= new FloatBuffer[6];
@@ -303,7 +306,11 @@ public class LostRenderer implements Renderer
 			heroBodyVertexBfr[i] = makeFloatBuffer(heroBodyCoords[i]);
 		}
 		doorVertexBfr = makeFloatBuffer(doorCoords);
-		
+
+		warpBuffer = makeFloatBuffer(new float[]{0    , 1 , 0,
+												 1  ,  1 , 0,
+												 1  , 0, 0,
+												 0    , 0 , 0});
 		
 		textureBuffer = ByteBuffer.allocateDirect(texture.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		textureBuffer.put(texture);
@@ -431,6 +438,7 @@ public class LostRenderer implements Renderer
 						i, 0 , -j-1});
 			}
 		}
+		
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -550,6 +558,26 @@ public class LostRenderer implements Renderer
 			}
 		}
 
+		for (int i = 0 ; i < currentGame.getCurrentMap().getNbWarps() ; i++)
+		{
+			gl.glColor4f(1,1 ,1, 0.7f);	
+			Warp warp = currentGame.getWarp(i);
+			gl.glPushMatrix();
+			gl.glTranslatef(warp.getX(), 0, warp.getZ());
+			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+
+			gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+			
+			gl.glFrontFace(GL10.GL_CW);
+			
+			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, warpBuffer);
+
+			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
+
+			gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+			gl.glPopMatrix();
+		}
+		
 		for (int i = 0 ; i < currentGame.getCurrentMap().getNbCubes() ; i++)
 		{
 			if (currentGame.getCube(i).isVisible() == false)
@@ -561,8 +589,15 @@ public class LostRenderer implements Renderer
 
 			gl.glTranslatef(currentGame.getCube(i).getX() + 0.5f, 0.5f, currentGame.getCube(i).getZ());
 
-			gl.glRotatef(currentGame.getCube(i).getRotation(), 1, 0, 0);
-
+			if (currentGame.getCube(i).getType() == Cube.TYPE_VERTICAL)
+			{
+				gl.glRotatef(currentGame.getCube(i).getRotation(), 1, 0, 0);
+			}
+			if (currentGame.getCube(i).getType() == Cube.TYPE_HORIZONTAL)
+			{
+				gl.glRotatef(currentGame.getCube(i).getRotation(), 0, 0, 1);
+			}
+			
 			for (int k = 0; k < 6; k++)
 			{
 				/*

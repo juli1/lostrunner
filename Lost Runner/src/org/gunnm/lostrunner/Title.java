@@ -120,7 +120,7 @@ public class Title extends Activity implements OnTouchListener
 			{
 				sound.playSound(Sound.SELECTION);
 				sound.startTrack();
-
+				Game.getInstance(this).reset();
 	        	Intent intent = new Intent(this, org.gunnm.lostrunner.Main.class);
 	        	startActivity(intent);
 			}

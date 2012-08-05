@@ -2,11 +2,8 @@ package org.gunnm.lostrunner.model;
 
 import java.util.Calendar;
 
-import org.gunnm.lostrunner.maps.Map1;
-import org.gunnm.lostrunner.maps.Map2;
-import org.gunnm.lostrunner.maps.MapInterface;
+import org.gunnm.lostrunner.maps.*;
 import org.gunnm.lostrunner.sounds.Sound;
-import org.gunnm.lostrunner.utils.Score;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,18 +11,18 @@ import android.util.Log;
 public class Game {
 
 	private Cube[] cubes;
+	private Warp[] warps;
 	private Hero hero;
 	private MapInterface currentMap;
-	private static float CUBE_SPEED = 1;
 	private static float HERO_SPEED = 2.5f;
-	private static float CUBE_ROTATION_SPEED = 60;
+
 	
 	private long elapsed;
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private long completedTime;
 	private final static int NB_MAPS = 1;
-	private final static Class[] maps = {Map1.class, Map2.class};
+	private final static Class[] maps = {Map7.class, Map2.class};
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
@@ -68,12 +65,29 @@ public class Game {
 	{
 		currentMap = map;
 		cubes = new Cube[currentMap.getNbCubes()];
+		warps = new Warp[currentMap.getNbWarps()];
 		hero.setX(currentMap.getHeroPositionX());
 		hero.setZ(currentMap.getHeroPositionZ());
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
 			cubes[i] = new Cube (map.getCubePositionX(i), map.getCubePositionZ(i));
+			cubes[i].setBounce(map.getCubeBouncing (i));
+			cubes[i].setType(map.getCubeType (i));
+			cubes[i].setDirection(map.getCubeDirection (i));
+			cubes[i].setMap (map);
 		}
+		
+		for (int i = 0 ; i < currentMap.getNbWarps() ; i++)
+		{
+			warps[i] = new Warp ();
+			warps[i].setX(currentMap.getWarpPositionX(i));
+			warps[i].setZ(currentMap.getWarpPositionZ(i));
+		}
+		for (int i = 0 ; i < currentMap.getNbWarps() ; i++)
+		{
+			warps[i].setConnection(warps[currentMap.getWarpConnection(i)]);
+		}
+		
 		
 		hasBomb    = new boolean[map.getMapWidth()][map.getMapDepth()];
 		hasBigBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
@@ -317,16 +331,8 @@ public class Game {
 		
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
-			if (cubes[i].isVisible())
-			{
-				cubes[i].setZ(cubes[i].getZ() + ( ((float)((float)period / 1000)) * CUBE_SPEED) );
-				cubes[i].setRotation(cubes[i].getRotation() + ( ((float)((float)period / 1000)) * CUBE_ROTATION_SPEED) );
-				
-				if (cubes[i].getZ() >= 0)
-				{
-					cubes[i].setVisible(false);
-				}
-			}
+			cubes[i].update (period);
+
 		}
 		
 		hero.updateAngles();
@@ -415,6 +421,11 @@ public class Game {
 	public Cube getCube (int id)
 	{
 		return cubes[id];
+	}
+	
+	public Warp getWarp (int id)
+	{
+		return warps[id];
 	}
 	
 	public MapInterface getCurrentMap ()
