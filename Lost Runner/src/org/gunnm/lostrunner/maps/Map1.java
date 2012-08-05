@@ -113,6 +113,15 @@ public class Map1 implements MapInterface {
 	{
 		return 0;
 	}
+	public float getCubeSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_SPEED;
+	}
+	
+	public float getCubeRotationSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_ROTATION_SPEED;
+	}
 	public int getWarpConnection(int warpId)
 	{
 		return 0;

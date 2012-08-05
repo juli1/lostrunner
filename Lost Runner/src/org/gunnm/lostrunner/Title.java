@@ -94,7 +94,7 @@ public class Title extends Activity implements OnTouchListener
 		builder = new AlertDialog.Builder(this);
 
 		sound.startTrack();
-		Log.i("Title", "onCreate");
+//		Log.i("Title", "onCreate");
     }
 		 
 	public boolean onTouch(View v, MotionEvent event)
@@ -189,7 +189,7 @@ public class Title extends Activity implements OnTouchListener
 		Score score;
 		
 		super.onResume();
-		Log.i("Title", "onResume");
+//		Log.i("Title", "onResume");
 		surface.onResume();
 		sound.startTrack();
 		scores = Score.getInstance();
@@ -201,7 +201,7 @@ public class Title extends Activity implements OnTouchListener
 		score.setActivity(this);
 		if (currentGame.isCompleted() && ( ! currentGame.getScoreSubmitted()))
 		{
-			Log.i("Title", "onResume score not submitted");
+//			Log.i("Title", "onResume score not submitted");
 			score.registerScore(currentGame.getElapsedSec());
 			currentGame.setScoreSubmitted(true);
 		}

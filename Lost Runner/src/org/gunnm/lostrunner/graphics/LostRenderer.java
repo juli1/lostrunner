@@ -30,7 +30,7 @@ import android.util.Log;
 
 public class LostRenderer implements Renderer 
 {
-	private static FloatBuffer[][] gamePlate;
+	private FloatBuffer ground;
 	private FloatBuffer warpBuffer;
 	public float camX = 0;
 	public float camY = 0;
@@ -427,20 +427,13 @@ public class LostRenderer implements Renderer
 
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
-		
-		gamePlate = new FloatBuffer[currentGame.getCurrentMap().getMapWidth()][currentGame.getCurrentMap().getMapDepth()];
 
-		for (int i = 0 ; i < currentGame.getCurrentMap().getMapWidth() ; i++)
-		{
-			for (int j = 0 ; j < currentGame.getCurrentMap().getMapDepth() ; j++)
-			{
-				gamePlate[i][j] = makeFloatBuffer(new float[]{i    , 0 , -j,
-						i+1  ,  0 , -j,
-						i+1, 0, -j-1,
-						i, 0 , -j-1});
-			}
-		}
+		ground = makeFloatBuffer(new float[]{0    , 0 , 0,
+				1  ,  0 , 0,
+				1, 0, -1,
+				0, 0 , -1});
 		
+
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -538,6 +531,8 @@ public class LostRenderer implements Renderer
 				{
 					gl.glColor4f(1,1 ,1, 0.7f);	
 				}
+				gl.glPushMatrix();
+				gl.glTranslatef(i, 0, -1 * j);
 				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
 				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
 				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureGround[0]);
@@ -548,7 +543,7 @@ public class LostRenderer implements Renderer
 				
 				gl.glFrontFace(GL10.GL_CW);
 				
-				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, gamePlate[i][j]);
+				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, ground);
 				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
@@ -557,6 +552,7 @@ public class LostRenderer implements Renderer
 				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 				gl.glDisable( GL10.GL_BLEND );  
 				gl.glDisable( GL10.GL_TEXTURE_2D );
+				gl.glPopMatrix();
 			}
 		}
 

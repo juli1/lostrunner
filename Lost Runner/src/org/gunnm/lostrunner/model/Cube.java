@@ -15,17 +15,26 @@ public class Cube {
 	private int direction;
 	private float speed;
 	private float rotationSpeed;
-	private static float DEFAULT_ROTATION_SPEED = 60;
+	public final static float DEFAULT_ROTATION_SPEED = 60;
 	public final static int TYPE_HORIZONTAL 			= 1;
 	public final static int TYPE_VERTICAL 			= 2;
 	public final static int DIRECTION_WEST_TO_EAST 	= 4;
 	public final static int DIRECTION_EAST_TO_WEST 	= 5;
 	public final static int DIRECTION_NORTH_TO_SOUTH 	= 6;
 	public final static int DIRECTION_SOUTH_TO_NORTH 	= 7;
-	private static float DEFAULT_SPEED = 1;
+	public final static float DEFAULT_SPEED = 1;
 	private boolean bounce;
 	private MapInterface currentMap;
 	
+	public void setSpeed (float s)
+	{
+		this.speed = s;
+	}
+	
+	public void setRotationSpeed (float rs)
+	{
+		this.rotationSpeed = rs;
+	}
 	
 	public void setDirection (int d)
 	{

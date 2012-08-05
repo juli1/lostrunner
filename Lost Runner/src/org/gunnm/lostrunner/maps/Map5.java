@@ -122,6 +122,15 @@ public class Map5 implements MapInterface {
 	{
 		return Warp.WARP_TYPE_HORIZONTAL;
 	}
+	public float getCubeSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_SPEED;
+	}
+	
+	public float getCubeRotationSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_ROTATION_SPEED;
+	}
 	public int getWarpConnection(int warpId)
 	{
 		return 0;

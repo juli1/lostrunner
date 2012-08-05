@@ -21,8 +21,11 @@ public class Game {
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private long completedTime;
-	private final static int NB_MAPS = 1;
-	private final static Class[] maps = {Map7.class, Map2.class};
+	private final static int NB_MAPS = 7;
+	private final static Class[] maps = {Map1.class, Map2.class,
+										 Map3.class, Map4.class,
+										 Map5.class, Map6.class,
+										 Map7.class};
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
@@ -74,6 +77,8 @@ public class Game {
 			cubes[i].setBounce(map.getCubeBouncing (i));
 			cubes[i].setType(map.getCubeType (i));
 			cubes[i].setDirection(map.getCubeDirection (i));
+			cubes[i].setSpeed(map.getCubeSpeed(i));
+			cubes[i].setRotationSpeed(map.getCubeRotationSpeed(i));
 			cubes[i].setMap (map);
 		}
 		
@@ -209,8 +214,8 @@ public class Game {
 			{
 				//Log.i ("Game", "Potential Collision with cube " + i); 
 				
-				if ((hero.getZ() > cube.getZ() ) &&
-				   (hero.getZ() < cube.getZ() + 1.5f))
+				if ((hero.getZ() > ( cube.getZ() - 0.5f) ) &&
+				   (hero.getZ() < ( cube.getZ() + 0.5f)))
 				{  
 					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
 					Log.i ("Game", "Collision with cube" + i);
@@ -298,7 +303,7 @@ public class Game {
 			if (warp.getZ() == ( ( -1 ) * currentMap.getMapDepth()))
 			{
 				newX = warp.getX();
-				newZ = currentMap.getMapWidth() + 1;
+				newZ = currentMap.getMapDepth();
 			}
 			if (warp.getZ() == 0)
 			{
@@ -310,6 +315,7 @@ public class Game {
 //		Log.i ("Game", "New position warp X = " + warp.getX() + "hero coarse z="+newX);
 		hero.setX(newX);
 		hero.setZ( ( - 1 ) * newZ);
+		hero.setDirection(Hero.DIRECTION_NONE);
 	}
 	
 	public void detectWarp()
@@ -322,6 +328,11 @@ public class Game {
 		heroFineRight 	= hero.getX() + 0.2f;
 		heroCoarsePosX = (int)Math.floor( (double)hero.getX());
 		heroCoarsePosZ = (int)Math.floor( (double) ( -1 * hero.getZ()));
+		
+		if (hero.getDirection() == Hero.DIRECTION_NONE)
+		{
+			return;
+		}
 		
 		for (int i = 0 ; i < currentMap.getNbWarps() ; i++)
 		{
@@ -340,6 +351,10 @@ public class Game {
 
 					if (warp.getX() == currentMap.getMapWidth())
 					{
+						if (hero.getDirection() != Hero.DIRECTION_RIGHT)
+						{
+							continue;
+						}
 						if (hero.getX() >= warp.getX())
 						{
 							warpSwitch (warp.getConnection ());
@@ -349,6 +364,10 @@ public class Game {
 					
 					if (warp.getX() == 0)
 					{
+						if (hero.getDirection() != Hero.DIRECTION_LEFT)
+						{
+							continue;
+						}
 						if (hero.getX() <= 0)
 						{
 							warpSwitch (warp.getConnection ());
@@ -360,17 +379,22 @@ public class Game {
 				
 				case Warp.WARP_TYPE_VERTICAL:
 				{
+					
 					if (heroCoarsePosX != warp.getX())
 					{
 						continue;
 					}
-//					Log.i ("Game", "hero on the same X as the warp");
-//					Log.i ("Game", "warp X = " + warp.getX() + "hero coarse x="+heroCoarsePosX);
-//					Log.i ("Game", "warp Z = " + warp.getZ() + "hero coarse z="+heroCoarsePosZ);
-//					Log.i ("Game", "map depth="+currentMap.getMapDepth());
+					//Log.i ("Game", "hero on the same X as the warp");
+					//Log.i ("Game", "warp X = " + warp.getX() + "hero coarse x="+heroCoarsePosX);
+					//Log.i ("Game", "warp Z = " + warp.getZ() + "hero coarse z="+heroCoarsePosZ);
+					//Log.i ("Game", "map depth="+currentMap.getMapDepth());
 
 					if (Math.abs(warp.getZ()) == currentMap.getMapDepth())
 					{
+						if (hero.getDirection() != Hero.DIRECTION_UP)
+						{
+							continue;
+						}
 						if ((heroCoarsePosZ * (-1)) <= warp.getZ())
 						{
 							warpSwitch (warp.getConnection ());
@@ -380,6 +404,11 @@ public class Game {
 					
 					if (warp.getZ() == 0)
 					{
+						if (hero.getDirection() != Hero.DIRECTION_DOWN)
+						{
+							continue;
+						}
+						
 						if (heroCoarsePosZ >= 0)
 						{
 							warpSwitch (warp.getConnection ());

@@ -5,10 +5,10 @@ import org.gunnm.lostrunner.model.Warp;
 
 public class Map7 implements MapInterface {
 
-	private int NB_CUBES = 3;
+	private int NB_CUBES = 10;
 	private int NB_WARPS = 2;
 	private int MAP_WIDTH = 6;
-	private int MAP_DEPTH = 8;
+	private int MAP_DEPTH = 12;
 	private int cubesPositions[][];
 	private int warpsPositions[][];
 	private int warpsTypes[];
@@ -28,8 +28,15 @@ public class Map7 implements MapInterface {
 		cubid = 0;
 		for ( int i = 0 ; i < NB_CUBES ; i++)
 		{
-			cubesPositions[cubid][0] = 3;
-			cubesPositions[cubid][1] = -MAP_DEPTH + (i * 2) + 1;
+			if (( i % 2 ) == 0)
+			{
+				cubesPositions[cubid][0] = (int) Math.floor(((double)i/2));
+			}
+			else
+			{
+				cubesPositions[cubid][0] = MAP_WIDTH - (int) Math.floor(((double)i/2));
+			}
+			cubesPositions[cubid][1] = -MAP_DEPTH + (int) Math.floor(((double)i/2)) + 3;
 			cubid++;
 		}	
 		
@@ -148,4 +155,15 @@ public class Map7 implements MapInterface {
 	{
 		return warpsTypes[warpId];
 	}
+	
+	public float getCubeSpeed (int cubeId)
+	{
+		return 2 * Cube.DEFAULT_SPEED;
+	}
+	
+	public float getCubeRotationSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_ROTATION_SPEED;
+	}
+	
 }

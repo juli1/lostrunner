@@ -20,4 +20,7 @@ public interface MapInterface {
 	public int getWarpPositionZ(int warpId);
 	public int getWarpConnection(int warpId);
 	public int getWarpDirection (int warpId);
+	public float getCubeRotationSpeed (int cubeId);
+	public float getCubeSpeed (int cubeId);
+
 }

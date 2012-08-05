@@ -11,12 +11,10 @@ import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -61,7 +59,7 @@ public class Main extends Activity {
         surface.setOnTouchListener(new Touch(this, renderer, currentGame));
         surface.setFocusable(true);
         setContentView(surface);
-		Log.i("Main", "onCreate");
+		//Log.i("Main", "onCreate");
 
     }
 	
@@ -92,7 +90,7 @@ public class Main extends Activity {
 	protected void onResume() {
 		super.onResume();
 		surface.onResume();
-		Log.i("Main", "onResume");
+		//Log.i("Main", "onResume");
 		if (currentGame.isActive() == false)
 		{
 			currentGame.reset ();

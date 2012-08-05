@@ -8,7 +8,7 @@ public class Map3 implements MapInterface {
 	private int NB_CUBES = 16;
 	
 	private int MAP_WIDTH = 10;
-	private int MAP_DEPTH = 20;
+	private int MAP_DEPTH = 18;
 	private int cubesPositions[][];
 	private int heroPositionX;
 	private int heroPositionZ;
@@ -156,6 +156,15 @@ public class Map3 implements MapInterface {
 	public int getWarpDirection (int warpId)
 	{
 		return Warp.WARP_TYPE_HORIZONTAL;
+	}
+	public float getCubeSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_SPEED;
+	}
+	
+	public float getCubeRotationSpeed (int cubeId)
+	{
+		return Cube.DEFAULT_ROTATION_SPEED;
 	}
 	public int getWarpConnection(int warpId)
 	{
