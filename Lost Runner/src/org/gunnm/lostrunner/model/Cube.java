@@ -106,7 +106,7 @@ public class Cube {
 					case DIRECTION_WEST_TO_EAST:
 					{
 						this.posX = this.posX + ( ((float)((float)period / 1000)) * speed);
-						this.rotation = rotation + ( ((float)((float)period / 1000)) * rotationSpeed);
+						this.rotation = rotation - ( ((float)((float)period / 1000)) * rotationSpeed);
 						
 						if (posX >= (currentMap.getMapWidth() - 1))
 						{
@@ -124,7 +124,7 @@ public class Cube {
 					case DIRECTION_EAST_TO_WEST:
 					{
 						this.posX = this.posX - ( ((float)((float)period / 1000)) * speed);
-						this.rotation = rotation - ( ((float)((float)period / 1000)) * rotationSpeed);
+						this.rotation = rotation + ( ((float)((float)period / 1000)) * rotationSpeed);
 						
 						if (posX <= 0)
 						{

@@ -564,6 +564,10 @@ public class LostRenderer implements Renderer
 			Warp warp = currentGame.getWarp(i);
 			gl.glPushMatrix();
 			gl.glTranslatef(warp.getX(), 0, warp.getZ());
+			if (warp.getDirection() == Warp.WARP_TYPE_HORIZONTAL)
+			{
+				gl.glRotatef(90, 0, 1, 0);
+			}
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
 			gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
