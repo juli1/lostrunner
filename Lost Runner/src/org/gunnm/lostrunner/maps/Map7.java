@@ -37,13 +37,13 @@ public class Map7 implements MapInterface {
 		this.warpsConnections[1] = 0;
 		
 		this.warpsTypes[0] = Warp.WARP_TYPE_HORIZONTAL;
-		this.warpsTypes[1] = Warp.WARP_TYPE_HORIZONTAL;
+		this.warpsTypes[1] = Warp.WARP_TYPE_VERTICAL;
 		
 		this.warpsPositions[0][0] = MAP_WIDTH;
-		this.warpsPositions[0][1] = -3;
+		this.warpsPositions[0][1] = -2;
 		
-		this.warpsPositions[0][0] = MAP_WIDTH;
-		this.warpsPositions[0][1] = -5;
+		this.warpsPositions[1][0] = 3;
+		this.warpsPositions[1][1] = -MAP_DEPTH;
 		
 		
 		this.heroPositionX = 2;
@@ -142,5 +142,10 @@ public class Map7 implements MapInterface {
 	public int getWarpConnection(int warpId)
 	{
 		return warpsConnections[warpId];
+	}
+	
+	public int getWarpDirection (int warpId)
+	{
+		return warpsTypes[warpId];
 	}
 }

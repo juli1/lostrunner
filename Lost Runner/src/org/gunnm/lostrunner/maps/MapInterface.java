@@ -19,4 +19,5 @@ public interface MapInterface {
 	public int getWarpPositionY(int warpId);
 	public int getWarpPositionZ(int warpId);
 	public int getWarpConnection(int warpId);
+	public int getWarpDirection (int warpId);
 }

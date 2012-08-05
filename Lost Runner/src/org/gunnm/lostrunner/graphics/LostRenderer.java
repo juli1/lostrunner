@@ -85,6 +85,7 @@ public class LostRenderer implements Renderer
 	private int[] 		textureGround 	= new int[1];
 	private int[] 		textureDoor 	= new int[1];
 	private int[] 		textureCube 	= new int[1];
+	private int[] 		textureWarp 	= new int[1];
 	private int[] 		textureFace 	= new int[1];
 	
 	private FloatBuffer textureBuffer;  // buffer holding the texture coordinates
@@ -406,6 +407,7 @@ public class LostRenderer implements Renderer
 		iconLifeSmall.loadGLTexture(gl, mainActivity);
 		iconBigBombSmall.loadGLTexture(gl, mainActivity);
 		
+		loadGLTexture(gl, "warp.png", textureWarp);
 		loadGLTexture(gl, "metal2.png", textureCube);
 		loadGLTexture(gl, "ground4.png", textureGround);
 		loadGLTexture(gl, "door2.png", textureDoor);
@@ -560,7 +562,7 @@ public class LostRenderer implements Renderer
 
 		for (int i = 0 ; i < currentGame.getCurrentMap().getNbWarps() ; i++)
 		{
-			gl.glColor4f(1,1 ,1, 0.7f);	
+			gl.glColor4f(1,1 ,1, 1);	
 			Warp warp = currentGame.getWarp(i);
 			gl.glPushMatrix();
 			gl.glTranslatef(warp.getX(), 0, warp.getZ());
@@ -568,17 +570,28 @@ public class LostRenderer implements Renderer
 			{
 				gl.glRotatef(90, 0, 1, 0);
 			}
+			gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+			gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureWarp[0]);
+
 			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+
+			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
 			gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 			
 			gl.glFrontFace(GL10.GL_CW);
 			
 			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, warpBuffer);
+			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 
 			gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+
+			gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+			gl.glDisable( GL10.GL_BLEND );  
+			gl.glDisable( GL10.GL_TEXTURE_2D );
 			gl.glPopMatrix();
 		}
 		

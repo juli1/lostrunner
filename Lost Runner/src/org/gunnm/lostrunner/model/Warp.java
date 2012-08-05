@@ -2,7 +2,7 @@ package org.gunnm.lostrunner.model;
 
 public class Warp {
 	public final static int WARP_TYPE_VERTICAL = 1;
-	public final static int WARP_TYPE_HORIZONTAL = 1;
+	public final static int WARP_TYPE_HORIZONTAL = 2;
 	private float posX;
 	private float posY;
 	private float posZ;
@@ -17,6 +17,11 @@ public class Warp {
 	public void setConnection (Warp c)
 	{
 		this.connection = c;
+	}
+	
+	public Warp getConnection ()
+	{
+		return (this.connection);
 	}
 	
 	public void setX (float x)
@@ -53,6 +58,11 @@ public class Warp {
 	public int getDirection ()
 	{
 		return (this.direction);
+	}
+	
+	public int getType ()
+	{
+		return this.getDirection();
 	}
 	
 	public void setDirection (int d)

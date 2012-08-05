@@ -1,6 +1,7 @@
 package org.gunnm.lostrunner.maps;
 
 import org.gunnm.lostrunner.model.Cube;
+import org.gunnm.lostrunner.model.Warp;
 
 public class Map3 implements MapInterface {
 
@@ -151,6 +152,10 @@ public class Map3 implements MapInterface {
 	public int getWarpPositionZ(int warpId)
 	{
 		return 0;
+	}
+	public int getWarpDirection (int warpId)
+	{
+		return Warp.WARP_TYPE_HORIZONTAL;
 	}
 	public int getWarpConnection(int warpId)
 	{

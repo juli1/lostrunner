@@ -82,6 +82,7 @@ public class Game {
 			warps[i] = new Warp ();
 			warps[i].setX(currentMap.getWarpPositionX(i));
 			warps[i].setZ(currentMap.getWarpPositionZ(i));
+			warps[i].setDirection (currentMap.getWarpDirection(i));
 		}
 		for (int i = 0 ; i < currentMap.getNbWarps() ; i++)
 		{
@@ -273,6 +274,125 @@ public class Game {
 		return false;
 	}
 	
+	public void warpSwitch (Warp warp)
+	{
+		float newX = 0;
+		float newZ = 0;
+		if (warp.getDirection() == Warp.WARP_TYPE_HORIZONTAL)
+		{
+			if (warp.getX() == currentMap.getMapWidth())
+			{
+				newX = currentMap.getMapWidth() - 1;
+				newZ = (-1) * warp.getZ();
+			}
+			if (warp.getX() == 0)
+			{
+				newX = currentMap.getMapWidth() + 1;
+				newZ = (-1) * warp.getZ();
+
+			}	
+		}
+		
+		if (warp.getDirection() == Warp.WARP_TYPE_VERTICAL)
+		{
+			if (warp.getZ() == ( ( -1 ) * currentMap.getMapDepth()))
+			{
+				newX = warp.getX();
+				newZ = currentMap.getMapWidth() + 1;
+			}
+			if (warp.getZ() == 0)
+			{
+				newX = warp.getX();
+				newZ = -1;
+			}	
+		}
+//		Log.i ("Game", "New position: warp Z = " + warp.getZ() + "hero coarse z="+newZ);
+//		Log.i ("Game", "New position warp X = " + warp.getX() + "hero coarse z="+newX);
+		hero.setX(newX);
+		hero.setZ( ( - 1 ) * newZ);
+	}
+	
+	public void detectWarp()
+	{
+		float heroFineLeft;
+		float heroFineRight;
+		float heroCoarsePosX;
+		float heroCoarsePosZ;
+		heroFineLeft 	= hero.getX() - 0.2f;
+		heroFineRight 	= hero.getX() + 0.2f;
+		heroCoarsePosX = (int)Math.floor( (double)hero.getX());
+		heroCoarsePosZ = (int)Math.floor( (double) ( -1 * hero.getZ()));
+		
+		for (int i = 0 ; i < currentMap.getNbWarps() ; i++)
+		{
+			Warp warp = warps[i];
+			switch (warp.getDirection())
+			{
+				case Warp.WARP_TYPE_HORIZONTAL:
+				{
+					if ( (( -1 ) * heroCoarsePosZ) != warp.getZ())
+					{
+						continue;
+					}
+//					Log.i ("Game", "hero on the same Z as the warp");
+//					Log.i ("Game", "warp Z = " + warp.getZ() + "hero coarse z="+heroCoarsePosZ);
+//					Log.i ("Game", "warp X = " + warp.getX() + "hero coarse z="+heroCoarsePosX);
+
+					if (warp.getX() == currentMap.getMapWidth())
+					{
+						if (hero.getX() >= warp.getX())
+						{
+							warpSwitch (warp.getConnection ());
+							return;
+						}
+					}
+					
+					if (warp.getX() == 0)
+					{
+						if (hero.getX() <= 0)
+						{
+							warpSwitch (warp.getConnection ());
+							return;
+						}
+					}
+					break;
+				}
+				
+				case Warp.WARP_TYPE_VERTICAL:
+				{
+					if (heroCoarsePosX != warp.getX())
+					{
+						continue;
+					}
+//					Log.i ("Game", "hero on the same X as the warp");
+//					Log.i ("Game", "warp X = " + warp.getX() + "hero coarse x="+heroCoarsePosX);
+//					Log.i ("Game", "warp Z = " + warp.getZ() + "hero coarse z="+heroCoarsePosZ);
+//					Log.i ("Game", "map depth="+currentMap.getMapDepth());
+
+					if (Math.abs(warp.getZ()) == currentMap.getMapDepth())
+					{
+						if ((heroCoarsePosZ * (-1)) <= warp.getZ())
+						{
+							warpSwitch (warp.getConnection ());
+							return;
+						}
+					}
+					
+					if (warp.getZ() == 0)
+					{
+						if (heroCoarsePosZ >= 0)
+						{
+							warpSwitch (warp.getConnection ());
+							return;
+						}
+					}
+					break;
+					
+				}
+			}
+		}
+	}
+	
 	public boolean isActive ()
 	{
 		if (isStarted == false)
@@ -380,6 +500,9 @@ public class Game {
 				break;
 			}
 		}
+		
+		
+		detectWarp();
 		
 		
 		endLevel = detectEndOfLevel ();
