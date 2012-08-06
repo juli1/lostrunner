@@ -131,7 +131,7 @@ public class Touch implements OnTouchListener {
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			
+			Log.i("Touch", "onTouch, width=" + screenWidth + "; height=" + screenHeight);
 			posX = (int) event.getX();
 			posY = (int) event.getY();
 			//Log.i(TAG, "Screen Width = " + screenWidth + ";screen height=" + screenHeight + ";posx=" + posX + ";posy=" + posY);
@@ -162,24 +162,6 @@ public class Touch implements OnTouchListener {
 				return true;
 			}
 			
-			if ( (posX > zoneBullet[0]) && (posX < zoneBullet[1]) && (posY > zoneBullet[2]) && (posY < zoneBullet[3]) )
-			{
-				Log.i(TAG, "Bullet");
-				currentGame.enableShoot();
-				return true;
-			}
-			if ( (posX > zoneBomb[0]) && (posX < zoneBomb[1]) && (posY > zoneBomb[2]) && (posY < zoneBomb[3]) )
-			{
-				Log.i(TAG, "Bomb");
-				currentGame.enableBomb();
-				return true;
-			}
-			if ( (posX > zoneBigBomb[0]) && (posX < zoneBigBomb[1]) && (posY > zoneBigBomb[2]) && (posY < zoneBigBomb[3]) )
-			{
-				Log.i(TAG, "BigBomb");
-				currentGame.enableBigBomb();
-				return true;
-			}
 			
 			if ( (posX > zoneZoomIn[0]) && (posX < zoneZoomIn[1]) && (posY > zoneZoomIn[2]) && (posY < zoneZoomIn[3]) )
 			{
@@ -209,6 +191,27 @@ public class Touch implements OnTouchListener {
 				Log.i(TAG, "Cam right");
 				return true;
 			}
+			
+			/*
+			if ( (posX > zoneBullet[0]) && (posX < zoneBullet[1]) && (posY > zoneBullet[2]) && (posY < zoneBullet[3]) )
+			{
+				Log.i(TAG, "Bullet");
+				currentGame.enableShoot();
+				return true;
+			}
+			if ( (posX > zoneBomb[0]) && (posX < zoneBomb[1]) && (posY > zoneBomb[2]) && (posY < zoneBomb[3]) )
+			{
+				Log.i(TAG, "Bomb");
+				currentGame.enableBomb();
+				return true;
+			}
+			if ( (posX > zoneBigBomb[0]) && (posX < zoneBigBomb[1]) && (posY > zoneBigBomb[2]) && (posY < zoneBigBomb[3]) )
+			{
+				Log.i(TAG, "BigBomb");
+				currentGame.enableBigBomb();
+				return true;
+			}
+			*/
 		}
 		
 		

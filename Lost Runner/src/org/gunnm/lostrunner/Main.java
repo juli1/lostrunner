@@ -4,6 +4,7 @@ import org.gunnm.lostrunner.controller.Key;
 import org.gunnm.lostrunner.controller.Touch;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.model.Game;
+import org.gunnm.lostrunner.sounds.Sound;
 import org.gunnm.lostrunner.utils.Score;
 
 import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
@@ -85,12 +86,14 @@ public class Main extends Activity {
 	protected void onPause() {
 		super.onPause();
 		surface.onPause();
+		Sound.getInstance(this).stopTrack();
 	}
 
 	protected void onResume() {
 		super.onResume();
 		surface.onResume();
 		//Log.i("Main", "onResume");
+		Sound.getInstance(this).startTrack();
 		if (currentGame.isActive() == false)
 		{
 			currentGame.reset ();

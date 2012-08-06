@@ -36,7 +36,8 @@ public class LostRenderer implements Renderer
 	public float camY = 0;
 	public float camZ = 0;
 	public float camAngle;
-
+	private int screenWidth;
+	private int screenHeight;
 	
 	LostIcon iconDirectionLeft;
 	LostIcon iconDirectionRight;
@@ -225,40 +226,43 @@ public class LostRenderer implements Renderer
 	
 	private static float[][] heroMemberCoords = new float[][] {
 		new float[] { 
-				0.1f, 0,-0.1f,
-				-0.1f, 0,-0.1f,
-				-0.1f, 0, 0.1f,
-				0.1f, 0, 0.1f
+				0.1f  , 0 ,-0.1f,
+				-0.1f , 0 ,-0.1f,
+				-0.1f , 0 , 0.1f,
+				0.1f  , 0 , 0.1f
 		},
 		new float[] { 
-				0.1f,-0.4f, 0.1f,
-				-0.1f,-0.4f, 0.1f,
-				-0.1f,-0.4f,-0.1f,
-				0.1f,-0.4f,-0.1f
+				0.1f  ,-0.4f ,  0.1f,
+				-0.1f ,-0.4f ,  0.1f,
+				-0.1f ,-0.4f , -0.1f,
+				0.1f  ,-0.4f , -0.1f
 		},
 		new float[] { 
-				0.1f, 0, 0.1f,
-				-0.1f, 0, 0.1f,
-				-0.1f,-0.4f, 0.1f,
-				0.1f,-0.4f, 0.1f
+				0.1f  ,     0, 0.1f,
+				-0.1f ,     0, 0.1f,
+				-0.1f , -0.4f, 0.1f,
+				0.1f  , -0.4f, 0.1f
 		},
-		new float[] { 
-				0.1f,-0.4f,-0.1f,
-				-0.1f,-0.4f,-0.1f,
-				-0.1f, 0,-0.1f,
-				0.1f, 0,-0.1f
+		new float[]
+		{ 
+				0.1f  ,-0.4f ,-0.1f,
+				-0.1f ,-0.4f ,-0.1f,
+				-0.1f , 0    ,-0.1f,
+				0.1f  , 0    ,-0.1f
 		},
-		new float[] { 
-				-0.1f, 0, 0.1f,
-				-0.1f, 0,-0.1f,
-				-0.f,-0.4f,-0.1f,
-				-0.1f,-0.4f, 0.1f
+		new float[]
+		{ 
+				-0.1f  , 0     , 0.1f,
+				-0.1f  , 0     ,-0.1f,
+				-0.f   ,-0.4f  ,-0.1f,
+				-0.1f  ,-0.4f  , 0.1f
 		},
-		new float[] {
-				0.1f, 0,-0.1f,
-				0.1f, 0, 0.1f,
-				0.1f,-0.4f, 0.1f,
-				0.1f,-0.4f,-0.1f
+		new float[]
+		{
+				0.1f , 0    ,-0.1f,
+				0.1f , 0    , 0.1f,
+				0.1f ,-0.4f , 0.1f,
+				0.1f ,-0.4f ,-0.1f
 		},
 	};
 	
@@ -289,6 +293,9 @@ public class LostRenderer implements Renderer
 		this.scoreNotified 		= false;
 		
 		
+		screenWidth				= 0;
+		screenHeight			= 0;
+		
 		camX = 0;
 		camY = 4.5f;
 		camZ = 2;
@@ -301,40 +308,41 @@ public class LostRenderer implements Renderer
 		
 		for (int i = 0 ; i < 6 ; i++)
 		{
-			cubeVertexBfr[i] = makeFloatBuffer(cubeCoords[i]);
-			textureCubeBuffer[i] = makeFloatBuffer(textureCubeCoords[i]);
-			heroMemberVertexBfr[i] = makeFloatBuffer(heroMemberCoords[i]);
-			heroBodyVertexBfr[i] = makeFloatBuffer(heroBodyCoords[i]);
+			cubeVertexBfr[i] 		= makeFloatBuffer (cubeCoords[i]);
+			textureCubeBuffer[i] 	= makeFloatBuffer (textureCubeCoords[i]);
+			heroMemberVertexBfr[i]	= makeFloatBuffer (heroMemberCoords[i]);
+			heroBodyVertexBfr[i] 	= makeFloatBuffer (heroBodyCoords[i]);
 		}
 		doorVertexBfr = makeFloatBuffer(doorCoords);
 
-		warpBuffer = makeFloatBuffer(new float[]{0    , 1 , 0,
-												 1  ,  1 , 0,
-												 1  , 0, 0,
-												 0    , 0 , 0});
+		warpBuffer = makeFloatBuffer(new float[]{0 , 1 , 0,
+												 1 , 1 , 0,
+												 1 , 0 , 0,
+												 0 , 0 , 0});
 		
 		textureBuffer = ByteBuffer.allocateDirect(texture.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 
-		iconDirectionLeft = new LostIcon (c, "direction-left.png", -5.0f, -6.5f, -10.0f);
-		iconDirectionDown = new LostIcon (c, "direction-down.png", -3.0f, -9.0f, -10.0f);
-		iconDirectionUp = new LostIcon (c, "direction-up.png", -3.0f, -4.0f, -10.0f);
-		iconDirectionRight = new LostIcon (c, "direction-right.png", -1.0f, -6.5f, -10.0f);
-		iconGun = new LostIcon (c, "gun.png", 0f, -9.0f, -10.0f);
-		iconBomb = new LostIcon (c, "bomb1.png", 2.5f, -9.0f, -10.0f);
-		iconBigBomb = new LostIcon (c, "bomb2.png", 5.0f, -9.0f, -10.0f);
+		iconDirectionLeft = new LostIcon 	(c, "direction-left.png"	, -5.0f	, -6.5f, -10.0f);
+		iconDirectionDown = new LostIcon 	(c, "direction-down.png"	, -3.0f	, -9.0f, -10.0f);
+		iconDirectionUp = new LostIcon 		(c, "direction-up.png"		, -3.0f	, -4.0f, -10.0f);
+		iconDirectionRight = new LostIcon 	(c, "direction-right.png"	, -1.0f	, -6.5f, -10.0f);
+		iconGun = new LostIcon 				(c, "gun.png"				, 0f	, -9.0f, -10.0f);
+		iconBomb = new LostIcon 			(c, "bomb1.png"				, 2.5f	, -9.0f, -10.0f);
+		iconBigBomb = new LostIcon 			(c, "bomb2.png"				, 5.0f	, -9.0f, -10.0f);
 		
-		iconGunSmall = new LostIcon (c, "gun.png", -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBombSmall = new LostIcon (c, "bomb1.png", -5.5f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBigBombSmall = new LostIcon (c, "bomb2.png", -5.5f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconLifeSmall = new LostIcon (c, "life.png", -5.5f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconGunSmall = new LostIcon 	(c, "gun.png"		, -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBombSmall = new LostIcon 	(c, "bomb1.png"		, -5.5f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconBigBombSmall = new LostIcon (c, "bomb2.png"		, -5.5f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
+		//iconLifeSmall = new LostIcon 	(c, "life.png", -5.5f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconLifeSmall = new LostIcon 	(c, "life.png"		, -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
 		
 		
-		iconZoomIn = new LostIcon (c, "zoomin.png",5.5f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
-		iconZoomOut = new LostIcon (c, "zoomout.png",3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
-		iconCameraLeft = new LostIcon (c, "camleft.png", -5.5f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
-		iconCameraRight = new LostIcon (c, "camright.png",  -3.0f, 8.5f, -10.0f, LostIcon.ICON_MEDIUM);
+		iconZoomIn = new LostIcon 		(c, "zoomin.png"		,  5.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconZoomOut = new LostIcon 		(c, "zoomout.png"		,  3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconCameraLeft = new LostIcon 	(c, "camleft.png"		, -5.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconCameraRight = new LostIcon 	(c, "camright.png"		, -3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
 	}
 
 	public void loadGLTexture(GL10 gl, String filename, int[] textures) 
@@ -477,7 +485,11 @@ public class LostRenderer implements Renderer
 
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
+		gl.glMatrixMode( GL10.GL_PROJECTION );       
+		gl.glViewport(0, 0, screenWidth, screenHeight);
 
+		gl.glLoadIdentity();
+		GLU.gluPerspective(gl,90.0f, (float)screenWidth / (float)screenHeight , 0.1f, 200.0f);
 
 		gl.glMatrixMode( GL10.GL_MODELVIEW );       
 		gl.glLoadIdentity();   
@@ -696,11 +708,15 @@ public class LostRenderer implements Renderer
 
 		// TEST: render some strings with the font
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, 20 );          // Draw Test String
+
+		/*
 		glText.draw( "" + currentGame.getHero().getNbBullets(), 10, 20 );          // Draw Test String
 		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, 0 );          // Draw Test String
 		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, -20 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, -40 );          // Draw Test String
 		
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, -40 );          // Draw Test String
+		*/
 		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );          // Draw Test String
 		
 		if (this.showFPS)
@@ -711,25 +727,29 @@ public class LostRenderer implements Renderer
 		
 		
 		gl.glPopMatrix();
-
+		
+		
 		iconDirectionLeft.draw(gl);
 		
 		iconDirectionDown.draw(gl);
 		iconDirectionRight.draw(gl);
 		iconDirectionUp.draw(gl);
+		/*
 		iconGun.draw(gl);
 		iconBomb.draw(gl);
 		iconBigBomb.draw(gl);
+		*/
 		iconCameraLeft.draw(gl);
 		iconCameraRight.draw(gl);
 		iconZoomIn.draw(gl);
 		iconZoomOut.draw(gl);
+		/*
 		iconGunSmall.draw(gl);
 		iconBombSmall.draw(gl);
-		iconLifeSmall.draw(gl);
+		
 		iconBigBombSmall.draw(gl);
-		
-		
+		*/
+		iconLifeSmall.draw(gl);
 		gl.glDisable( GL10.GL_BLEND);
 		gl.glDisable( GL10.GL_TEXTURE_2D);
 	}  
@@ -740,8 +760,10 @@ public class LostRenderer implements Renderer
 		{
 			height = 1;
 		}
+		screenWidth = width;
+		screenHeight = height;
 		// Setup orthographic projection
-
+		Log.i("Renderer", "onSurfaceChanged, width=" + width + "; height=" + height);
 		gl.glMatrixMode( GL10.GL_PROJECTION );       
 		gl.glViewport(0, 0, width, height);
 

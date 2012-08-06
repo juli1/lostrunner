@@ -156,8 +156,10 @@ public class Title extends Activity implements OnTouchListener
 			    }
 			}
 			if ( (posY < 5 * partSize) &&  (posY > 4 * partSize))
-			{
+			{ 
 				sound.playSound(Sound.SELECTION);
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://julien.gunnm.org/data/misc/lost-runner-instructions.html")));
+				/*
 				if ( (this.screenWidth < 400) || (this.screenHeight < 800))
 				{
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://julien.gunnm.org/data/misc/lost-runner-instructions.html")));
@@ -168,6 +170,7 @@ public class Title extends Activity implements OnTouchListener
 					Intent intent = new Intent(this, org.gunnm.lostrunner.Instructions.class);
 					startActivity(intent);
 				}
+				*/
 			}
 		}
 		return true;
@@ -181,6 +184,7 @@ public class Title extends Activity implements OnTouchListener
 	protected void onPause() {
 		super.onPause();
 		surface.onPause();
+		sound.stopTrack();
 		Log.i("Title", "onPause");
 	}
 

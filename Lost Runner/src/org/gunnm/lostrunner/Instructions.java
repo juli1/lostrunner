@@ -6,6 +6,7 @@ import org.gunnm.lostrunner.graphics.InstructionsRenderer;
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.graphics.TitleRenderer;
 import org.gunnm.lostrunner.model.Game;
+import org.gunnm.lostrunner.sounds.Sound;
 
 import android.app.Activity;
 import android.content.Context;
@@ -140,11 +141,17 @@ public class Instructions extends Activity implements OnTouchListener
 
 	protected void onPause() {
 		super.onPause();
+
+		Sound.getInstance(this).stopTrack();
+		
 		surface.onPause();
 	}
 
 	protected void onResume() {
 		super.onResume();
+
+		Sound.getInstance(this).startTrack();
+		
 		surface.onResume();
 	}
 		

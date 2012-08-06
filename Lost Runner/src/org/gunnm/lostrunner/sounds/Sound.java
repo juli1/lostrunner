@@ -84,9 +84,11 @@ public class Sound {
 	    try {
 			poolMap.put(SELECTION, soundPool.load(context.getAssets().openFd(selection), 0));
 			poolMap.put(LEVEL_COMPLETED, soundPool.load(context.getAssets().openFd(levelCompleted), 0));
+			/*
 			poolMap.put(BOMB, soundPool.load(context.getAssets().openFd(bomb), 0));
 			poolMap.put(BIG_BOMB, soundPool.load(context.getAssets().openFd(bigBomb), 0));
 			poolMap.put(GUN, soundPool.load(context.getAssets().openFd(gun), 0));
+			*/
 			poolMap.put(FINISHED, soundPool.load(context.getAssets().openFd(finished), 0));
 			poolMap.put(DEATH, soundPool.load(context.getAssets().openFd(death), 0));
 			
