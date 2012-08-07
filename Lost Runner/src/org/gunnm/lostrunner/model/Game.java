@@ -16,16 +16,19 @@ public class Game {
 	private MapInterface currentMap;
 	private static float HERO_SPEED = 2.5f;
 
+	private static final int COLLISION_NONE 	= 1;
+	private static final int COLLISION_BLOCK 	= 2;
+	private static final int COLLISION_KILL 	= 3;
 	
 	private long elapsed;
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private long completedTime;
-	private final static int NB_MAPS = 7;
+	private final static int NB_MAPS = 8;
 	private final static Class[] maps = {Map1.class, Map2.class,
 										 Map3.class, Map4.class,
 										 Map5.class, Map6.class,
-										 Map7.class};
+										 Map7.class, Map8.class};
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
@@ -158,7 +161,7 @@ public class Game {
 		return this.hero;
 	}
 	
-	public boolean detectCollision ()
+	public int detectCollision ()
 	{
 		Cube cube;
 		int cubeCoarsePosX;
@@ -196,7 +199,7 @@ public class Game {
 		if (destroyed[heroCoarsePosX][heroCoarsePosZ])
 		{
 			sound.playSound(Sound.DEATH);
-			return true;
+			return COLLISION_KILL;
 		}
 		
 		//Log.i("GAME", "try to detect collision, heroX = "  + hero.getX() + "heroZ=" + hero.getZ());
@@ -217,10 +220,17 @@ public class Game {
 				if ((hero.getZ() > ( cube.getZ() - 0.5f) ) &&
 				   (hero.getZ() < ( cube.getZ() + 0.5f)))
 				{  
-					Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
-					Log.i ("Game", "Collision with cube" + i);
-					sound.playSound(Sound.DEATH);
-					return true;
+					//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+					//Log.i ("Game", "Collision with cube" + i);
+					if (cube.getSpeed() != 0)
+					{
+						sound.playSound(Sound.DEATH);
+						return COLLISION_KILL;
+					}
+					else
+					{
+						return COLLISION_BLOCK;
+					}
 				}
 			}
 			cubeCoarsePosX = (int)Math.floor( (double)cube.getX());
@@ -240,7 +250,7 @@ public class Game {
 				}
 			}
 		}
-		return false;
+		return COLLISION_NONE;
 	}
 	
 	 
@@ -292,7 +302,7 @@ public class Game {
 			}
 			if (warp.getX() == 0)
 			{
-				newX = currentMap.getMapWidth() + 1;
+				newX = 1;
 				newZ = (-1) * warp.getZ();
 
 			}	
@@ -462,12 +472,17 @@ public class Game {
 		long currentTime;
 		long period;
 		boolean endLevel;
-		boolean collision;
+		float newX;
+		float newZ;
+		float previousX;
+		float previousZ;
 		
+		endLevel 	= false;
 		
-		endLevel = false;
-		collision = false;
-		
+		newX = hero.getX();
+		newZ = hero.getZ();
+		previousX = hero.getX();
+		previousZ = hero.getZ();
 		
 		if (this.isActive() == false)
 		{
@@ -491,9 +506,7 @@ public class Game {
 			{
 				if (hero.getX() >= 0)
 				{
-					hero.setX(hero.getX() - ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					//hero.setDirection(Hero.DIRECTION_NONE); 
-					
+					newX = hero.getX() - ( ((float)((float)period / 1000)) * HERO_SPEED);
 				}
 				break;
 			}
@@ -501,19 +514,15 @@ public class Game {
 			{
 				if (hero.getX() < currentMap.getMapWidth() )
 				{
-					hero.setX(hero.getX() +   ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					//hero.setDirection(Hero.DIRECTION_NONE); 
-					
+					newX = hero.getX() +   ( ((float)((float)period / 1000)) * HERO_SPEED);
 				}
 				break;
 			}
 			case Hero.DIRECTION_UP:
 			{
 				if (hero.getZ() > - currentMap.getMapDepth() )
-					{
-					hero.setZ(hero.getZ() -  ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					//hero.setDirection(Hero.DIRECTION_NONE); 
-					
+				{
+					newZ = hero.getZ() -  ( ((float)((float)period / 1000)) * HERO_SPEED);				
 				}
 				break;
 			}
@@ -521,15 +530,16 @@ public class Game {
 			{
 				if (hero.getZ() < 0)
 				{
-					hero.setZ(hero.getZ() +  ( ((float)((float)period / 1000)) * HERO_SPEED) );
-					//hero.setDirection(Hero.DIRECTION_NONE); 
-					
-				
+					newZ = hero.getZ() +  ( ((float)((float)period / 1000)) * HERO_SPEED);
 				}
 				break;
 			}
 		}
-		
+
+
+		hero.setX(newX);
+		hero.setZ(newZ);
+
 		
 		detectWarp();
 		
@@ -559,11 +569,29 @@ public class Game {
 			}
 		}
 		
-		collision = detectCollision ();
-		if (collision)
+		switch (detectCollision ())
 		{
-			hero.setNbLifes(hero.getNbLifes() - 1); 
-			loadMap (currentMap);
+			case COLLISION_KILL:
+			{
+				hero.setDirection(Hero.DIRECTION_NONE);
+				hero.setNbLifes(hero.getNbLifes() - 1); 
+				loadMap (currentMap);
+				break;
+			}
+			
+			case COLLISION_BLOCK:
+			{
+				hero.setX(previousX);
+				hero.setZ(previousZ);
+				
+				hero.setDirection(Hero.DIRECTION_NONE);
+				break;
+			}
+			
+			default:
+			{
+				break;
+			}
 		}
 	
 		lastTime = currentTime;

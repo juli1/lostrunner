@@ -262,4 +262,9 @@ public class Cube {
 	{
 		return (this.active);
 	}
+	
+	public float getSpeed ()
+	{
+		return this.speed;
+	}
 }

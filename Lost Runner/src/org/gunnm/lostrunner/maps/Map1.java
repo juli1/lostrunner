@@ -22,7 +22,7 @@ public class Map1 implements MapInterface {
 		{
 			
 			cubesPositions[i][0] = (i + 2) % MAP_WIDTH;
-			cubesPositions[i][1] = -MAP_DEPTH + i;
+			cubesPositions[i][1] = -MAP_DEPTH + i; 
 		}
 		this.heroPositionX = 2;
 		this.heroPositionZ = -4;
@@ -35,7 +35,7 @@ public class Map1 implements MapInterface {
 	
 	public boolean getCubeBouncing(int cubeId)
 	{
-		return false;
+		return true;
 	}
 	
 	public int getCubeDirection(int cubeId)
