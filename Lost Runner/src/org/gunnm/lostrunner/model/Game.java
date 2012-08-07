@@ -302,7 +302,7 @@ public class Game {
 			}
 			if (warp.getX() == 0)
 			{
-				newX = 1;
+				newX = 0.2f;
 				newZ = (-1) * warp.getZ();
 
 			}	

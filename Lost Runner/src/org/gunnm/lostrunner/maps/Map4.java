@@ -100,7 +100,7 @@ public class Map4 implements MapInterface {
 	
 	public boolean getCubeBouncing(int cubeId)
 	{
-		return false;
+		return true;
 	}
 	
 	public int getCubeDirection(int cubeId)

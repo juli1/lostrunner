@@ -8,7 +8,7 @@ public class Map3 implements MapInterface {
 	private int NB_CUBES = 16;
 	
 	private int MAP_WIDTH = 10;
-	private int MAP_DEPTH = 18;
+	private int MAP_DEPTH = 12;
 	private int cubesPositions[][];
 	private int heroPositionX;
 	private int heroPositionZ;
@@ -123,7 +123,7 @@ public class Map3 implements MapInterface {
 	
 	public boolean getCubeBouncing(int cubeId)
 	{
-		return false;
+		return true;
 	}
 	
 	public int getCubeDirection(int cubeId)
