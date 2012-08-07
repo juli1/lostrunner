@@ -87,21 +87,13 @@ public class Touch implements OnTouchListener {
 		int dividerHeight;
 		
 		
-		
-		if (screenWidth < screenHeight)
-		{
-			dividerWidth = 6;
-			dividerHeight = 8;
 
-			this.orientation = ORIENTATION_PORTRAIT;
+		dividerWidth = 5;
+		dividerHeight = 8;
 
-		}
-		else
-		{
-			dividerWidth = 6;
-			dividerHeight = 8;
-			this.orientation = ORIENTATION_LANDSCAPE;
-		}
+		this.orientation = ORIENTATION_PORTRAIT;
+
+
 		
 		screenWidthPart = screenWidth / dividerWidth;
 		screenHeightPart = screenHeight / dividerHeight;
@@ -131,9 +123,10 @@ public class Touch implements OnTouchListener {
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			Log.i("Touch", "onTouch, width=" + screenWidth + "; height=" + screenHeight);
+			
 			posX = (int) event.getX();
 			posY = (int) event.getY();
+			Log.i("Touch", "onTouch, width=" + screenWidth + "; height=" + screenHeight + "touchX=" + posX + "touchY=" + posY);
 			//Log.i(TAG, "Screen Width = " + screenWidth + ";screen height=" + screenHeight + ";posx=" + posX + ";posy=" + posY);
 			if ( (posX > zoneMoveLeft[0]) && (posX < zoneMoveLeft[1]) && (posY > zoneMoveLeft[2]) && (posY < zoneMoveLeft[3]) )
 			{

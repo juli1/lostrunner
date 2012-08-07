@@ -43,17 +43,21 @@ public class LostRenderer implements Renderer
 	LostIcon iconDirectionRight;
 	LostIcon iconDirectionUp;
 	LostIcon iconDirectionDown;
-	LostIcon iconGunSmall;
-	LostIcon iconBombSmall;
-	LostIcon iconBigBombSmall;
 	LostIcon iconLifeSmall;
-	LostIcon iconGun;
-	LostIcon iconBomb;
-	LostIcon iconBigBomb;
+
 	LostIcon iconZoomIn;
 	LostIcon iconZoomOut;
 	LostIcon iconCameraLeft;
 	LostIcon iconCameraRight;
+	
+	/*
+	LostIcon iconGun;
+	LostIcon iconBomb;
+	LostIcon iconBigBomb;
+	LostIcon iconGunSmall;
+	LostIcon iconBombSmall;
+	LostIcon iconBigBombSmall;
+	*/
 	
 	private static FloatBuffer[] 	heroBodyVertexBfr;
 	private static FloatBuffer[] 	heroMemberVertexBfr;
@@ -325,17 +329,10 @@ public class LostRenderer implements Renderer
 		textureBuffer.position(0);
 
 		iconDirectionLeft = new LostIcon 	(c, "direction-left.png"	, -5.0f	, -6.5f, -10.0f);
-		iconDirectionDown = new LostIcon 	(c, "direction-down.png"	, -3.0f	, -9.0f, -10.0f);
-		iconDirectionUp = new LostIcon 		(c, "direction-up.png"		, -3.0f	, -4.0f, -10.0f);
-		iconDirectionRight = new LostIcon 	(c, "direction-right.png"	, -1.0f	, -6.5f, -10.0f);
-		iconGun = new LostIcon 				(c, "gun.png"				, 0f	, -9.0f, -10.0f);
-		iconBomb = new LostIcon 			(c, "bomb1.png"				, 2.5f	, -9.0f, -10.0f);
-		iconBigBomb = new LostIcon 			(c, "bomb2.png"				, 5.0f	, -9.0f, -10.0f);
-		
-		iconGunSmall = new LostIcon 	(c, "gun.png"		, -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBombSmall = new LostIcon 	(c, "bomb1.png"		, -5.5f, 6.0f, -10.0f, LostIcon.ICON_SMALL);
-		iconBigBombSmall = new LostIcon (c, "bomb2.png"		, -5.5f, 5.0f, -10.0f, LostIcon.ICON_SMALL);
-		//iconLifeSmall = new LostIcon 	(c, "life.png", -5.5f, 4.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconDirectionDown = new LostIcon 	(c, "direction-down.png"	, -2.5f	, -9.0f, -10.0f);
+		iconDirectionUp = new LostIcon 		(c, "direction-up.png"		, -2.5f	, -4.0f, -10.0f);
+		iconDirectionRight = new LostIcon 	(c, "direction-right.png"	,  0.0f	, -6.5f, -10.0f);
+
 		iconLifeSmall = new LostIcon 	(c, "life.png"		, -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
 		
 		
@@ -403,17 +400,22 @@ public class LostRenderer implements Renderer
 		iconDirectionDown.loadGLTexture(gl, mainActivity);
 		iconDirectionUp.loadGLTexture(gl, mainActivity);
 		iconDirectionRight.loadGLTexture(gl, mainActivity);
-		iconGun.loadGLTexture(gl, mainActivity);
-		iconBomb.loadGLTexture(gl, mainActivity);
-		iconBigBomb.loadGLTexture(gl, mainActivity);
+
 		iconZoomIn.loadGLTexture(gl, mainActivity);
 		iconZoomOut.loadGLTexture(gl, mainActivity);
 		iconCameraLeft.loadGLTexture(gl, mainActivity);
 		iconCameraRight.loadGLTexture(gl, mainActivity);
+		iconLifeSmall.loadGLTexture(gl, mainActivity);
+		
+		/*
+		iconGun.loadGLTexture(gl, mainActivity);
+		iconBomb.loadGLTexture(gl, mainActivity);
+		iconBigBomb.loadGLTexture(gl, mainActivity);
 		iconGunSmall.loadGLTexture(gl, mainActivity);
 		iconBombSmall.loadGLTexture(gl, mainActivity);
-		iconLifeSmall.loadGLTexture(gl, mainActivity);
 		iconBigBombSmall.loadGLTexture(gl, mainActivity);
+		*/
+		
 		
 		loadGLTexture(gl, "warp.png", textureWarp);
 		loadGLTexture(gl, "metal2.png", textureCube);
@@ -436,12 +438,11 @@ public class LostRenderer implements Renderer
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
-		ground = makeFloatBuffer(new float[]{0    , 0 , 0,
-				1  ,  0 , 0,
-				1, 0, -1,
-				0, 0 , -1});
-		
-
+		ground = makeFloatBuffer(new float[]
+				{	0	,	0	,	0,
+					1	,	0	,	0,
+					1	,	0	,	-1,
+					0	,	0	,	-1});
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -528,7 +529,7 @@ public class LostRenderer implements Renderer
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		
 		gl.glFrontFace(GL10.GL_CW);
 		
@@ -563,7 +564,7 @@ public class LostRenderer implements Renderer
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		
 		gl.glFrontFace(GL10.GL_CW);
 		
@@ -602,7 +603,7 @@ public class LostRenderer implements Renderer
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
-		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 		
 		gl.glFrontFace(GL10.GL_CW);
 		
@@ -694,38 +695,41 @@ public class LostRenderer implements Renderer
 		gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
 		gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
 		// TEST: render the entire font texture
-		gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
 
 		// TEST: render some strings with the font
-		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, 20 );          // Draw Test String
+		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, 20 );
 
 
-		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );          // Draw Test String
+		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );
 		
 		if (this.showFPS)
 		{
-			glText.draw( fps + "fps", 190, 0 );          // Draw Test String
+			glText.draw( fps + "fps", 190, 0 );
 		}
 		glText.end();
-		
-		
 		gl.glPopMatrix();
-		
-		
+		/* End of text stuff */
+
+        /* Display icons */
+        gl.glShadeModel(GL10.GL_FLAT);
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glColor4x(0x10000, 0x10000, 0x10000, 0x10000);
+        gl.glEnable(GL10.GL_TEXTURE_2D);
 		iconDirectionLeft.draw(gl);
-		
 		iconDirectionDown.draw(gl);
 		iconDirectionRight.draw(gl);
 		iconDirectionUp.draw(gl);
-
 		iconCameraLeft.draw(gl);
 		iconCameraRight.draw(gl);
 		iconZoomIn.draw(gl);
 		iconZoomOut.draw(gl);
 		iconLifeSmall.draw(gl);
+		
 		gl.glDisable( GL10.GL_BLEND);
 		gl.glDisable( GL10.GL_TEXTURE_2D);
+		/* End of icons display */
 	}  
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) 

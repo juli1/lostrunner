@@ -26,6 +26,7 @@ public class LostIcon {
 	private int[] 		textures 	= new int[1];
 	private int 		type;
 	private int			form;
+	private float		fade;
 	
 	public final static int ICON_SMALL 		= 1;
 	public final static int ICON_MEDIUM 	= 2;
@@ -34,25 +35,24 @@ public class LostIcon {
 	public final static int FORM_RECTANGLE  = 2;
 	
 	private float verticesSquare[] = {
-			1, 1, 0,
+			 1, 1, 0,
 			-1, 1, 0,
 			-1,-1, 0,
-			1,-1, 0
+			 1,-1, 0
 	};	
 	
 
 	private float verticesRectangle[] = {
-			1, 2, 0,
-			-1, 2, 0,
-			-1,-1, 0,
-			1,-1, 0
+			1   ,  2, 0,
+			-1  ,  2, 0,
+			-1  , -1, 0,
+			1   , -1, 0
 	};	
 
 	private FloatBuffer textureBuffer;  // buffer holding the texture coordinates
 
 	private float texture[] = {
-	// Mapping coordinates for the vertices
-			1.0f, 0.0f,      // bottom right (V3)
+			1.0f, 0.0f,     // bottom right (V3)
 			0.0f, 0.0f,     // top right    (V4)
 			0.0f, 1.0f,     // bottom left  (V1)
 			1.0f, 1.0f,     // top left     (V2)	
@@ -71,13 +71,14 @@ public class LostIcon {
 		ByteBuffer vertexByteBuffer;
 		ByteBuffer byteBuffer;
 
-		context = c;
-		filename = f;
+		this.fade 		= 1;
+		this.context 	= c;
+		this.filename 	= f;
 		
-		this.form = fo;
-		this.type = t;
+		this.form 		= fo;
+		this.type 		= t;
 		
-		vertices = null;
+		vertices		= null;
 		
 		switch (this.type)
 		{
@@ -174,6 +175,10 @@ public class LostIcon {
 		bitmap.recycle();
 	}
 
+	public void setFade (float f)
+	{
+		this.fade = f;
+	}
 
 	public void draw(GL10 gl) 
 	{
@@ -182,6 +187,7 @@ public class LostIcon {
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
+	    gl.glColor4f( 1.0f, 1.0f, 1.0f, this.fade );
 		
 		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 		

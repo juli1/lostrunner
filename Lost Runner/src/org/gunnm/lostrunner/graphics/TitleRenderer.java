@@ -46,7 +46,8 @@ public class TitleRenderer implements Renderer
 		this.angleOnlineScoresDirection = ANGLE_DECREASE;
 		this.angleInstructionsDirection = ANGLE_INCREASE;
 		
-		iconLogo = new LostIcon (c, "logo.png", -1.5f, 3.5f, -3.0f, LostIcon.ICON_BIG);
+		iconLogo = new LostIcon (c, "logo.png", -0.0f, 0.0f, -1.0f, LostIcon.ICON_BIG);
+		iconLogo.setFade (0.3f);
 	}
 
 	
@@ -54,15 +55,11 @@ public class TitleRenderer implements Renderer
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
 	{
-	      // Set the background frame color
 	      gl.glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
-	      // Create the GLText
 	      glText = new GLText( gl, context.getAssets() );
 
-	      // Load the font from file (set size + padding), creates the texture
-	      // NOTE: after a successful call to this the font is ready for rendering!
-	      glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+	      glText.load( "Roboto-Regular.ttf", 14, 2, 2 );  
 	      
 	      iconLogo.loadGLTexture(gl, context);
 
@@ -115,16 +112,12 @@ public class TitleRenderer implements Renderer
 		}
 		else
 		{
-			//Log.i("TitleRenderer", "Should decrease the nesgame angle, old value="+ this.angleNewGame + "increment=" + ANGLE_INCREMENT + "d=" + delta);
-
 			this.angleNewGame = this.angleNewGame - ANGLE_INCREMENT;
 			if (this.angleNewGame < -ANGLE_MAX)
 			{
 				this.angleNewGame = -ANGLE_MAX;
 				this.angleNewGameDirection = ANGLE_INCREASE;
 			}
-			//Log.i("TitleRenderer", "New value="+ this.angleNewGame);
-
 		}
 		
 		if (this.angleOnlineScoresDirection == ANGLE_INCREASE)
@@ -157,79 +150,73 @@ public class TitleRenderer implements Renderer
 		  
 		  updateAngles (deltaTime);
 		  lastTime = currentTime;
-		  //Log.i ("TitleRenderer", "Angle instructions=" + angleInstructions + ";anglerecords=" + angleOnlineScores + ";angleNewGame = " + angleNewGame);
-	      // Redraw background color
+
+
 	      gl.glClear( GL10.GL_COLOR_BUFFER_BIT );
 
-	      // Set to ModelView mode
-	      gl.glMatrixMode( GL10.GL_MODELVIEW );           // Activate Model View Matrix
+
+	      gl.glMatrixMode( GL10.GL_MODELVIEW );      
 	      gl.glLoadIdentity(); 
 	      
 	      gl.glPushMatrix();
 	      
-	      // enable texture + alpha blending
-	      // NOTE: this is required for text rendering! we could incorporate it into
-	      // the GLText class, but then it would be called multiple times (which impacts performance).
-	      gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-	      gl.glEnable( GL10.GL_BLEND );                   // Enable Alpha Blend
-	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
 
-	      // TEST: render the entire font texture
-	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-	      //glText.drawTexture( screenWidth, screenHeight );            // Draw the Entire Texture
+	      gl.glEnable( GL10.GL_TEXTURE_2D );
+	      gl.glEnable( GL10.GL_BLEND );
+	      gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  
+
+	      gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
 	      
 	      iconLogo.draw(gl);
 	      
 	      gl.glPushMatrix(); 
-	      gl.glTranslatef (20,100,-50);
+	      gl.glTranslatef (-22,40,-40);
 
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Lost", -11, -50 );          // Draw Test String
-	      glText.end();                                   // End Text Rendering
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
+	      glText.draw( "Lost", -10, 0 );     
+	      glText.end();  
 	      gl.glPopMatrix();
 	      
 	      gl.glPushMatrix(); 
-	      gl.glTranslatef (0,100,-60);
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Runner", 0, -50 );          // Draw Test String
-	      glText.end();                                   // End Text Rendering
+	      gl.glTranslatef (0,105,-60);
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
+	      glText.draw( "Runner", 10, -50 ); 
+	      glText.end(); 
 	      gl.glPopMatrix();
 	      
 	      
-	      // TEST: render some strings with the font
+	  
 	      gl.glPushMatrix(); 
 
 	      gl.glRotatef(angleInstructions, 0, 1, 0);
 	      gl.glTranslatef (-50,-20,-100);
 
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Game Instructions", 0, -100 );          // Draw Test String
-	      glText.end();                                   // End Text Rendering
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );        
+	      glText.draw( "Game Instructions", 0, -100 );       
+	      glText.end();                         
 	      gl.glPopMatrix();
 	       
 	      gl.glPushMatrix();
 	      gl.glRotatef(angleOnlineScores, 0, 1, 0);
 	      gl.glTranslatef (-50,-20,-100);
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Online Records", 4, -20 );                // Draw Test String
-	      glText.end();                                   // End Text Rendering
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         
+	      glText.draw( "Online Records", 4, -20 );             
+	      glText.end();                                   
 	      gl.glPopMatrix();
 	      
 	      gl.glPushMatrix();
 	      gl.glRotatef(angleNewGame, 0, 1, 0);
 	      gl.glTranslatef (-50,-20,-100);
-	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-	      glText.draw( "Start or Continue", 2, 60 );              // Draw Test String
-	      glText.end();                                   // End Text Rendering
+	      glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );    
+	      glText.draw( "Start or Continue", 2, 60 );           
+	      glText.end();                              
 	      gl.glPopMatrix();
 	      
-	                                       // End Text Rendering
 	      gl.glPopMatrix();
 
 	      
-	      // disable texture + alpha
-	      gl.glDisable( GL10.GL_BLEND );                  // Disable Alpha Blend
-	      gl.glDisable( GL10.GL_TEXTURE_2D );             // Disable Texture Mapping
+	      gl.glDisable( GL10.GL_BLEND );             
+	      gl.glDisable( GL10.GL_TEXTURE_2D );         
 
 	}  
 
@@ -237,12 +224,12 @@ public class TitleRenderer implements Renderer
 	      gl.glViewport( 0, 0, width, height );
 
 	      // Setup orthographic projection
-	      gl.glMatrixMode( GL10.GL_PROJECTION );          // Activate Projection Matrix
-	      gl.glLoadIdentity();                            // Load Identity Matrix
+	      gl.glMatrixMode( GL10.GL_PROJECTION );          
+	      gl.glLoadIdentity();                   
 	     
 	      // Save width and height
-	      this.screenWidth = width;                             // Save Current Width
-	      this.screenHeight = height;                           // Save Current Height
+	      this.screenWidth = width;                   
+	      this.screenHeight = height;                     
 			gl.glMatrixMode( GL10.GL_PROJECTION );       
 			gl.glViewport(0, 0, width, height);
 
