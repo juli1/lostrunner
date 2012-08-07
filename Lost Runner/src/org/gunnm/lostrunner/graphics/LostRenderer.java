@@ -496,81 +496,82 @@ public class LostRenderer implements Renderer
 		
 		if (currentGame.isCompleted())
 		{
-			/* Start text stuff */
 			gl.glPushMatrix();
 			gl.glTranslatef(-50, 80, -200);
-			gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-			gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
-			gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );  // Set Alpha Blend Function
-			// TEST: render the entire font texture
-			gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );         // Set Color to Use
-	
-			// TEST: render some strings with the font
-			glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
-			glText.draw( "Congratulations !", 0, 0 );          // Draw Test String
+			gl.glEnable( GL10.GL_TEXTURE_2D );
+			gl.glEnable( GL10.GL_BLEND );
+			gl.glBlendFunc( GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA );
+			gl.glColor4f( 1.0f, 1.0f, 1.0f, 1.0f );
+			glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
+			glText.draw( "Congratulations !", 0, 0 );
 			glText.end();
 			gl.glPopMatrix();
 		}
 		
-		/* Camera stuff */
-		gl.glPushMatrix();
+		
 		currentGame.update();
 
+		gl.glPushMatrix();
+
+		/* Camera management */
 		gl.glRotatef(20, 1, 0, 0);
 		gl.glRotatef(camAngle, 0, 1, 0);
 		gl.glTranslatef(-camX, -camY, -camZ);
+		/* End of camera management */
+		
+		
+		/* Start to display the ground */
+		gl.glColor4f(1, 1, 1, 1);
+		gl.glEnable( GL10.GL_TEXTURE_2D );
+		gl.glEnable( GL10.GL_BLEND );  
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureGround[0]);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		
+		gl.glFrontFace(GL10.GL_CW);
+		
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, ground);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
-		/* Start to draw the scene */
-		gl.glColor4f(1, 0, 0, 0.5f);
 		for (int i = 0 ; i < currentGame.getCurrentMap().getMapWidth() ; i++)
 		{
 			for (int j = 0 ; j < currentGame.getCurrentMap().getMapDepth() ; j++)
 			{
-				if (currentGame.isDestroyed(i, j))
-				{
-					continue;
-				}
-
-				gl.glColor4f(1, 1, 1, 1);
-
-				if (currentGame.hasBigBomb(i, j))
-				{
-					gl.glColor4f(1, 1,1, 0.3f);	
-				}
-
-				if (currentGame.hasBomb(i, j))
-				{
-					gl.glColor4f(1,1 ,1, 0.7f);	
-				}
 				gl.glPushMatrix();
 				gl.glTranslatef(i, 0, -1 * j);
-				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
-				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureGround[0]);
-				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 				
-				gl.glFrontFace(GL10.GL_CW);
-				
-				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, ground);
-				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
 
-				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				gl.glDisable( GL10.GL_BLEND );  
-				gl.glDisable( GL10.GL_TEXTURE_2D );
+
 				gl.glPopMatrix();
 			}
 		}
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisable( GL10.GL_BLEND );  
+		gl.glDisable( GL10.GL_TEXTURE_2D );
+		/* Display the ground completed */
+		
+		/* Start to display the Warp zones */
+		gl.glColor4f(1,1 ,1, 1);	
+
+		gl.glEnable( GL10.GL_TEXTURE_2D );         
+		gl.glEnable( GL10.GL_BLEND ); 
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureWarp[0]);
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		
+		gl.glFrontFace(GL10.GL_CW);
+		
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, warpBuffer);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
 
 		for (int i = 0 ; i < currentGame.getCurrentMap().getNbWarps() ; i++)
 		{
-			gl.glColor4f(1,1 ,1, 1);	
 			Warp warp = currentGame.getWarp(i);
 			gl.glPushMatrix();
 			gl.glTranslatef(warp.getX(), 0, warp.getZ());
@@ -578,30 +579,32 @@ public class LostRenderer implements Renderer
 			{
 				gl.glRotatef(90, 0, 1, 0);
 			}
-			gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-			gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
-			gl.glBindTexture(GL10.GL_TEXTURE_2D, textureWarp[0]);
-
-			gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-
-			gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-
-			gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
-			
-			gl.glFrontFace(GL10.GL_CW);
-			
-			gl.glVertexPointer(3, GL10.GL_FLOAT, 0, warpBuffer);
-			gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
-
 			gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-
-			gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-
-			gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-			gl.glDisable( GL10.GL_BLEND );  
-			gl.glDisable( GL10.GL_TEXTURE_2D );
 			gl.glPopMatrix();
 		}
+
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisable( GL10.GL_BLEND );  
+		gl.glDisable( GL10.GL_TEXTURE_2D );
+		
+		/* End displaying Warp zones */
+		
+		
+		/* Display the cubes */
+		gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
+		gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureCube[0]);
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnable(GL10.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL10.GL_LEQUAL);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		
+		gl.glFrontFace(GL10.GL_CW);
 		
 		for (int i = 0 ; i < currentGame.getCurrentMap().getNbCubes() ; i++)
 		{
@@ -625,46 +628,31 @@ public class LostRenderer implements Renderer
 			
 			for (int k = 0; k < 6; k++)
 			{
-				/*
-				gl.glColor4f(0,1,0,0.5f);
-				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
-				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-				*/
-				gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-				gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
-
-				gl.glBindTexture(GL10.GL_TEXTURE_2D, textureCube[0]);
-
-				gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-				gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				gl.glEnable(GL10.GL_DEPTH_TEST);
-				gl.glDepthFunc(GL10.GL_LEQUAL);
-				gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
-				
-				gl.glFrontFace(GL10.GL_CW);
 				
 				gl.glVertexPointer(3, GL10.GL_FLOAT, 0, cubeVertexBfr[k]);
 				gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCubeBuffer[k]);
 
 				gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, 4);
-				gl.glDisable(GL10.GL_DEPTH_TEST);
-				gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-				gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-				gl.glDisable( GL10.GL_BLEND );  
-				gl.glDisable( GL10.GL_TEXTURE_2D );
+
 			}
 
 			gl.glPopMatrix();
 
 		}
-
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisable( GL10.GL_BLEND );  
+		gl.glDisable( GL10.GL_TEXTURE_2D );
+		/* end of displaying cubes */
+		
+		
+		/* Display the door */
 		gl.glPushMatrix();
 		gl.glTranslatef(currentGame.getCurrentMap().getExitPositionX() , 0, currentGame.getCurrentMap().getExitPositionZ());
 		
-		gl.glEnable( GL10.GL_TEXTURE_2D );              // Enable Texture Mapping
-		gl.glEnable( GL10.GL_BLEND );                    // Enable Alpha Blend
+		gl.glEnable( GL10.GL_TEXTURE_2D );
+		gl.glEnable( GL10.GL_BLEND );
 		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureDoor[0]);
 		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
@@ -685,14 +673,16 @@ public class LostRenderer implements Renderer
 		gl.glDisable( GL10.GL_BLEND );  
 		gl.glDisable( GL10.GL_TEXTURE_2D );
 		gl.glPopMatrix();
+		/* end of door display */
 		
 		
 		
-
+		/* Draw the hero */
 		gl.glPushMatrix();
 		gl.glTranslatef(currentGame.getHero().getX() , 0, currentGame.getHero().getZ());
 		drawHero (gl);
 		gl.glPopMatrix();
+		/* Finish to draw the hero */
 		gl.glPopMatrix();
 		/* Finish to draw the scene */
 		
@@ -710,13 +700,7 @@ public class LostRenderer implements Renderer
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );         // Begin Text Rendering (Set Color WHITE)
 		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, 20 );          // Draw Test String
 
-		/*
-		glText.draw( "" + currentGame.getHero().getNbBullets(), 10, 20 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, 0 );          // Draw Test String
-		glText.draw( "" + currentGame.getHero().getNbBombs(), 10, -20 );          // Draw Test String
-		
-		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, -40 );          // Draw Test String
-		*/
+
 		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );          // Draw Test String
 		
 		if (this.showFPS)
@@ -734,21 +718,11 @@ public class LostRenderer implements Renderer
 		iconDirectionDown.draw(gl);
 		iconDirectionRight.draw(gl);
 		iconDirectionUp.draw(gl);
-		/*
-		iconGun.draw(gl);
-		iconBomb.draw(gl);
-		iconBigBomb.draw(gl);
-		*/
+
 		iconCameraLeft.draw(gl);
 		iconCameraRight.draw(gl);
 		iconZoomIn.draw(gl);
 		iconZoomOut.draw(gl);
-		/*
-		iconGunSmall.draw(gl);
-		iconBombSmall.draw(gl);
-		
-		iconBigBombSmall.draw(gl);
-		*/
 		iconLifeSmall.draw(gl);
 		gl.glDisable( GL10.GL_BLEND);
 		gl.glDisable( GL10.GL_TEXTURE_2D);
@@ -762,7 +736,7 @@ public class LostRenderer implements Renderer
 		}
 		screenWidth = width;
 		screenHeight = height;
-		// Setup orthographic projection
+		
 		Log.i("Renderer", "onSurfaceChanged, width=" + width + "; height=" + height);
 		gl.glMatrixMode( GL10.GL_PROJECTION );       
 		gl.glViewport(0, 0, width, height);
