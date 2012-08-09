@@ -1,7 +1,5 @@
 package org.gunnm.lostrunner.graphics;
 
-import android.util.FloatMath;
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class SpriteBatch {

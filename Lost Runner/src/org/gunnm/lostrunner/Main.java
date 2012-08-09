@@ -7,8 +7,6 @@ import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.sounds.Sound;
 import org.gunnm.lostrunner.utils.Score;
 
-import com.scoreloop.client.android.ui.OnScoreSubmitObserver;
-import com.scoreloop.client.android.ui.PostScoreOverlayActivity;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
@@ -48,6 +46,7 @@ public class Main extends Activity {
 		ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(scores);
         
         currentGame = Game.getInstance(this);
+        currentGame.reset();
         currentGame.start();
         
         gestureDetector = new GestureDetector(this, new GlAppGestureListener(this));
@@ -99,6 +98,7 @@ public class Main extends Activity {
 			currentGame.reset ();
 			currentGame.start ();
 		}
+		currentGame.updateLastTime();
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {

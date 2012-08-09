@@ -4,7 +4,6 @@ import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;

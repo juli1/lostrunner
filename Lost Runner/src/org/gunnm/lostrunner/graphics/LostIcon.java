@@ -13,7 +13,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 public class LostIcon {
 
@@ -154,7 +153,7 @@ public class LostIcon {
 		} 
 		catch (IOException e) 
 		{
-			Log.i("LostIcon", "Error when trying to load texture" + filename);
+			//Log.i("LostIcon", "Error when trying to load texture" + filename);
 			return;
 		}
 

@@ -1,7 +1,6 @@
 package org.gunnm.lostrunner.controller;
 
 
-
 import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;

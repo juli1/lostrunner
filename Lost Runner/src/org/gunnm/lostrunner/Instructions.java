@@ -1,11 +1,6 @@
 package org.gunnm.lostrunner;
 
-import org.gunnm.lostrunner.controller.Key;
-import org.gunnm.lostrunner.controller.Touch;
 import org.gunnm.lostrunner.graphics.InstructionsRenderer;
-import org.gunnm.lostrunner.graphics.LostRenderer;
-import org.gunnm.lostrunner.graphics.TitleRenderer;
-import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.sounds.Sound;
 
 import android.app.Activity;
@@ -13,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;

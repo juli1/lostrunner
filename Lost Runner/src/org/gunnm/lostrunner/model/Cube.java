@@ -2,7 +2,6 @@ package org.gunnm.lostrunner.model;
 
 import org.gunnm.lostrunner.maps.MapInterface;
 
-import android.util.Log;
 
 public class Cube {
 	private float posX;
@@ -96,7 +95,7 @@ public class Cube {
 							}
 							else
 							{
-								Log.i ("CUBE", "boucing go to reverse");
+								//Log.i ("CUBE", "boucing go to reverse");
 								this.reverse();
 							}
 						}
@@ -104,7 +103,7 @@ public class Cube {
 					}
 					default:
 					{
-						Log.i ("CUBE", "invalid direction");
+						//Log.i ("CUBE", "invalid direction");
 						break;
 					}
 				}
@@ -152,7 +151,7 @@ public class Cube {
 					}
 					default:
 					{
-						Log.i ("CUBE", "invalid direction");
+						//Log.i ("CUBE", "invalid direction");
 						break;
 					}
 				}
@@ -161,7 +160,7 @@ public class Cube {
 			}
 			default:
 			{
-				Log.i ("CUBE", "invalid direction");
+				//Log.i ("CUBE", "invalid direction");
 				break;
 			}
 		}
@@ -212,10 +211,10 @@ public class Cube {
 		     ((currentCubeLeft >= otherCubeRight) || (currentCubeRight <= otherCubeLeft)))
 		{
 			return false;
-		}
+		} 
 		
-		if ( ((direction == DIRECTION_WEST_TO_EAST) || (direction == DIRECTION_NORTH_TO_SOUTH)) && 
-			     ((currentCubeLeft >= otherCubeRight) || (currentCubeRight <= otherCubeLeft)))
+		if ( ((direction == DIRECTION_WEST_TO_EAST) || (direction == DIRECTION_EAST_TO_WEST)) && 
+			     ((currentCubeTop >= otherCubeBottom) || (currentCubeBottom <= otherCubeTop)))
 		{
 			return false;
 		}

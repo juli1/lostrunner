@@ -8,7 +8,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
-import android.util.Log;
 
 public class Sound {
 
@@ -94,7 +93,7 @@ public class Sound {
 			
 		} catch (IOException e) {
 			
-			Log.i("Sound", "Error when trying to load sound");
+			//Log.i("Sound", "Error when trying to load sound");
 		}
 	}
 	

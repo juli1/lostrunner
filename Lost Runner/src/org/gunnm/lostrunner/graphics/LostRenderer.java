@@ -10,23 +10,16 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import org.gunnm.lostrunner.Main;
-import org.gunnm.lostrunner.R;
 import org.gunnm.lostrunner.model.Cube;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;
 import org.gunnm.lostrunner.model.Warp;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 public class LostRenderer implements Renderer 
 {
@@ -352,7 +345,7 @@ public class LostRenderer implements Renderer
 		} 
 		catch (IOException e) 
 		{
-			Log.i("LostIcon", "Error when trying to load texture" + filename);
+//			Log.i("LostIcon", "Error when trying to load texture" + filename);
 			return;
 		}
 		
@@ -741,7 +734,7 @@ public class LostRenderer implements Renderer
 		screenWidth = width;
 		screenHeight = height;
 		
-		Log.i("Renderer", "onSurfaceChanged, width=" + width + "; height=" + height);
+//		Log.i("Renderer", "onSurfaceChanged, width=" + width + "; height=" + height);
 		gl.glMatrixMode( GL10.GL_PROJECTION );       
 		gl.glViewport(0, 0, width, height);
 

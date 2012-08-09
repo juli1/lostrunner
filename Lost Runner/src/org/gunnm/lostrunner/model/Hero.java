@@ -1,6 +1,5 @@
 package org.gunnm.lostrunner.model;
 
-import android.util.Log;
 
 public class Hero {
 	private float posX = 0;

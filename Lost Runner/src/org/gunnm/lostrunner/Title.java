@@ -1,8 +1,5 @@
 package org.gunnm.lostrunner;
 
-import org.gunnm.lostrunner.controller.Key;
-import org.gunnm.lostrunner.controller.Touch;
-import org.gunnm.lostrunner.graphics.LostRenderer;
 import org.gunnm.lostrunner.graphics.TitleRenderer;
 import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.sounds.Sound;
@@ -24,7 +21,6 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -68,13 +64,13 @@ public class Title extends Activity implements OnTouchListener
         {
         	try
         	{
-        		Log.i("Title", "initialize scoreloop");
+//        		Log.i("Title", "initialize scoreloop");
         		ScoreloopManagerSingleton.init(this, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
         		scoreLoopInitialized = true;
         	}
         	catch (IllegalStateException e)
         	{
-        		Log.i("Title", "error when initializng scoreloop" + e.toString());
+  //      		Log.i("Title", "error when initializng scoreloop" + e.toString());
         	}
         }
         Score.getInstance().setInitialized(scoreLoopInitialized);

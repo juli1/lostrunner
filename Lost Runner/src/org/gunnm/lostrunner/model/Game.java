@@ -6,7 +6,6 @@ import org.gunnm.lostrunner.maps.*;
 import org.gunnm.lostrunner.sounds.Sound;
 
 import android.content.Context;
-import android.util.Log;
 
 public class Game {
 
@@ -14,7 +13,7 @@ public class Game {
 	private Warp[] warps;
 	private Hero hero;
 	private MapInterface currentMap;
-	private static float HERO_SPEED = 2.5f;
+	private static float HERO_SPEED = 1.5f;
 
 	private static final int COLLISION_NONE 	= 1;
 	private static final int COLLISION_BLOCK 	= 2;
@@ -24,14 +23,17 @@ public class Game {
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private long completedTime;
-	private final static int NB_MAPS = 8;
-	private final static Class[] maps = {Map10.class, Map2.class,
+	private final static int NB_MAPS = 10;
+	private final static Class[] maps = {Map1.class, Map2.class,
 										 Map3.class, Map4.class,
 										 Map5.class, Map6.class,
-										 Map7.class, Map8.class};
+										 Map7.class, Map8.class,
+										 Map9.class, Map10.class};
+	/*
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
 	private boolean[][] destroyed;
+	*/
 	private boolean 	completed;
 	private Sound 		sound;
 	private static Game instance;
@@ -45,7 +47,13 @@ public class Game {
 		{
 			instance = new Game(c);
 		}
+		instance.updateLastTime();
 		return instance;
+	}
+	
+	public void updateLastTime ()
+	{
+		this.lastTime = Calendar.getInstance().getTimeInMillis();
 	}
 	
 	public long getCompletedTime ()
@@ -64,6 +72,7 @@ public class Game {
 		{
 			isStarted 				= true;
 			this.elapsed 			= 0;
+			this.updateLastTime();
 		}
 	}
 	
@@ -72,7 +81,7 @@ public class Game {
 		currentMap = map;
 		cubes = new Cube[currentMap.getNbCubes()];
 		warps = new Warp[currentMap.getNbWarps()];
-		hero.setX(currentMap.getHeroPositionX());
+		hero.setX(currentMap.getHeroPositionX() + 0.5f);
 		hero.setZ(currentMap.getHeroPositionZ());
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
 		{
@@ -97,7 +106,7 @@ public class Game {
 			warps[i].setConnection(warps[currentMap.getWarpConnection(i)]);
 		}
 		
-		
+		/*
 		hasBomb    = new boolean[map.getMapWidth()][map.getMapDepth()];
 		hasBigBomb = new boolean[map.getMapWidth()][map.getMapDepth()];
 		destroyed  = new boolean[map.getMapWidth()][map.getMapDepth()];
@@ -111,8 +120,8 @@ public class Game {
 				destroyed[i][j] 	= false;
 			}	
 		}
-		
-		lastTime = Calendar.getInstance().getTimeInMillis();
+		*/
+		updateLastTime ();
 	}
 	
 	
@@ -164,13 +173,17 @@ public class Game {
 	public int detectCollision ()
 	{
 		Cube cube;
+		/*
 		int heroCoarsePosX;
 		int heroCoarsePosZ;
+		*/
 		float heroFineLeft;
 		float heroFineRight;
 		
 		heroFineLeft 	= hero.getX() - 0.2f;
 		heroFineRight 	= hero.getX() + 0.2f;
+		
+		/*
 		heroCoarsePosX = (int)Math.floor( (double)hero.getX());
 		heroCoarsePosZ = (int)Math.floor( (double) ( -1 * hero.getZ()));
 		
@@ -192,7 +205,7 @@ public class Game {
 		{
 			heroCoarsePosZ = 0;
 		}
-		
+		*/
 		//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";heroCoarseX="+ heroCoarsePosX + ";heroCoarseZ=" + heroCoarsePosZ);
 		/*
 		if (destroyed[heroCoarsePosX][heroCoarsePosZ])
@@ -208,10 +221,10 @@ public class Game {
 			if (cube.isVisible() == false)
 				continue;
 			
-			if (((heroFineLeft > cube.getX()) &&
-			     (heroFineLeft <= cube.getX()+1)) ||
-			     ((heroFineRight > cube.getX()) &&
-			     (heroFineRight <= cube.getX()+1))
+			if (((hero.getX() > cube.getX()) &&
+			     (hero.getX() <= cube.getX()+1)) ||
+			     ((hero.getX() > cube.getX()) &&
+			     (hero.getX() <= cube.getX()+1))
 			   )
 			{
 				//Log.i ("Game", "Potential Collision with cube " + i); 
@@ -220,16 +233,16 @@ public class Game {
 				   (hero.getZ() < ( cube.getZ() + 0.5f)))
 				{  
 					//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
-					Log.i ("Game", "Collision with cube" + i);
+					//Log.i ("Game", "Collision with cube" + i + "heroX=" + hero.getX());
 					if (cube.getSpeed() != 0)
 					{
 						sound.playSound(Sound.DEATH);
-						Log.i ("Game", "Collision KILL");
+						//Log.i ("Game", "Collision KILL");
 						return COLLISION_KILL;
 					}
 					else
 					{
-						Log.i ("Game", "Collision BLOCK");
+						//Log.i ("Game", "Collision BLOCK");
 						return COLLISION_BLOCK;
 					}
 				}
@@ -525,6 +538,7 @@ public class Game {
 				{
 					newX = hero.getX() - ( ((float)((float)period / 1000)) * HERO_SPEED);
 				}
+				
 				break;
 			}
 			case Hero.DIRECTION_RIGHT:
@@ -553,6 +567,14 @@ public class Game {
 			}
 		}
 
+		if (newX < 0)
+		{
+			newX = 0;
+		}
+		if (newX > currentMap.getMapWidth())
+		{
+			newX = currentMap.getMapWidth();
+		}
 
 		hero.setX(newX);
 		hero.setZ(newZ);
@@ -611,8 +633,7 @@ public class Game {
 			}
 		}
 	
-		lastTime = currentTime;
-		
+		updateLastTime ();
 	}
 	
 	public Cube getCube (int id)
@@ -629,7 +650,7 @@ public class Game {
 	{
 		return this.currentMap;
 	}
-	
+	/*
 	public void enableBomb ()
 	{
 		int x;
@@ -769,5 +790,5 @@ public class Game {
 			return false;
 		}
 	}
-	
+	*/
 }
