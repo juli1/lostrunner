@@ -25,7 +25,7 @@ public class Game {
 	private int currentMapIndex;
 	private long completedTime;
 	private final static int NB_MAPS = 8;
-	private final static Class[] maps = {Map1.class, Map2.class,
+	private final static Class[] maps = {Map10.class, Map2.class,
 										 Map3.class, Map4.class,
 										 Map5.class, Map6.class,
 										 Map7.class, Map8.class};
@@ -164,8 +164,6 @@ public class Game {
 	public int detectCollision ()
 	{
 		Cube cube;
-		int cubeCoarsePosX;
-		int cubeCoarsePosZ;
 		int heroCoarsePosX;
 		int heroCoarsePosZ;
 		float heroFineLeft;
@@ -196,11 +194,12 @@ public class Game {
 		}
 		
 		//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";heroCoarseX="+ heroCoarsePosX + ";heroCoarseZ=" + heroCoarsePosZ);
+		/*
 		if (destroyed[heroCoarsePosX][heroCoarsePosZ])
 		{
 			sound.playSound(Sound.DEATH);
 			return COLLISION_KILL;
-		}
+		}*/
 		
 		//Log.i("GAME", "try to detect collision, heroX = "  + hero.getX() + "heroZ=" + hero.getZ());
 		for (int i = 0 ; i < currentMap.getNbCubes() ; i++)
@@ -221,21 +220,27 @@ public class Game {
 				   (hero.getZ() < ( cube.getZ() + 0.5f)))
 				{  
 					//Log.i ("Game", "HeroX="+ hero.getX() + ";heroZ="+hero.getZ() + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
-					//Log.i ("Game", "Collision with cube" + i);
+					Log.i ("Game", "Collision with cube" + i);
 					if (cube.getSpeed() != 0)
 					{
 						sound.playSound(Sound.DEATH);
+						Log.i ("Game", "Collision KILL");
 						return COLLISION_KILL;
 					}
 					else
 					{
+						Log.i ("Game", "Collision BLOCK");
 						return COLLISION_BLOCK;
 					}
 				}
 			}
+			/*
 			cubeCoarsePosX = (int)Math.floor( (double)cube.getX());
 			cubeCoarsePosZ = (int)Math.floor( (double) ( -1 * cube.getZ()));
+			*/
 			//Log.i ("Game", "CubeCoarseX="+ cubeCoarsePosX + ";cubeCoarseZ="+cubeCoarsePosZ + ";cubeX="+cube.getX() + ";cubeZ=" +cube.getZ());
+			
+			/*
 			if ((hasBomb(cubeCoarsePosX, cubeCoarsePosZ)) || (hasBigBomb(cubeCoarsePosX, cubeCoarsePosZ)))
 			{
 				cube.setActive(false);
@@ -249,6 +254,18 @@ public class Game {
 					hasBomb[cubeCoarsePosX][cubeCoarsePosZ] = false;
 				}
 			}
+			*/
+			
+
+			for (int j = 0 ; j < currentMap.getNbCubes() ; j++)
+			{
+				if (cube.isTouching (cubes[j]))
+				{
+					cube.reverse();
+					cubes[j].reverse();
+				}
+			}
+			
 		}
 		return COLLISION_NONE;
 	}

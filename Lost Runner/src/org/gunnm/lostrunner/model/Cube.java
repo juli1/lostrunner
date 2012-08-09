@@ -50,9 +50,10 @@ public class Cube {
 	{
 		this.currentMap = m;
 	}
-	
+
 	public void update (long period)
 	{
+	
 		if (this.isVisible() == false)
 		{
 			return;
@@ -77,7 +78,7 @@ public class Cube {
 							}
 							else
 							{
-								this.direction = DIRECTION_SOUTH_TO_NORTH;
+								this.reverse();
 							}
 						}
 						break;
@@ -95,7 +96,8 @@ public class Cube {
 							}
 							else
 							{
-								this.direction = DIRECTION_NORTH_TO_SOUTH;
+								Log.i ("CUBE", "boucing go to reverse");
+								this.reverse();
 							}
 						}
 						break;
@@ -125,7 +127,7 @@ public class Cube {
 							}
 							else
 							{
-								this.direction = DIRECTION_EAST_TO_WEST;
+								this.reverse();
 							}
 						}
 						break;
@@ -143,7 +145,7 @@ public class Cube {
 							}
 							else
 							{
-								this.direction = DIRECTION_WEST_TO_EAST;
+								this.reverse();
 							}
 						}
 						break;
@@ -162,7 +164,133 @@ public class Cube {
 				Log.i ("CUBE", "invalid direction");
 				break;
 			}
-		}		
+		}
+		
+		
+		
+	}
+	
+	public boolean isTouching (Cube otherCube)
+	{
+		float currentCubeTop;
+		float currentCubeBottom;
+		float currentCubeLeft;
+		float currentCubeRight;
+		float otherCubeTop;
+		float otherCubeBottom;
+		float otherCubeLeft;
+		float otherCubeRight;
+		boolean result;
+		currentCubeTop 		= posZ - 0.5f;
+		currentCubeBottom 	= posZ + 0.5f;
+		currentCubeLeft 	= posX;
+		currentCubeRight 	= posX + 1;
+		
+		otherCubeTop 		= otherCube.getZ() - 0.5f;
+		otherCubeBottom 	= otherCube.getZ() + 0.5f;
+		otherCubeLeft 		= otherCube.getX();
+		otherCubeRight 		= otherCube.getX() + 1;
+		
+		result = false;
+		
+		if ( ! otherCube.isVisible())
+		{
+			return false;
+		}
+		
+		if (visible == false)
+		{
+			return false;
+		}
+		if (speed == 0)
+		{
+			return false;
+		}
+		
+		/* Vertical cubes have to be on the same colon as the collision cube */
+		if ( ((direction == DIRECTION_SOUTH_TO_NORTH) || (direction == DIRECTION_NORTH_TO_SOUTH)) && 
+		     ((currentCubeLeft >= otherCubeRight) || (currentCubeRight <= otherCubeLeft)))
+		{
+			return false;
+		}
+		
+		if ( ((direction == DIRECTION_WEST_TO_EAST) || (direction == DIRECTION_NORTH_TO_SOUTH)) && 
+			     ((currentCubeLeft >= otherCubeRight) || (currentCubeRight <= otherCubeLeft)))
+		{
+			return false;
+		}
+		
+		
+		if ((direction == DIRECTION_SOUTH_TO_NORTH) && (currentCubeTop < otherCubeBottom) && (currentCubeTop > otherCubeTop))
+		{
+			//Log.i("Cube", "collision with top"+ this.toString() + this.toString() + "other" + otherCube.toString());
+			result = false;
+		}
+		if ((direction == DIRECTION_NORTH_TO_SOUTH) && (currentCubeBottom < otherCubeBottom) && (currentCubeBottom > otherCubeTop))
+		{
+			//Log.i("Cube", "collision with bottom" + this.toString() + this.toString() + "other" + otherCube.toString());
+			result = true;
+		}
+		
+		if ((direction == DIRECTION_EAST_TO_WEST) && (currentCubeLeft < otherCubeRight) && (currentCubeLeft > otherCubeLeft))
+		{
+			//Log.i("Cube", "collision with bottom" + this.toString() + this.toString() + "other" + otherCube.toString());
+			result = true;
+		}
+		
+		if ((direction == DIRECTION_WEST_TO_EAST) && (currentCubeRight > otherCubeLeft) && (currentCubeRight < otherCubeRight))
+		{
+			//Log.i("Cube", "collision with bottom" + this.toString() + this.toString() + "other" + otherCube.toString());
+			result = true;
+		}
+		/*
+		if (result)
+		{
+			Log.i("Cube", "currentCubeTop = " + currentCubeTop + 
+				      "currentCubeBottom = " + currentCubeBottom + 
+				      "currentCubeLeft = " + currentCubeLeft + 
+				      "currentCubeRight = " + currentCubeRight +
+				      "currentCubeDirection = " + this.direction + 
+				      "otherCubeTop = "   + otherCubeTop + 
+				      "otherCubeBottom = "   + otherCubeBottom + 
+				      "otherCubeLeft = "   + otherCubeLeft + 
+				      "otherCubeRight = "   + otherCubeRight +
+				      "otherCubeDirection = " + otherCube.getType());
+		}
+		*/
+		return result;
+	}
+	
+	public void reverse ()
+	{
+		if (this.speed == 0)
+		{
+			return;
+		}
+		
+		if (this.direction == DIRECTION_EAST_TO_WEST)
+		{
+			this.direction = DIRECTION_WEST_TO_EAST;
+			return;
+		}
+		
+		if (this.direction == DIRECTION_WEST_TO_EAST)
+		{
+			this.direction = DIRECTION_EAST_TO_WEST;
+			return;
+		}
+		
+		if (this.direction == DIRECTION_NORTH_TO_SOUTH)
+		{
+			this.direction = DIRECTION_SOUTH_TO_NORTH;
+			return;
+		}
+		
+		if(this.direction == DIRECTION_SOUTH_TO_NORTH)
+		{
+			this.direction = DIRECTION_NORTH_TO_SOUTH;
+			return;
+		}
 	}
 	
 	

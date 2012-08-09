@@ -185,7 +185,7 @@ public class Title extends Activity implements OnTouchListener
 		super.onPause();
 		surface.onPause();
 		sound.stopTrack();
-		Log.i("Title", "onPause");
+//		Log.i("Title", "onPause");
 	}
 
 	protected void onResume() {
