@@ -143,7 +143,7 @@ public class Map10 implements MapInterface {
 	
 	public int getNbWarps()
 	{
-		return this.NB_WARPS;
+		return 0;
 	}
 	public int getWarpPositionX(int warpId)
 	{

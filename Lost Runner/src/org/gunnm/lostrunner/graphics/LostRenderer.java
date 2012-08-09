@@ -144,6 +144,11 @@ public class LostRenderer implements Renderer
 		0.25f, 2, 0, 
 		0.25f,0, 0, 
 		0.75f,0, 0};
+	
+	/*
+	 * This is the cube coordinate, we specify
+	 * the vertices for each face of the cube.
+	 */
 	private static float[][] cubeCoords = new float[][] {
 		new float[] { 
 				0.5f, 0.5f,-0.5f,
@@ -182,6 +187,11 @@ public class LostRenderer implements Renderer
 				0.5f,-0.5f,-0.5f
 		},
 	};
+	
+	
+	/*
+	 * Coordinates for each vertices of the body of the hero.
+	 */
 	private static float[][] heroBodyCoords = new float[][] {
 		new float[] { //top
 				0.1f, 0.5f,-0.1f,
@@ -321,18 +331,18 @@ public class LostRenderer implements Renderer
 		textureBuffer.put(texture);
 		textureBuffer.position(0);
 
-		iconDirectionLeft = new LostIcon 	(c, "direction-left.png"	, -5.0f	, -6.5f, -10.0f);
-		iconDirectionDown = new LostIcon 	(c, "direction-down.png"	, -2.5f	, -9.0f, -10.0f);
-		iconDirectionUp = new LostIcon 		(c, "direction-up.png"		, -2.5f	, -4.0f, -10.0f);
-		iconDirectionRight = new LostIcon 	(c, "direction-right.png"	,  0.0f	, -6.5f, -10.0f);
+		iconDirectionLeft = new LostIcon 	(c, "direction-left.png"	, -4.5f	, -6.5f, -10.0f);
+		iconDirectionDown = new LostIcon 	(c, "direction-down.png"	, -1.5f	, -9.0f, -10.0f);
+		iconDirectionUp = new LostIcon 		(c, "direction-up.png"		, -1.5f	, -4.0f, -10.0f);
+		iconDirectionRight = new LostIcon 	(c, "direction-right.png"	,  1.5f	, -6.5f, -10.0f);
 
-		iconLifeSmall = new LostIcon 	(c, "life.png"		, -5.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
+		iconLifeSmall = new LostIcon 	(c, "life.png"		, -4.5f, 7.0f, -10.0f, LostIcon.ICON_SMALL);
 		
 		
-		iconZoomIn = new LostIcon 		(c, "zoomin.png"		,  5.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
-		iconZoomOut = new LostIcon 		(c, "zoomout.png"		,  3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
-		iconCameraLeft = new LostIcon 	(c, "camleft.png"		, -5.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
-		iconCameraRight = new LostIcon 	(c, "camright.png"		, -3.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconZoomIn = new LostIcon 		(c, "zoomin.png"		,  4.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconZoomOut = new LostIcon 		(c, "zoomout.png"		,  2.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconCameraLeft = new LostIcon 	(c, "camleft.png"		, -4.5f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
+		iconCameraRight = new LostIcon 	(c, "camright.png"		, -2.0f, 8.5f, -10.0f , LostIcon.ICON_MEDIUM);
 	}
 
 	public void loadGLTexture(GL10 gl, String filename, int[] textures) 
@@ -691,7 +701,7 @@ public class LostRenderer implements Renderer
 
 		// TEST: render some strings with the font
 		glText.begin( 1.0f, 1.0f, 1.0f, 1.0f );
-		glText.draw( "" + currentGame.getHero().getNbLifes(), 10, 20 );
+		glText.draw( "" + currentGame.getHero().getNbLifes(), 35, 20 );
 
 
 		glText.draw( currentGame.getElapsedSec() + " s", 190, 20 );

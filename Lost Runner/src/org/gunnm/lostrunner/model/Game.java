@@ -13,7 +13,7 @@ public class Game {
 	private Warp[] warps;
 	private Hero hero;
 	private MapInterface currentMap;
-	private static float HERO_SPEED = 1.5f;
+	private static float HERO_SPEED = 2.0f;
 
 	private static final int COLLISION_NONE 	= 1;
 	private static final int COLLISION_BLOCK 	= 2;

@@ -2,6 +2,8 @@ package org.gunnm.lostrunner.model;
 
 import org.gunnm.lostrunner.maps.MapInterface;
 
+import android.util.Log;
+
 
 public class Cube {
 	private float posX;
@@ -210,12 +212,14 @@ public class Cube {
 		if ( ((direction == DIRECTION_SOUTH_TO_NORTH) || (direction == DIRECTION_NORTH_TO_SOUTH)) && 
 		     ((currentCubeLeft >= otherCubeRight) || (currentCubeRight <= otherCubeLeft)))
 		{
+		//	Log.i("Cube", "not aligned");
 			return false;
 		} 
 		
 		if ( ((direction == DIRECTION_WEST_TO_EAST) || (direction == DIRECTION_EAST_TO_WEST)) && 
 			     ((currentCubeTop >= otherCubeBottom) || (currentCubeBottom <= otherCubeTop)))
 		{
+			
 			return false;
 		}
 		
@@ -223,7 +227,7 @@ public class Cube {
 		if ((direction == DIRECTION_SOUTH_TO_NORTH) && (currentCubeTop < otherCubeBottom) && (currentCubeTop > otherCubeTop))
 		{
 			//Log.i("Cube", "collision with top"+ this.toString() + this.toString() + "other" + otherCube.toString());
-			result = false;
+			result = true;
 		}
 		if ((direction == DIRECTION_NORTH_TO_SOUTH) && (currentCubeBottom < otherCubeBottom) && (currentCubeBottom > otherCubeTop))
 		{
