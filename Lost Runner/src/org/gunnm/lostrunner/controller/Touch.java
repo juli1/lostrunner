@@ -6,7 +6,6 @@ import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.model.Hero;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -125,34 +124,34 @@ public class Touch implements OnTouchListener {
 			
 			posX = (int) event.getX();
 			posY = (int) event.getY();
-			Log.i("Touch", "onTouch, X = "+ posX + "touchY=" + posY  + "screenWidth=" + screenWidth + "; screenHeight=" + screenHeight );
-			Log.i("Touch", "horizontalButtonWidth="+ horizontalButtonWidth + ";horizontalButtonHeight=" + horizontalButtonHeight  + ";verticalButtonWidth=" + verticalButtonWidth + "; verticalButtonHeight=" + verticalButtonHeight );
+			//Log.i("Touch", "onTouch, X = "+ posX + "touchY=" + posY  + "screenWidth=" + screenWidth + "; screenHeight=" + screenHeight );
+			//Log.i("Touch", "horizontalButtonWidth="+ horizontalButtonWidth + ";horizontalButtonHeight=" + horizontalButtonHeight  + ";verticalButtonWidth=" + verticalButtonWidth + "; verticalButtonHeight=" + verticalButtonHeight );
 			
 			//Log.i(TAG, "Screen Width = " + screenWidth + ";screen height=" + screenHeight + ";posx=" + posX + ";posy=" + posY);
 			if ( (posX > zoneMoveLeft[0]) && (posX < zoneMoveLeft[1]) && (posY > zoneMoveLeft[2]) && (posY < zoneMoveLeft[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_LEFT);
-				Log.i(TAG, "Move left");
+				//Log.i(TAG, "Move left");
 				return true;
 			}
 			
 			if ( (posX > zoneMoveRight[0]) && (posX < zoneMoveRight[1]) && (posY > zoneMoveRight[2]) && (posY < zoneMoveRight[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_RIGHT);
-				Log.i(TAG, "Move right");
+				//Log.i(TAG, "Move right");
 				return true;
 			}
 
 			if ( (posX > zoneMoveUp[0]) && (posX < zoneMoveUp[1]) && (posY > zoneMoveUp[2]) && (posY < zoneMoveUp[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_UP);
-				Log.i(TAG, "Move up");
+				//Log.i(TAG, "Move up");
 				return true;
 			}
 			if ( (posX > zoneMoveDown[0]) && (posX < zoneMoveDown[1]) && (posY > zoneMoveDown[2]) && (posY < zoneMoveDown[3]) )
 			{
 				currentGame.getHero().setDirection(Hero.DIRECTION_DOWN);
-				Log.i(TAG, "Move down");
+				//Log.i(TAG, "Move down");
 				return true;
 			}
 			
@@ -161,28 +160,28 @@ public class Touch implements OnTouchListener {
 			{
 				renderer.zoomIn ();
 				
-				Log.i(TAG, "ZoomIn");
+				//Log.i(TAG, "ZoomIn");
 				return true;
 			}
 			
 			if ( (posX > zoneZoomOut[0]) && (posX < zoneZoomOut[1]) && (posY > zoneZoomOut[2]) && (posY < zoneZoomOut[3]) )
 			{
 				renderer.zoomOut ();
-				Log.i(TAG, "Zoom Out");
+				//Log.i(TAG, "Zoom Out");
 				return true;
 			}
 			 
 			if ( (posX > zoneCamLeft[0]) && (posX < zoneCamLeft[1]) && (posY > zoneCamLeft[2]) && (posY < zoneCamLeft[3]) )
 			{
 				renderer.moveLeft ();
-				Log.i(TAG, "Cam left");
+				//Log.i(TAG, "Cam left");
 				return true;
 			}
 			
 			if ( (posX > zoneCamRight[0]) && (posX < zoneCamRight[1]) && (posY > zoneCamRight[2]) && (posY < zoneCamRight[3]) )
 			{
 				renderer.moveRight ();
-				Log.i(TAG, "Cam right");
+				//Log.i(TAG, "Cam right");
 				return true;
 			}
 			

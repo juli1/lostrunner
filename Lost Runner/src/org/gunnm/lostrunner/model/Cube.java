@@ -2,7 +2,6 @@ package org.gunnm.lostrunner.model;
 
 import org.gunnm.lostrunner.maps.MapInterface;
 
-import android.util.Log;
 
 
 public class Cube {
