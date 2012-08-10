@@ -19,9 +19,12 @@ public class Touch implements OnTouchListener {
 	private int screenHeight;
 	private static final String TAG = "Touch";
 	private Context context;
+	/*
 	private final static int ORIENTATION_PORTRAIT  = 1;
 	private final static int ORIENTATION_LANDSCAPE = 2;
+	
 	private int orientation;
+	*/
 	private LostRenderer renderer;
 	private Game currentGame;
 	
@@ -30,9 +33,11 @@ public class Touch implements OnTouchListener {
 	private int[] zoneMoveRight;
 	private int[] zoneMoveUp;
 	private int[] zoneMoveDown;
+	/*
 	private int[] zoneBullet;
 	private int[] zoneBomb;
 	private int[] zoneBigBomb;
+	*/
 	private int[] zoneZoomIn;
 	private int[] zoneZoomOut;
 	private int[] zoneCamLeft;
@@ -48,7 +53,7 @@ public class Touch implements OnTouchListener {
 		display = wm.getDefaultDisplay();
 		screenWidth = display.getWidth();
 		screenHeight = display.getHeight();
-		orientation = ORIENTATION_PORTRAIT;
+		
 		
 		this.renderer = r;
 		this.currentGame = g;
@@ -57,9 +62,7 @@ public class Touch implements OnTouchListener {
 		zoneMoveRight 	= new int[]{0,0,0,0};
 		zoneMoveUp 		= new int[]{0,0,0,0};
 		zoneMoveDown 	= new int[]{0,0,0,0};
-		zoneBullet 		= new int[]{0,0,0,0};
-		zoneBomb 		= new int[]{0,0,0,0};
-		zoneBigBomb 	= new int[]{0,0,0,0};
+		
 		zoneZoomIn 		= new int[]{0,0,0,0};
 		zoneZoomOut 	= new int[]{0,0,0,0};
 		zoneCamLeft 	= new int[]{0,0,0,0};
@@ -79,34 +82,27 @@ public class Touch implements OnTouchListener {
 	
 	private void updateOrientation()
 	{
+		int horizontalButtonWidth;
+		int horizontalButtonHeight;
+		int verticalButtonWidth;
+		int verticalButtonHeight;
 		
-		int screenWidthPart;
-		int screenHeightPart;
-		int dividerWidth;
-		int dividerHeight;
+		horizontalButtonWidth = (int) (screenWidth / 3.5);
+		horizontalButtonHeight = screenHeight / 8;
+		verticalButtonWidth = (int) (screenWidth / 5);
+		verticalButtonHeight = screenHeight / 6;
 		
 		
-
-		dividerWidth = 5;
-		dividerHeight = 8;
-
-		this.orientation = ORIENTATION_PORTRAIT;
-
-
 		
-		screenWidthPart = screenWidth / dividerWidth;
-		screenHeightPart = screenHeight / dividerHeight;
-		zoneMoveLeft 	= new int[]{0                    ,screenWidthPart       ,  screenHeightPart  * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1) };
-		zoneMoveRight 	= new int[]{screenWidthPart*2    ,screenWidthPart* 3 , screenHeightPart * (dividerHeight - 2) ,screenHeightPart * (dividerHeight - 1)};
-		zoneMoveUp 		= new int[]{0                    ,screenWidthPart*2     ,  screenHeightPart  * (dividerHeight - 3) , (int)(screenHeightPart * (dividerHeight - 1.5))};
-		zoneMoveDown 	= new int[]{0                    ,screenWidthPart*2     ,(int)( screenHeightPart   * (dividerHeight - 1.5)) ,screenHeightPart * dividerHeight};
-		zoneBullet 		= new int[]{screenWidthPart* (dividerWidth - 3) ,screenWidthPart* (dividerWidth - 2), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
-		zoneBomb 		= new int[]{screenWidthPart* (dividerWidth - 2) ,screenWidthPart* (dividerWidth - 1), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
-		zoneBigBomb 	= new int[]{screenWidthPart* (dividerWidth - 1) ,screenWidthPart* (dividerWidth - 0), screenHeightPart * (dividerHeight - 2) ,screenHeightPart * dividerHeight};
-		zoneZoomIn 		= new int[]{screenWidthPart* (dividerWidth - 1) ,screenWidthPart* (dividerWidth - 0), 0 ,screenHeightPart};
-		zoneZoomOut 	= new int[]{screenWidthPart* (dividerWidth - 2) ,screenWidthPart* (dividerWidth - 1), 0 ,screenHeightPart};
-		zoneCamLeft 	= new int[]{0 ,screenWidthPart, 0 ,screenHeightPart};
-		zoneCamRight 	= new int[]{screenWidthPart , 2 * screenWidthPart, 0 ,screenHeightPart};
+		zoneMoveLeft 	= new int[]{0                    ,horizontalButtonWidth       ,  screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - verticalButtonHeight };
+		zoneMoveRight 	= new int[]{horizontalButtonWidth + verticalButtonWidth    ,horizontalButtonWidth + verticalButtonWidth + horizontalButtonWidth , screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - verticalButtonHeight };
+		zoneMoveUp 		= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - horizontalButtonHeight - verticalButtonHeight - verticalButtonHeight , screenHeight - horizontalButtonHeight - verticalButtonHeight};
+		zoneMoveDown 	= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - verticalButtonHeight , screenHeight};
+		
+		zoneZoomIn 		= new int[]{2* (screenWidth / 4) ,3* (screenWidth / 4), 0 ,screenHeight / 4};
+		zoneZoomOut 	= new int[]{3* (screenWidth / 4) ,screenWidth, 0 ,screenHeight / 4};
+		zoneCamLeft 	= new int[]{0 ,screenWidth / 4, 0 ,screenHeight / 4};
+		zoneCamRight 	= new int[]{screenWidth / 4 , 2 * (screenWidth / 4), 0 ,screenHeight / 4};
 	}
 	
 	public boolean onTouch(View v, MotionEvent event) 
@@ -125,7 +121,7 @@ public class Touch implements OnTouchListener {
 			
 			posX = (int) event.getX();
 			posY = (int) event.getY();
-			Log.i("Touch", "onTouch, width=" + screenWidth + "; height=" + screenHeight + "touchX=" + posX + "touchY=" + posY);
+			Log.i("Touch", "onTouch, X = "+ posX + "touchY=" + posY  + "screenWidth=" + screenWidth + "; screenHeight=" + screenHeight );
 			//Log.i(TAG, "Screen Width = " + screenWidth + ";screen height=" + screenHeight + ";posx=" + posX + ";posy=" + posY);
 			if ( (posX > zoneMoveLeft[0]) && (posX < zoneMoveLeft[1]) && (posY > zoneMoveLeft[2]) && (posY < zoneMoveLeft[3]) )
 			{
