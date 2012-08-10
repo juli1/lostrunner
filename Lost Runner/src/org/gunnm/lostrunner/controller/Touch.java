@@ -43,6 +43,11 @@ public class Touch implements OnTouchListener {
 	private int[] zoneCamLeft;
 	private int[] zoneCamRight;
 	
+	int horizontalButtonWidth;
+	int horizontalButtonHeight;
+	int verticalButtonWidth;
+	int verticalButtonHeight;
+	
 	public Touch (Context c, LostRenderer r, Game g)
 	{
 		WindowManager wm;
@@ -67,6 +72,25 @@ public class Touch implements OnTouchListener {
 		zoneZoomOut 	= new int[]{0,0,0,0};
 		zoneCamLeft 	= new int[]{0,0,0,0};
 		zoneCamRight 	= new int[]{0,0,0,0};
+		
+
+		horizontalButtonWidth = (int) (screenWidth / 3.5);
+		horizontalButtonHeight = screenHeight / 8;
+		verticalButtonWidth = (int) (screenWidth / 5);
+		verticalButtonHeight = screenHeight / 6;
+		
+		
+		
+		zoneMoveLeft 	= new int[]{0                    ,horizontalButtonWidth       ,  screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - horizontalButtonHeight };
+		zoneMoveRight 	= new int[]{horizontalButtonWidth + verticalButtonWidth    ,horizontalButtonWidth + verticalButtonWidth + horizontalButtonWidth , screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - horizontalButtonHeight };
+		zoneMoveUp 		= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - (3 * verticalButtonHeight) , screenHeight - (horizontalButtonHeight / 2) - verticalButtonHeight};
+		zoneMoveDown 	= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - verticalButtonHeight , screenHeight};
+		
+		zoneZoomIn 		= new int[]{2* (screenWidth / 4) ,3* (screenWidth / 4), 0 ,screenHeight / 4};
+		zoneZoomOut 	= new int[]{3* (screenWidth / 4) ,screenWidth, 0 ,screenHeight / 4};
+		zoneCamLeft 	= new int[]{0 ,screenWidth / 4, 0 ,screenHeight / 4};
+		zoneCamRight 	= new int[]{screenWidth / 4 , 2 * (screenWidth / 4), 0 ,screenHeight / 4};
+		
 		updateOrientation();
 	}
 
@@ -82,27 +106,7 @@ public class Touch implements OnTouchListener {
 	
 	private void updateOrientation()
 	{
-		int horizontalButtonWidth;
-		int horizontalButtonHeight;
-		int verticalButtonWidth;
-		int verticalButtonHeight;
-		
-		horizontalButtonWidth = (int) (screenWidth / 3.5);
-		horizontalButtonHeight = screenHeight / 8;
-		verticalButtonWidth = (int) (screenWidth / 5);
-		verticalButtonHeight = screenHeight / 6;
-		
-		
-		
-		zoneMoveLeft 	= new int[]{0                    ,horizontalButtonWidth       ,  screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - verticalButtonHeight };
-		zoneMoveRight 	= new int[]{horizontalButtonWidth + verticalButtonWidth    ,horizontalButtonWidth + verticalButtonWidth + horizontalButtonWidth , screenHeight - verticalButtonHeight - horizontalButtonHeight ,screenHeight - verticalButtonHeight };
-		zoneMoveUp 		= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - horizontalButtonHeight - verticalButtonHeight - verticalButtonHeight , screenHeight - horizontalButtonHeight - verticalButtonHeight};
-		zoneMoveDown 	= new int[]{horizontalButtonWidth                 ,horizontalButtonWidth + verticalButtonWidth     ,  screenHeight - verticalButtonHeight , screenHeight};
-		
-		zoneZoomIn 		= new int[]{2* (screenWidth / 4) ,3* (screenWidth / 4), 0 ,screenHeight / 4};
-		zoneZoomOut 	= new int[]{3* (screenWidth / 4) ,screenWidth, 0 ,screenHeight / 4};
-		zoneCamLeft 	= new int[]{0 ,screenWidth / 4, 0 ,screenHeight / 4};
-		zoneCamRight 	= new int[]{screenWidth / 4 , 2 * (screenWidth / 4), 0 ,screenHeight / 4};
+
 	}
 	
 	public boolean onTouch(View v, MotionEvent event) 
@@ -122,6 +126,8 @@ public class Touch implements OnTouchListener {
 			posX = (int) event.getX();
 			posY = (int) event.getY();
 			Log.i("Touch", "onTouch, X = "+ posX + "touchY=" + posY  + "screenWidth=" + screenWidth + "; screenHeight=" + screenHeight );
+			Log.i("Touch", "horizontalButtonWidth="+ horizontalButtonWidth + ";horizontalButtonHeight=" + horizontalButtonHeight  + ";verticalButtonWidth=" + verticalButtonWidth + "; verticalButtonHeight=" + verticalButtonHeight );
+			
 			//Log.i(TAG, "Screen Width = " + screenWidth + ";screen height=" + screenHeight + ";posx=" + posX + ";posy=" + posY);
 			if ( (posX > zoneMoveLeft[0]) && (posX < zoneMoveLeft[1]) && (posY > zoneMoveLeft[2]) && (posY < zoneMoveLeft[3]) )
 			{
