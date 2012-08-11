@@ -5,10 +5,10 @@ import org.gunnm.lostrunner.model.Warp;
 
 public class Map10 implements MapInterface {
 
-	private int NB_CUBES = 13;
+	private int NB_CUBES = 15;
 	private int NB_WARPS = 4;
 	private int MAP_WIDTH = 6;
-	private int MAP_DEPTH = 8;
+	private int MAP_DEPTH = 7;
 	private int cubesPositions[][];
 	private int warpsPositions[][];
 	private int warpsTypes[];
@@ -33,8 +33,15 @@ public class Map10 implements MapInterface {
 			cubesPositions[i * 2 + 1][1] = -i;	
 		}
 		
-		cubesPositions[12][0] = 1;
-		cubesPositions[12][1] = -MAP_DEPTH / 2;
+		cubesPositions[12][0] = 2;
+		cubesPositions[12][1] = -MAP_DEPTH / 2 - 1;
+		
+		cubesPositions[13][0] = 2;
+		cubesPositions[13][1] = -MAP_DEPTH / 2 + 1;
+		
+		cubesPositions[14][0] = MAP_WIDTH - 2;
+		cubesPositions[14][1] = -6;
+		
 		
 		this.warpsConnections[0] = 1;
 		this.warpsConnections[1] = 0;
@@ -126,14 +133,8 @@ public class Map10 implements MapInterface {
 	public int getCubeDirection(int cubeId)
 	{
 		
-		if ( (cubeId % 2) == 0)
-		{
-			return Cube.DIRECTION_WEST_TO_EAST;
-		}
-		else
-		{
-			return Cube.DIRECTION_EAST_TO_WEST;
-		}
+		return Cube.DIRECTION_WEST_TO_EAST;
+
 	}
 	
 	public int getCubeType (int cubeId)
@@ -174,6 +175,14 @@ public class Map10 implements MapInterface {
 		{
 			return Cube.DEFAULT_SPEED / 2;
 		}
+		if (cubeId == 13)
+		{
+			return Cube.DEFAULT_SPEED / 4;
+		}
+		if (cubeId == 14)
+		{
+			return Cube.DEFAULT_SPEED * 2;
+		}
 		return 0;
 	}
 	
@@ -182,6 +191,14 @@ public class Map10 implements MapInterface {
 		if (cubeId == 12)
 		{
 			return Cube.DEFAULT_ROTATION_SPEED / 2;
+		}
+		if (cubeId == 13)
+		{
+			return Cube.DEFAULT_ROTATION_SPEED / 2;
+		}
+		if (cubeId == 14)
+		{
+			return Cube.DEFAULT_ROTATION_SPEED;
 		}
 		return 0;
 	}

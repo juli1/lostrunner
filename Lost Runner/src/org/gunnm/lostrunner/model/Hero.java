@@ -13,6 +13,8 @@ public class Hero {
 	public final static int DIRECTION_DOWN = 4;
 	public final static int ANGLE_INCREASE = 1;
 	public final static int ANGLE_DECREASE = 2;
+	public final static int angleArmIncrease = 5;
+	public final static int angleLegIncrease = 10;
 	private int nbLifes;
 	private int nbBombs;
 	private int nbBigBombs;
@@ -152,7 +154,7 @@ public class Hero {
 		
 		if (this.angleArmsStatus == ANGLE_INCREASE)
 		{
-			this.angleArms = this.angleArms + 15;
+			this.angleArms = this.angleArms + angleArmIncrease;
 			if (this.angleArms > 35)
 			{
 				this.angleArmsStatus = ANGLE_DECREASE;
@@ -162,7 +164,7 @@ public class Hero {
 		
 		if (this.angleArmsStatus == ANGLE_DECREASE)
 		{
-			this.angleArms = this.angleArms - 15;
+			this.angleArms = this.angleArms - angleArmIncrease;
 			if (this.angleArms < -35)
 			{
 				this.angleArmsStatus = ANGLE_INCREASE;
@@ -173,7 +175,7 @@ public class Hero {
 		
 		if (this.angleLegsStatus == ANGLE_INCREASE)
 		{
-			this.angleLegs = this.angleLegs + 20;
+			this.angleLegs = this.angleLegs + angleLegIncrease;
 			if (this.angleLegs > 45)
 			{
 				this.angleLegsStatus = ANGLE_DECREASE;
@@ -183,7 +185,7 @@ public class Hero {
 		
 		if (this.angleLegsStatus == ANGLE_DECREASE)
 		{
-			this.angleLegs = this.angleLegs - 20;
+			this.angleLegs = this.angleLegs - angleLegIncrease;
 			if (this.angleLegs < -45)
 			{
 				this.angleLegsStatus = ANGLE_INCREASE;

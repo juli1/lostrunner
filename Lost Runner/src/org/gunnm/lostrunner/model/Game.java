@@ -18,7 +18,7 @@ public class Game {
 	private static final int COLLISION_NONE 	= 1;
 	private static final int COLLISION_BLOCK 	= 2;
 	private static final int COLLISION_KILL 	= 3;
-	
+	 
 	private long elapsed;
 	private long lastTime = 0;
 	private int currentMapIndex;
@@ -587,6 +587,7 @@ public class Game {
 		
 		if (endLevel)
 		{
+			hero.setDirection(Hero.DIRECTION_NONE);
 			if (currentMapIndex < NB_MAPS - 1)
 			{
 				currentMapIndex = currentMapIndex + 1;

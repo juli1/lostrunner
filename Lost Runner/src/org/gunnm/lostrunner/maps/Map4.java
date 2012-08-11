@@ -5,10 +5,10 @@ import org.gunnm.lostrunner.model.Warp;
 
 public class Map4 implements MapInterface {
 
-	private int NB_CUBES = 64;
+	private int NB_CUBES = 36;
 	
 	private int MAP_WIDTH = 10;
-	private int MAP_DEPTH = 14;
+	private int MAP_DEPTH = 10;
 	private int cubesPositions[][];
 	private int heroPositionX;
 	private int heroPositionZ;
@@ -17,32 +17,61 @@ public class Map4 implements MapInterface {
 	
 	public Map4()
 	{
+		int cubeId = 0;
 		cubesPositions = new int[NB_CUBES][2];
-		for ( int i = 0 ; i < 8 ; i++)
+		for ( int i = 0 ; i < 4 ; i++)
 		{
-			cubesPositions[(i * 8)][0] = 0;
-			cubesPositions[(i * 8)][1] = -MAP_DEPTH + i;
+			cubesPositions[cubeId][0] = 0;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
+			
+			cubesPositions[cubeId][0] = 1;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
+			
+			cubesPositions[cubeId][0] = 2;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
 		
-			cubesPositions[1 + (i * 8)][0] = 1;
-			cubesPositions[1 + (i * 8)][1] = -MAP_DEPTH + i;
-		
-			cubesPositions[2 + (i * 8)][0] = 2;
-			cubesPositions[2 + (i * 8)][1] = -MAP_DEPTH + i;
-		
-			cubesPositions[3 + (i * 8)][0] = 3;
-			cubesPositions[3 + (i * 8)][1] = -MAP_DEPTH + i;
+			if (i != 3)
+			{
+				cubesPositions[cubeId][0] = 3;
+				cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+				cubeId = cubeId + 1;
+			}
 			
-			cubesPositions[4 + (i * 8)][0] = 6;
-			cubesPositions[4 + (i * 8)][1] = -MAP_DEPTH + i;
+			if (i != 2)
+			{
+				cubesPositions[cubeId][0] = 4;
+				cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+				cubeId = cubeId + 1;
+			}
 			
-			cubesPositions[5 + (i * 8)][0] = 7;
-			cubesPositions[5 + (i * 8)][1] = -MAP_DEPTH + i;
+			if (i != 1)
+			{
+				cubesPositions[cubeId][0] = 5;
+				cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+				cubeId = cubeId + 1;
+			}
 			
-			cubesPositions[6 + (i * 8)][0] = 8;
-			cubesPositions[6 + (i * 8)][1] = -MAP_DEPTH + i;
+			if (i != 0)
+			{
+				cubesPositions[cubeId][0] = 6;
+				cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+				cubeId = cubeId + 1;
+			}
 			
-			cubesPositions[7 + (i * 8)][0] = 9;
-			cubesPositions[7 + (i * 8)][1] = -MAP_DEPTH + i;
+			cubesPositions[cubeId][0] = 7;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
+			
+			cubesPositions[cubeId][0] = 8;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
+			
+			cubesPositions[cubeId][0] = 9;
+			cubesPositions[cubeId][1] = -MAP_DEPTH + i * 2;
+			cubeId = cubeId + 1;
 		}		
 		
 		this.heroPositionX = 2;

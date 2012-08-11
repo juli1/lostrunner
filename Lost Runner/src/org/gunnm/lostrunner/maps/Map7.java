@@ -8,7 +8,7 @@ public class Map7 implements MapInterface {
 	private int NB_CUBES = 10;
 	private int NB_WARPS = 2;
 	private int MAP_WIDTH = 6;
-	private int MAP_DEPTH = 12;
+	private int MAP_DEPTH = 10;
 	private int cubesPositions[][];
 	private int warpsPositions[][];
 	private int warpsTypes[];
@@ -47,9 +47,9 @@ public class Map7 implements MapInterface {
 		this.warpsTypes[1] = Warp.WARP_TYPE_VERTICAL;
 		
 		this.warpsPositions[0][0] = MAP_WIDTH;
-		this.warpsPositions[0][1] = -2;
+		this.warpsPositions[0][1] = -1;
 		
-		this.warpsPositions[1][0] = 3;
+		this.warpsPositions[1][0] = 1;
 		this.warpsPositions[1][1] = -MAP_DEPTH;
 		
 		

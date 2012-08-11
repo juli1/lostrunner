@@ -8,7 +8,7 @@ public class Map5 implements MapInterface {
 	private int NB_CUBES = 8;
 	
 	private int MAP_WIDTH = 6;
-	private int MAP_DEPTH = 16;
+	private int MAP_DEPTH = 10;
 	private int cubesPositions[][];
 	private int heroPositionX;
 	private int heroPositionZ;
@@ -29,7 +29,7 @@ public class Map5 implements MapInterface {
 		for ( int i = 0 ; i < 4  ; i++)
 		{
 			cubesPositions[cubid][0] =  i ;
-			cubesPositions[cubid][1] = -MAP_DEPTH + 7 + i;
+			cubesPositions[cubid][1] = -MAP_DEPTH + 5 + i;
 			cubid++;
 		}		
 		
@@ -93,12 +93,27 @@ public class Map5 implements MapInterface {
 	
 	public int getCubeDirection(int cubeId)
 	{
-		return Cube.DIRECTION_NORTH_TO_SOUTH;
+		if (cubeId == 6)
+		{
+			return Cube.DIRECTION_WEST_TO_EAST;
+		}
+		else
+		{
+			return Cube.DIRECTION_NORTH_TO_SOUTH;
+		}
+			
 	}
 	
 	public int getCubeType (int cubeId)
 	{
-		return Cube.TYPE_VERTICAL;
+		if (cubeId == 6)
+		{
+			return Cube.TYPE_HORIZONTAL;
+		}
+		else
+		{
+			return Cube.TYPE_VERTICAL;
+		}
 	}
 
 	public int getNbWarps()
