@@ -23,12 +23,13 @@ public class Game {
 	private long lastTime = 0;
 	private int currentMapIndex;
 	private long completedTime;
-	private final static int NB_MAPS = 10;
+	private final static int NB_MAPS = 11;
 	private final static Class[] maps = {Map1.class, Map2.class,
 										 Map3.class, Map4.class,
 										 Map5.class, Map6.class,
 										 Map7.class, Map8.class,
-										 Map9.class, Map10.class};
+										 Map9.class, Map10.class,
+										 Map11.class};
 	/*
 	private boolean[][] hasBomb;
 	private boolean[][] hasBigBomb;
