@@ -1,6 +1,7 @@
 package org.gunnm.lostrunner.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -13,17 +14,28 @@ import com.scoreloop.client.android.ui.ShowResultOverlayActivity;
 public class Score implements OnScoreSubmitObserver {
 	private static Score 		instance 			= null;
 	private Activity 			relatedActivity;
+	private Context				context;
 	private int  				scoreSubmitStatus;
 	private boolean				initialized         = false;
 	public final static int    	SHOW_RESULT 		= 2;
 	public final static int    	POST_SCORE 			= 3;
 	
-	public Score ()
+	public Score (Context c)
 	{
-		initialized = false;
+		try
+		{
+			//	    		Log.i("Title", "initialize scoreloop");
+			ScoreloopManagerSingleton.init(c, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
+			ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(this);
+			initialized = true;
+		}
+		catch (IllegalStateException e)
+		{
+			//	      		Log.i("Title", "error when initializng scoreloop" + e.toString());
+		}
 	}
 	
-	
+
 	public void setInitialized (boolean b)
 	{
 		this.initialized = b;
@@ -34,16 +46,39 @@ public class Score implements OnScoreSubmitObserver {
 		return this.initialized;
 	}
 	
-	public static Score getInstance ()
+
+    
+	
+	public static Score getInstance (Context c)
 	{
 		if (instance == null)
 		{
-			instance = new Score();
+			instance = new Score(c);
 		}
+		instance.setContext (c);
 		return instance;
 	}
 	
+	public void setContext (Context c)
+	{
+
+		this.context = c;
+		if (this.initialized == false)
+		{
+			try
+			{
+				//	    		Log.i("Title", "initialize scoreloop");
+				ScoreloopManagerSingleton.init(c, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
+				initialized = true;
+			}
+			catch (IllegalStateException e)
+			{
+				//	      		Log.i("Title", "error when initializng scoreloop" + e.toString());
+			}
+		}
+	}
 	
+
 
     public void registerScore (int score)
     {
@@ -74,13 +109,13 @@ public class Score implements OnScoreSubmitObserver {
     		return;
     	}
 
-    	preferences = PreferenceManager.getDefaultSharedPreferences(relatedActivity);
+    	preferences = PreferenceManager.getDefaultSharedPreferences(this.context);
     	useScoreloop = preferences.getBoolean("use_scoreloop", false);
     	
     	if (useScoreloop && this.initialized)
     	{
     		checkTermsOfService();
-    		relatedActivity.startActivityForResult(new Intent(relatedActivity, ShowResultOverlayActivity.class), SHOW_RESULT);
+    		relatedActivity.startActivityForResult(new Intent(this.context, ShowResultOverlayActivity.class), SHOW_RESULT);
     	}
     }
     
@@ -89,12 +124,7 @@ public class Score implements OnScoreSubmitObserver {
     	final SharedPreferences preferences;
 	    boolean use;
 	    
-    	if (relatedActivity == null)
-    	{
-    		return false;
-    	}
-    	
-		preferences = PreferenceManager.getDefaultSharedPreferences(relatedActivity);
+		preferences = PreferenceManager.getDefaultSharedPreferences(this.context);
 	    	
 	    use = preferences.getBoolean("use_scoreloop", false);
 	    
@@ -103,14 +133,7 @@ public class Score implements OnScoreSubmitObserver {
     
     private void disableScoreLoop ()
     {
-
-	    
-    	if (relatedActivity == null)
-    	{
-    		return;
-    	}
-    	
-		PreferenceManager.getDefaultSharedPreferences(relatedActivity).edit().putBoolean("use_scoreloop", false);
+		PreferenceManager.getDefaultSharedPreferences(this.context).edit().putBoolean("use_scoreloop", false);
     }
     
     

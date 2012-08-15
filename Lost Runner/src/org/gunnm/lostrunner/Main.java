@@ -10,6 +10,7 @@ import org.gunnm.lostrunner.utils.Score;
 import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,9 +42,8 @@ public class Main extends Activity {
 
         handler = new Handler();
         
-		scores 				= Score.getInstance ();
+		scores 				= Score.getInstance (this);
 		scores.setActivity(this);
-		ScoreloopManagerSingleton.get().setOnScoreSubmitObserver(scores);
         
         currentGame = Game.getInstance(this);
         currentGame.reset();
@@ -66,12 +66,13 @@ public class Main extends Activity {
 	
 	public void notifyScore ()
 	{
+		final Context c = this;
 		Looper.prepare ();
 		handler.post (new Runnable()
 		{
 			public void run()
 			{
-				Score.getInstance().registerScore(currentGame.getElapsedSec());
+				Score.getInstance(c).registerScore(currentGame.getElapsedSec());
 			}
 		}
 		);

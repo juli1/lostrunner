@@ -43,8 +43,6 @@ public class Title extends Activity implements OnTouchListener
 	private Score scores;
 
 	AlertDialog.Builder builder;
-	private boolean scoreLoopInitialized = false;
-	
 	public Title ()
 	{
         
@@ -60,20 +58,8 @@ public class Title extends Activity implements OnTouchListener
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,   
         WindowManager.LayoutParams.FLAG_FULLSCREEN);
         
-        if (scoreLoopInitialized == false)
-        {
-        	try
-        	{
-//        		Log.i("Title", "initialize scoreloop");
-        		ScoreloopManagerSingleton.init(this, org.gunnm.lostrunner.configuration.ScoreLoop.scoreLoopSecret);
-        		scoreLoopInitialized = true;
-        	}
-        	catch (IllegalStateException e)
-        	{
-  //      		Log.i("Title", "error when initializng scoreloop" + e.toString());
-        	}
-        }
-        Score.getInstance().setInitialized(scoreLoopInitialized);
+        
+        scores = Score.getInstance (this);
         sound = Sound.getInstance(this);
         surface = new GLSurfaceView(this);
         renderer = new TitleRenderer(this);
@@ -192,17 +178,16 @@ public class Title extends Activity implements OnTouchListener
 //		Log.i("Title", "onResume");
 		surface.onResume();
 		sound.startTrack();
-		scores = Score.getInstance();
+		scores = Score.getInstance(this);
 		scores.setActivity(this);
 		scores.checkTermsOfService();
 		
 		currentGame = Game.getInstance(this);
-		score = Score.getInstance();
-		score.setActivity(this);
+		scores.setActivity(this);
 		if (currentGame.isCompleted() && ( ! currentGame.getScoreSubmitted()))
 		{
 //			Log.i("Title", "onResume score not submitted");
-			score.registerScore(currentGame.getElapsedSec());
+			scores.registerScore(currentGame.getElapsedSec());
 			currentGame.setScoreSubmitted(true);
 		}
 		
@@ -228,7 +213,7 @@ public class Title extends Activity implements OnTouchListener
 	 protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) 
 	 {
 
-		 scores = Score.getInstance();
+		 scores = Score.getInstance(this);
 		 scores.setActivity(this);
 		 switch (requestCode) {
 
