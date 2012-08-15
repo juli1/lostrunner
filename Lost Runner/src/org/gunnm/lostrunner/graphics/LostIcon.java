@@ -7,7 +7,6 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import org.gunnm.lostrunner.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,14 +16,12 @@ import android.opengl.GLUtils;
 public class LostIcon {
 
 	private String 		filename;
-	private Context     context;
 	private FloatBuffer vertexBuffer;   // buffer holding the vertices
 	private float 		translationX;
 	private float 		translationY;
 	private float 		translationZ;
 	private int[] 		textures 	= new int[1];
 	private int 		type;
-	private int			form;
 	private float		fade;
 	
 	public final static int ICON_SMALL 		= 1;
@@ -71,10 +68,8 @@ public class LostIcon {
 		ByteBuffer byteBuffer;
 
 		this.fade 		= 1;
-		this.context 	= c;
 		this.filename 	= f;
 		
-		this.form 		= fo;
 		this.type 		= t;
 		
 		vertices		= null;

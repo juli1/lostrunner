@@ -3,7 +3,6 @@ package org.gunnm.lostrunner.sounds;
 import java.io.IOException;
 import java.util.HashMap;
 
-import android.R;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,9 +15,7 @@ public class Sound {
 	private String selection      = "selection.wav";
 	private String death      = "death.wav";
 	private String finished      = "finished.wav";
-	private String gun      = "gun.wav";
-	private String bomb      = "bomb.wav";
-	private String bigBomb      = "bigbomb.wav";
+
 	private SoundPool soundPool;
 	private HashMap  poolMap;
 	private AudioManager audioManager;

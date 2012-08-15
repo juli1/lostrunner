@@ -7,7 +7,6 @@ import org.gunnm.lostrunner.model.Game;
 import org.gunnm.lostrunner.sounds.Sound;
 import org.gunnm.lostrunner.utils.Score;
 
-import com.scoreloop.client.android.ui.ScoreloopManagerSingleton;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,7 +22,6 @@ import android.view.WindowManager;
 
 public class Main extends Activity {
 	
-	private boolean 		fullScreen = false;
 	private GLSurfaceView 	surface;
 	private LostRenderer	renderer;
 	private Game			currentGame;

@@ -22,7 +22,6 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -172,7 +171,6 @@ public class Title extends Activity implements OnTouchListener
 
 	protected void onResume() {
 		Game currentGame;
-		Score score;
 		
 		super.onResume();
 //		Log.i("Title", "onResume");

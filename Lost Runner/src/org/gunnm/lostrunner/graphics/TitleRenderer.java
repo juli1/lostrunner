@@ -16,8 +16,6 @@ public class TitleRenderer implements Renderer
 	private long startTime;
 	private long lastTime;
 	private Context context;
-	private int screenWidth = 100;
-	private int screenHeight = 100;
 	private float angleNewGame;
 	private float angleOnlineScores;
 	private float angleInstructions;
@@ -222,13 +220,9 @@ public class TitleRenderer implements Renderer
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 	      gl.glViewport( 0, 0, width, height );
 
-	      // Setup orthographic projection
 	      gl.glMatrixMode( GL10.GL_PROJECTION );          
 	      gl.glLoadIdentity();                   
-	     
-	      // Save width and height
-	      this.screenWidth = width;                   
-	      this.screenHeight = height;                     
+	                        
 			gl.glMatrixMode( GL10.GL_PROJECTION );       
 			gl.glViewport(0, 0, width, height);
 

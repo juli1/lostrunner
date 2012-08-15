@@ -43,14 +43,6 @@ public class LostRenderer implements Renderer
 	LostIcon iconCameraLeft;
 	LostIcon iconCameraRight;
 	
-	/*
-	LostIcon iconGun;
-	LostIcon iconBomb;
-	LostIcon iconBigBomb;
-	LostIcon iconGunSmall;
-	LostIcon iconBombSmall;
-	LostIcon iconBigBombSmall;
-	*/
 	
 	private static FloatBuffer[] 	heroBodyVertexBfr;
 	private static FloatBuffer[] 	heroMemberVertexBfr;
